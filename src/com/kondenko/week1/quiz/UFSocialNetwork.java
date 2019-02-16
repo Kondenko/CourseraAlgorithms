@@ -1,22 +1,51 @@
 package com.kondenko.week1.quiz;
 
+
+import java.util.ArrayList;
+import java.util.Collections;
+
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class UFSocialNetwork {
+
+    public static void print(String s) {
+        System.out.println(s);
+    }
 
     public static void main(String[] args) {
         int n = 10;
         SocialUF socialUF = new SocialUF(n);
         Connection[] connections = getConnections(n);
+        print(getTimestamp(socialUF, connections) + " ");
+    }
+
+    private static int getTimestamp(SocialUF socialUF, Connection[] connections) {
+        for (Connection c : connections) {
+            if (socialUF.unionAndMatch(c.personA, c.personB)) return c.timestamp;
+        }
+        return 0;
     }
 
     private static Connection[] getConnections(int n) {
-        Connection[] connections = new Connection[n];
-        // TODO Generate connections
-        return connections;
+        int timestamp = n * 10;
+        ArrayList<Connection> connections = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            if (i == n - 1) {
+                connections.add(new Connection(timestamp, i, 0));
+            } else {
+                connections.add(new Connection(timestamp, i, i + 1));
+            }
+        }
+        Collections.shuffle(connections);
+        for (int i = 0; i < n; i++) {
+            timestamp++;
+            connections.get(i).timestamp = timestamp;
+        }
+        print("Connections: \n" + connections + "\n max timestamp = " + timestamp);
+        return connections.toArray(Connection[]::new);
     }
 
-    class Connection {
+    static class Connection {
 
         int timestamp;
         int personA;
@@ -28,16 +57,13 @@ public class UFSocialNetwork {
             this.personB = personB;
         }
 
-        public int getTimestamp() {
-            return timestamp;
-        }
-
-        public int getPersonA() {
-            return personA;
-        }
-
-        public int getPersonB() {
-            return personB;
+        @Override
+        public String toString() {
+            return "Connection{" +
+                    "timestamp=" + timestamp +
+                    ", personA=" + personA +
+                    ", personB=" + personB +
+                    '}';
         }
 
     }
@@ -65,8 +91,7 @@ public class UFSocialNetwork {
             if (size[rootP] < size[rootQ]) {
                 parent[rootP] = rootQ;
                 size[rootQ] += size[rootP];
-            }
-            else {
+            } else {
                 parent[rootQ] = rootP;
                 size[rootP] += size[rootQ];
             }
