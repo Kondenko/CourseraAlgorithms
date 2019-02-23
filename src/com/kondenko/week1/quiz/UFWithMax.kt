@@ -1,6 +1,6 @@
 package com.kondenko.week1.quiz
 
-import edu.princeton.cs.algs4.WeightedQuickUnionUF
+import com.kondenko.algs4.WeightedQuickUnionUF
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import kotlin.math.max

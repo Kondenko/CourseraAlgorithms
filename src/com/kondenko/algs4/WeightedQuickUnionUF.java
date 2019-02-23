@@ -1,31 +1,23 @@
 /******************************************************************************
- *  Compilation:  javac UF.java
- *  Execution:    java UF < input.txt
+ *  Compilation:  javac WeightedQuickUnionUF.java
+ *  Execution:  java WeightedQuickUnionUF < input.txt
  *  Dependencies: StdIn.java StdOut.java
  *  Data files:   https://algs4.cs.princeton.edu/15uf/tinyUF.txt
  *                https://algs4.cs.princeton.edu/15uf/mediumUF.txt
  *                https://algs4.cs.princeton.edu/15uf/largeUF.txt
  *
- *  Weighted quick-union by rank with path compression by halving.
- *
- *  % java UF < tinyUF.txt
- *  4 3
- *  3 8
- *  6 5
- *  9 4
- *  2 1
- *  5 0
- *  7 2
- *  6 1
- *  2 components
+ *  Weighted quick-union (without path compression).
  *
  ******************************************************************************/
 
-package edu.princeton.cs.algs4;
+package com.kondenko.algs4;
 
+import edu.princeton.cs.algs4.QuickFindUF;
+import edu.princeton.cs.algs4.QuickUnionUF;
+import edu.princeton.cs.algs4.UF;
 
 /**
- *  The {@code UF} class represents a <em>union–find data type</em>
+ *  The {@code WeightedQuickUnionUF} class represents a <em>union–find data type</em>
  *  (also known as the <em>disjoint-sets data type</em>).
  *  It supports the <em>union</em> and <em>find</em> operations,
  *  along with a <em>connected</em> operation for determining whether
@@ -76,16 +68,13 @@ package edu.princeton.cs.algs4;
  *  <em>union</em>—it cannot change during a call
  *  to <em>find</em>, <em>connected</em>, or <em>count</em>.
  *  <p>
- *  This implementation uses weighted quick union by rank with path compression
- *  by halving.
+ *  This implementation uses weighted quick union by size (without path compression).
  *  Initializing a data structure with <em>n</em> sites takes linear time.
- *  Afterwards, the <em>union</em>, <em>find</em>, and <em>connected</em> 
- *  operations take logarithmic time (in the worst case) and the
+ *  Afterwards, the <em>union</em>, <em>find</em>, and <em>connected</em>
+ *  operations  take logarithmic time (in the worst case) and the
  *  <em>count</em> operation takes constant time.
- *  Moreover, the amortized time per <em>union</em>, <em>find</em>,
- *  and <em>connected</em> operation has inverse Ackermann complexity.
  *  For alternate implementations of the same API, see
- *  {@link QuickUnionUF}, {@link QuickFindUF}, and {@link WeightedQuickUnionUF}.
+ *  {@link UF}, {@link QuickFindUF}, and {@link QuickUnionUF}.
  *
  *  <p>
  *  For additional documentation, see <a href="https://algs4.cs.princeton.edu/15uf">Section 1.5</a> of
@@ -94,12 +83,13 @@ package edu.princeton.cs.algs4;
  *  @author Robert Sedgewick
  *  @author Kevin Wayne
  */
+public class WeightedQuickUnionUF {
 
-public class UF {
+    protected int[] parent;   // parent[i] = parent of i
 
-    private int[] parent;  // parent[i] = parent of i
-    private byte[] rank;   // rank[i] = rank of subtree rooted at i (never more than 31)
-    private int count;     // number of components
+    protected int[] size;     // size[i] = number of sites in subtree rooted at i
+
+    protected int count;      // number of components
 
     /**
      * Initializes an empty union–find data structure with {@code n} sites
@@ -109,31 +99,14 @@ public class UF {
      * @param  n the number of sites
      * @throws IllegalArgumentException if {@code n < 0}
      */
-    public UF(int n) {
-        if (n < 0) throw new IllegalArgumentException();
+    public WeightedQuickUnionUF(int n) {
         count = n;
         parent = new int[n];
-        rank = new byte[n];
+        size = new int[n];
         for (int i = 0; i < n; i++) {
             parent[i] = i;
-            rank[i] = 0;
+            size[i] = 1;
         }
-    }
-
-    /**
-     * Returns the component identifier for the component containing site {@code p}.
-     *
-     * @param  p the integer representing one site
-     * @return the component identifier for the component containing site {@code p}
-     * @throws IllegalArgumentException unless {@code 0 <= p < n}
-     */
-    public int find(int p) {
-        validate(p);
-        while (p != parent[p]) {
-            parent[p] = parent[parent[p]];    // path compression by halving
-            p = parent[p];
-        }
-        return p;
     }
 
     /**
@@ -145,6 +118,28 @@ public class UF {
         return count;
     }
   
+    /**
+     * Returns the component identifier for the component containing site {@code p}.
+     *
+     * @param  p the integer representing one object
+     * @return the component identifier for the component containing site {@code p}
+     * @throws IllegalArgumentException unless {@code 0 <= p < n}
+     */
+    public int find(int p) {
+        validate(p);
+        while (p != parent[p])
+            p = parent[p];
+        return p;
+    }
+
+    // validate that p is a valid index
+    protected void validate(int p) {
+        int n = parent.length;
+        if (p < 0 || p >= n) {
+            throw new IllegalArgumentException("index " + p + " is not between 0 and " + (n-1));  
+        }
+    }
+
     /**
      * Returns true if the the two sites are in the same component.
      *
@@ -158,7 +153,7 @@ public class UF {
     public boolean connected(int p, int q) {
         return find(p) == find(q);
     }
-  
+
     /**
      * Merges the component containing site {@code p} with the 
      * the component containing site {@code q}.
@@ -173,45 +168,18 @@ public class UF {
         int rootQ = find(q);
         if (rootP == rootQ) return;
 
-        // make root of smaller rank point to root of larger rank
-        if      (rank[rootP] < rank[rootQ]) parent[rootP] = rootQ;
-        else if (rank[rootP] > rank[rootQ]) parent[rootQ] = rootP;
+        // make smaller root point to larger one
+        if (size[rootP] < size[rootQ]) {
+            parent[rootP] = rootQ;
+            size[rootQ] += size[rootP];
+        }
         else {
             parent[rootQ] = rootP;
-            rank[rootP]++;
+            size[rootP] += size[rootQ];
         }
         count--;
     }
 
-    // validate that p is a valid index
-    private void validate(int p) {
-        int n = parent.length;
-        if (p < 0 || p >= n) {
-            throw new IllegalArgumentException("index " + p + " is not between 0 and " + (n-1));  
-        }
-    }
-
-    /**
-     * Reads in a an integer {@code n} and a sequence of pairs of integers
-     * (between {@code 0} and {@code n-1}) from standard input, where each integer
-     * in the pair represents some site;
-     * if the sites are in different components, merge the two components
-     * and print the pair to standard output.
-     *
-     * @param args the command-line arguments
-     */
-    public static void main(String[] args) {
-        int n = StdIn.readInt();
-        UF uf = new UF(n);
-        while (!StdIn.isEmpty()) {
-            int p = StdIn.readInt();
-            int q = StdIn.readInt();
-            if (uf.connected(p, q)) continue;
-            uf.union(p, q);
-            StdOut.println(p + " " + q);
-        }
-        StdOut.println(uf.count() + " components");
-    }
 }
 
 
