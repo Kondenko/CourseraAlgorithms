@@ -65,6 +65,10 @@ public class Percolation {
         return false;
     }
 
+    public int coordsToId(int row, int col) {
+        return col + (n * (row - 1));
+    }
+
     private void assertRowColumn(int row, int col) {
         if (!isInRange(row) || !isInRange(col))
             throw new IllegalArgumentException(String.format("Coordinates are outside the grid: row=%d, col=%d", row, col));
@@ -76,6 +80,18 @@ public class Percolation {
 
     private boolean isInRange(int num) {
         return num >= 0 && num <= n;
+    }
+
+    private static void print(int i) {
+        System.out.println(i);
+    }
+
+    private static void print(String s) {
+        System.out.println(s);
+    }
+
+    private static void print(boolean s) {
+        System.out.println(s);
     }
 
 }
