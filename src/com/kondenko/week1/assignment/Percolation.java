@@ -22,7 +22,7 @@ public class Percolation {
             int firstRowQ = n + coordsToId(1, i);
             int lastRowQ = coordsToId(n, i);
             uf.union(0, firstRowQ);
-            uf.union(n * n + 1, lastRowQ);
+            uf.union(getBottomVirtualSite(), lastRowQ);
         }
     }
 
@@ -66,7 +66,7 @@ public class Percolation {
      * does the system percolate?
      */
     public boolean percolates() {
-        return false;
+        return uf.connected(0, getBottomVirtualSite());
     }
 
     public int coordsToId(int row, int col) {
@@ -84,6 +84,10 @@ public class Percolation {
 
     private boolean isInRange(int num) {
         return num >= 0 && num <= n;
+    }
+
+    private int getBottomVirtualSite() {
+        return n * n + 1;
     }
 
     private static void print(int i) {
