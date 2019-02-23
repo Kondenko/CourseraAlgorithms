@@ -3,17 +3,19 @@ package com.kondenko.week1.quiz
 import edu.princeton.cs.algs4.WeightedQuickUnionUF
 import kotlin.math.max
 
-class WeightedUquickUnionUFWithMaxItem(n: Int) : WeightedQuickUnionUF(n) {
+class WeightedQuickUnionUFWithMaxItem(n: Int) : WeightedQuickUnionUF(n) {
 
     private val max = IntArray(n) { 0 }
 
-    fun findMax(p: Int): Int {
-        return max[find(p)]
+    override fun find(p: Int): Int {
+        return max[root(p)]
     }
 
+    fun root(p: Int) = super.find(p)
+
     override fun union(p: Int, q: Int) {
-        val rootP = find(p)
-        val rootQ = find(q)
+        val rootP = root(p)
+        val rootQ = root(q)
         if (rootP == rootQ) return
         val maxItem = max(p, q)
         // make smaller root point to larger one
