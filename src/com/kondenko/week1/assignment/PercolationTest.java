@@ -28,5 +28,16 @@ class PercolationTest {
         assertFalse(p.percolates());
     }
 
+    @Test
+    void shouldNotPercolate1() {
+        p = new Percolation(1);
+        assertFalse(p.percolates());
+    }
+
+    @Test
+    void shouldNotPercolate2() {
+        p = new Percolation(2);
+        assertFalse(p.percolates());
+    }
 
 }

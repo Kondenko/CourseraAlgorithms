@@ -4,7 +4,9 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
 
-    private static final int TOP_VIRTUAL_SITE_ID = 0;
+    private static final int topVirtualSiteId = 0;
+
+    private final int bottomVirtualSiteId;
 
     private int n;
 
@@ -21,13 +23,14 @@ public class Percolation {
         if (n <= 0)
             throw new IllegalArgumentException(String.format("N should be > 0 (was %d)", n));
         this.n = n;
+        bottomVirtualSiteId = n * n + 1;
         uf = new WeightedQuickUnionUF((n * n) + 2);
         isOpen = new boolean[n][n];
-        for (int i = 1; i <= n; i++) {
+        for (int i = 1; i <= n && n > 1; i++) {
             int firstRowQ = coordsToId(1, i);
             int lastRowQ = coordsToId(n, i);
-            uf.union(TOP_VIRTUAL_SITE_ID, firstRowQ);
-            uf.union(getBottomVirtualSiteId(), lastRowQ);
+            uf.union(topVirtualSiteId, firstRowQ);
+            uf.union(bottomVirtualSiteId, lastRowQ);
         }
     }
 
@@ -55,7 +58,7 @@ public class Percolation {
      * is site (row, col) full?
      */
     public boolean isFull(int row, int col) {
-        return isOpen(row, col) && uf.connected(coordsToId(row, col), TOP_VIRTUAL_SITE_ID);
+        return isOpen(row, col) && uf.connected(coordsToId(row, col), topVirtualSiteId);
     }
 
     /**
@@ -69,7 +72,7 @@ public class Percolation {
      * does the system percolate?
      */
     public boolean percolates() {
-        return uf.connected(0, getBottomVirtualSiteId());
+        return uf.connected(topVirtualSiteId, bottomVirtualSiteId) || n == 1 && isOpen(1, 1);
     }
 
     private int coordsToId(int row, int col) {
@@ -98,10 +101,6 @@ public class Percolation {
 
     private boolean isInRange(int num) {
         return num >= 0 && num <= n;
-    }
-
-    private int getBottomVirtualSiteId() {
-        return n * n + 1;
     }
 
     private static void print(int i) {
