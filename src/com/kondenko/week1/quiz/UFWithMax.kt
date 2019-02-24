@@ -1,8 +1,8 @@
 package com.kondenko.week1.quiz
 
 import com.kondenko.algs4.WeightedQuickUnionUF
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
+import junit.framework.Assert.assertEquals
+import org.junit.Test
 import kotlin.math.max
 
 class WeightedQuickUnionUFWithMaxItem(n: Int) : WeightedQuickUnionUF(n) {
@@ -45,13 +45,13 @@ internal class WeightedQuickUnionUFWithMaxItemTest {
             union(2, 3)
             union(1, 5)
         }
-        Assertions.assertEquals(5, uf.find(3))
+        assertEquals(5, uf.find(3))
     }
 
     @Test
     fun `should find nothing`() {
         val uf = WeightedQuickUnionUFWithMaxItem(10)
-        Assertions.assertEquals(0, uf.find(3))
+        assertEquals(0, uf.find(3))
     }
 
 }

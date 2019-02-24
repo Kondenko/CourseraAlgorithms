@@ -1,6 +1,6 @@
 package com.kondenko.week1.quiz
 
-import org.junit.jupiter.api.Test
+import org.junit.Test
 import kotlin.math.min
 import kotlin.test.assertEquals
 
