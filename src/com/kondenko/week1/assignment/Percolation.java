@@ -23,9 +23,9 @@ public class Percolation {
         this.n = n;
         uf = new WeightedQuickUnionUF((n * n) + 2);
         isOpen = new boolean[n][n];
-        for (int i = 0; i < n; i++) {
-            int firstRowQ = n - 1 + coordsToId(1, i);
-            int lastRowQ = coordsToId(n - 1, i);
+        for (int i = 1; i <= n; i++) {
+            int firstRowQ = coordsToId(1, i);
+            int lastRowQ = coordsToId(n, i);
             uf.union(TOP_VIRTUAL_SITE_ID, firstRowQ);
             uf.union(getBottomVirtualSiteId(), lastRowQ);
         }
