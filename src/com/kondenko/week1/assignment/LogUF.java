@@ -2,8 +2,6 @@ package com.kondenko.week1.assignment;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-import static edu.princeton.cs.algs4.StdOut.print;
-
 public class LogUF extends WeightedQuickUnionUF {
 
 
@@ -21,7 +19,6 @@ public class LogUF extends WeightedQuickUnionUF {
 
     @Override
     public void union(int p, int q) {
-        print(String.format("union(p=%d,q=%d)\n", p, q));
         super.union(p, q);
     }
 
