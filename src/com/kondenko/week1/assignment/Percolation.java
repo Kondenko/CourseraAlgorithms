@@ -102,7 +102,7 @@ public class Percolation {
     }
 
     private boolean isInRange(int num) {
-        return num >= 0 && num <= n;
+        return num > 0 && num <= n;
     }
 
     private static void print(int i) {
