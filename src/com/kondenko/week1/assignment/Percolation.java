@@ -60,7 +60,7 @@ public class Percolation {
      * is site (row, col) full?
      */
     public boolean isFull(int row, int col) {
-        return isOpen(row, col) && uf.connected(coordsToId(row, col), topVirtualSiteId);
+        return isOpen(row, col) && uf.connected(coordsToId(row, col), topVirtualSiteId) || n == 1;
     }
 
     /**
