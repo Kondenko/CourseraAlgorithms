@@ -1,4 +1,3 @@
-package com.kondenko.week1.assignment;
 
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;

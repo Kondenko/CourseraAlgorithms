@@ -1,8 +1,5 @@
-package com.kondenko.week1.assignment;
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-import com.kondenko.algs4.WeightedQuickUnionUF;
-
-@SuppressWarnings("WeakerAccess")
 public class Percolation {
 
     private static final int TOP_VIRTUAL_SITE_ID = 0;
@@ -73,7 +70,7 @@ public class Percolation {
         return uf.connected(0, getBottomVirtualSiteId());
     }
 
-    public int coordsToId(int row, int col) {
+    private int coordsToId(int row, int col) {
         assertRowColumn(row, col);
         return col + (n * (row - 1));
     }

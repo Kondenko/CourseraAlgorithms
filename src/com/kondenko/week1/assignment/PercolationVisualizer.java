@@ -16,8 +16,6 @@
  *
  ******************************************************************************/
 
-import com.kondenko.week1.assignment.Percolation;
-
 import java.awt.Font;
 
 import edu.princeton.cs.algs4.In;
