@@ -28,9 +28,7 @@ public class Percolation {
         isOpen = new boolean[n][n];
         for (int i = 1; i <= n && n > 1; i++) {
             int firstRowQ = coordsToId(1, i);
-            int lastRowQ = coordsToId(n, i);
             uf.union(topVirtualSiteId, firstRowQ);
-            uf.union(bottomVirtualSiteId, lastRowQ);
         }
     }
 
@@ -43,6 +41,10 @@ public class Percolation {
             isOpen[row - 1][col - 1] = true;
             numberOfOpenSites++;
             connectNeighbours(row, col);
+            int id = coordsToId(row, col);
+            if (row == n && uf.connected(id, topVirtualSiteId)) {
+                uf.union(id, bottomVirtualSiteId);
+            }
         }
     }
 
@@ -60,7 +62,8 @@ public class Percolation {
      * is site (row, col) full?
      */
     public boolean isFull(int row, int col) {
-        return isOpen(row, col) && uf.connected(coordsToId(row, col), topVirtualSiteId) || n == 1;
+        int id = coordsToId(row, col);
+        return isOpen(row, col) && uf.connected(id, topVirtualSiteId) || n == 1;
     }
 
     /**
