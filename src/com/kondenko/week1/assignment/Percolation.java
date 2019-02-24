@@ -28,7 +28,9 @@ public class Percolation {
         isOpen = new boolean[n][n];
         for (int i = 1; i <= n && n > 1; i++) {
             int firstRowQ = coordsToId(1, i);
+            int lastRowQ = coordsToId(n, i);
             uf.union(topVirtualSiteId, firstRowQ);
+            uf.union(bottomVirtualSiteId, lastRowQ);
         }
     }
 
@@ -41,10 +43,6 @@ public class Percolation {
             isOpen[row - 1][col - 1] = true;
             numberOfOpenSites++;
             connectNeighbours(row, col);
-            int id = coordsToId(row, col);
-            if (row == n && uf.connected(id, topVirtualSiteId)) {
-                uf.union(id, bottomVirtualSiteId);
-            }
         }
     }
 
@@ -52,10 +50,8 @@ public class Percolation {
      * is site (row, col) open?
      */
     public boolean isOpen(int row, int col) {
-        row--;
-        col--;
-        if (row < 0 || col < 0 || row >= n || col >= n) return false;
-        return isOpen[row][col];
+        assertRowColumn(row, col);
+        return isOpen[row - 1][col - 1];
     }
 
     /**
@@ -94,7 +90,7 @@ public class Percolation {
     }
 
     private void connectIfOpen(int originalRow, int originalCol, int row, int col) {
-        if (isOpen(row, col)) {
+        if (isInRange(originalRow, originalCol, row, col) && isOpen(row, col)) {
             uf.union(coordsToId(originalRow, originalCol), coordsToId(row, col));
         }
     }
@@ -102,6 +98,13 @@ public class Percolation {
     private void assertRowColumn(int row, int col) {
         if (!isInRange(row) || !isInRange(col))
             throw new IllegalArgumentException(String.format("Coordinates are outside the grid: row=%d, col=%d", row, col));
+    }
+
+    private boolean isInRange(int... num) {
+        for (int i : num) {
+            if (!isInRange(i)) return false;
+        }
+        return true;
     }
 
     private boolean isInRange(int num) {
