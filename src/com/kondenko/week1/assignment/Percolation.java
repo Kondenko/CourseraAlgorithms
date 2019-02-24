@@ -39,9 +39,11 @@ public class Percolation {
      */
     public void open(int row, int col) {
         assertRowColumn(row, col);
-        numberOfOpenSites++;
-        isOpen[row - 1][col - 1] = true;
-        connectNeighbours(row, col);
+        if (!isOpen(row, col)) {
+            isOpen[row - 1][col - 1] = true;
+            numberOfOpenSites++;
+            connectNeighbours(row, col);
+        }
     }
 
     /**
