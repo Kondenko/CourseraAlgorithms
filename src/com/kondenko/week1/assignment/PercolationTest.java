@@ -1,5 +1,6 @@
 package com.kondenko.week1.assignment;
 
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,6 +39,12 @@ class PercolationTest {
     void shouldNotPercolate2() {
         p = new Percolation(2);
         assertFalse(p.percolates());
+    }
+
+    @Test
+    void shouldBeFull() {
+        p = new Percolation(1);
+        assertTrue(p.isFull(1, 1));
     }
 
 }
