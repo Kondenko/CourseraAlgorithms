@@ -1,3 +1,5 @@
+package com.kondenko.week1.assignment;
+
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {

@@ -1,4 +1,4 @@
-/******************************************************************************
+package com.kondenko.week1.assignment; /******************************************************************************
  *  Compilation:  javac PercolationVisualizer.java
  *  Execution:    java PercolationVisualizer input.txt
  *  Dependencies: Percolation.java

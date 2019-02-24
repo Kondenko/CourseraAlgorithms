@@ -1,3 +1,4 @@
+package com.kondenko.week1.assignment;
 
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
@@ -5,8 +6,6 @@ import edu.princeton.cs.algs4.StdStats;
 public class PercolationStats {
 
     private static final double INTERVAL_CONST = 1.96;
-
-    private final int n;
 
     private final int trials;
 
@@ -19,7 +18,6 @@ public class PercolationStats {
         if (n <= 0 || trials <= 0) {
             throw new IllegalArgumentException("Arguments should be > 0");
         }
-        this.n = n;
         this.trials = trials;
         openSiteNumbers = new int[trials];
         for (int i = 0; i < trials; i++) {
@@ -30,9 +28,8 @@ public class PercolationStats {
     private int performTrial(int n) {
         Percolation p = new Percolation(n);
         do {
-            int randomN = n;
-            int row = StdRandom.uniform(randomN) + 1;
-            int col = StdRandom.uniform(randomN) + 1;
+            int row = StdRandom.uniform(n) + 1;
+            int col = StdRandom.uniform(n) + 1;
             if (!p.isOpen(row, col)) {
                 p.open(row, col);
             }
