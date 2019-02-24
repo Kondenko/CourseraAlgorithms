@@ -1,5 +1,7 @@
 package com.kondenko.week1.assignment;
 
+import com.kondenko.algs4.WeightedQuickUnionUF;
+
 @SuppressWarnings("WeakerAccess")
 public class Percolation {
 
@@ -7,7 +9,7 @@ public class Percolation {
 
     private int n;
 
-    private LogUF uf;
+    private WeightedQuickUnionUF uf;
 
     private boolean[][] isOpen;
 
@@ -20,7 +22,7 @@ public class Percolation {
         if (n <= 0)
             throw new IllegalArgumentException(String.format("N should be > 0 (was %d)", n));
         this.n = n;
-        uf = new LogUF((n * n) + 2);
+        uf = new WeightedQuickUnionUF((n * n) + 2);
         isOpen = new boolean[n][n];
         for (int i = 0; i < n; i++) {
             int firstRowQ = n - 1 + coordsToId(1, i);
