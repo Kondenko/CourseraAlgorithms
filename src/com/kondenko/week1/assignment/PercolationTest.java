@@ -42,9 +42,16 @@ class PercolationTest {
     }
 
     @Test
-    void shouldBeFull() {
+    void shouldBeFullAndOpen() {
         p = new Percolation(1);
-        assertTrue(p.isFull(1, 1));
+        p.open(1, 1);
+        assertTrue(p.isFull(1, 1) && p.isOpen(1, 1));
+    }
+
+    @Test
+    void shouldBeClosedAndNotFull() {
+        p = new Percolation(1);
+        assertFalse(p.isFull(1, 1) && p.isOpen(1, 1));
     }
 
 }

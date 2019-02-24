@@ -63,7 +63,7 @@ public class Percolation {
      */
     public boolean isFull(int row, int col) {
         int id = coordsToId(row, col);
-        return isOpen(row, col) && uf.connected(id, topVirtualSiteId) || n == 1;
+        return isOpen(row, col) && (uf.connected(id, topVirtualSiteId) || n == 1);
     }
 
     /**
