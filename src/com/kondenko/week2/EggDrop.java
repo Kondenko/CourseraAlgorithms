@@ -1,11 +1,7 @@
 package com.kondenko.week2;
 
-import org.junit.Test;
-
-import static com.kondenko.Utils.println;
-import static java.lang.Math.*;
+import static java.lang.Math.sqrt;
 import static java.lang.String.format;
-import static org.junit.Assert.assertEquals;
 
 public class EggDrop {
 
