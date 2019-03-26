@@ -2,45 +2,37 @@ package com.kondenko.week3;
 
 import edu.princeton.cs.algs4.Stack;
 
-import static com.kondenko.Utils.println;
-
 public class StackWithMax {
-
-    private int max = 0;
 
     private Stack<Integer> stack = new Stack<>();
 
+    private Stack<Integer> maxStack = new Stack<>();
+
     public void push(int item) {
-        if (stack.isEmpty() || item > max) {
-            max = item;
+        if (maxStack.isEmpty() || item > maxStack.peek()) {
+            maxStack.push(item);
         }
         stack.push(item);
     }
 
     public int pop() {
         int item = stack.pop();
-        if (item == max) {
-            recalculateMax();
+        if (item == maxStack.peek()) {
+            maxStack.pop();
         }
         return item;
     }
 
     public int max() {
-        return max;
+        return maxStack.peek();
     }
 
     public int size() {
         return stack.size();
     }
 
-    private void recalculateMax() {
-        println("recalculateMax called on %d elements", stack.size());
-        max = stack.peek();
-        for (Integer integer : stack) {
-            if (integer > max) {
-                max = integer;
-            }
-        }
+    public boolean isEmpty() {
+        return stack.isEmpty();
     }
 
 }

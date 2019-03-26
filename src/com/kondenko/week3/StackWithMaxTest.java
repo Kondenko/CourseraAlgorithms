@@ -11,39 +11,43 @@ import static org.junit.Assert.assertEquals;
 
 public class StackWithMaxTest {
 
-    private static StackWithMax stack = new StackWithMax();
-
-    static {
-        stack.push(10);
-        stack.push(5);
-        stack.push(15);
-    }
 
     @Test
     public void max() {
+        StackWithMax stack = new StackWithMax();
+        stack.push(10);
+        stack.push(5);
+        stack.push(15);
         assertEquals(15, stack.max());
     }
 
     @Test
     public void maxAfterPoppingMax() {
+        StackWithMax stack = new StackWithMax();
+        stack.push(10);
+        stack.push(1);
+        stack.push(5);
+        stack.push(15);
         stack.pop();
         assertEquals(10, stack.max());
     }
 
     @Test
     public void maxInLargeArray() {
-        stack = new StackWithMax();
-        int from = 100000;
-        for (int i = 0; i <= from; i++) {
+        StackWithMax stack = new StackWithMax();
+
+        int items = 100_000;
+        for (int i = 0; i <= items; i++) {
             stack.push(i);
         }
-        assertEquals(from, stack.max());
+        assertEquals(items, stack.max());
+
         long popTime = Utils.measureTime(() -> {
-            for (int i = 0; i <= from; i++) {
+            while (!stack.isEmpty()) {
                 stack.pop();
             }
         });
-        println("Popping %d items took %d ms", from - stack.size(), popTime);
+        println("Popping %d items took %d ms with", items, popTime);
     }
 
 }

@@ -1,5 +1,8 @@
 package com.kondenko;
 
+
+import java.util.Random;
+
 public class Utils {
 
     public static long measureTime(Runnable algorithm) {
@@ -9,12 +12,18 @@ public class Utils {
         return end - start;
     }
 
-    public static int[] randomIntArray(int n) {
-        int[] arr = new int[n];
-        for (int i = 0; i < n; i++) {
-            arr[i] = i;
+    public static int randomIntArray(int[] into) {
+        Random rnd = new Random();
+        int item = rnd.nextInt();
+        int max = item;
+        for (int i = 0; i < into.length; i++) {
+            into[i] = item;
+            if (item > max) {
+                max = item;
+            }
+            item = rnd.nextInt();
         }
-        return arr;
+        return max;
     }
 
     public static void println(String s, Object... args) {
