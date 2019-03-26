@@ -2,14 +2,14 @@ package com.kondenko;
 
 public class Utils {
 
-    public long measureTime(Runnable algorithm) {
+    public static long measureTime(Runnable algorithm) {
         long start = System.currentTimeMillis();
         algorithm.run();
         long end = System.currentTimeMillis();
         return end - start;
     }
 
-    public int[] randomIntArray(int n) {
+    public static int[] randomIntArray(int n) {
         int[] arr = new int[n];
         for (int i = 0; i < n; i++) {
             arr[i] = i;
