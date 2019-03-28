@@ -1,60 +1,98 @@
 package com.kondenko.week3;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class Deque<T> implements Iterable<T> {
 
-    private Object[] items = new Object[2];
+    private class Node {
+        T item;
+        Node next;
+        Node prev;
 
-    private int first = -1;
+        public Node(T item) {
+            this.item = item;
+        }
+    }
 
-    private int last = 0;
+    private Node first = null;
+
+    private Node last = null;
 
     private int size = 0;
 
-    // return the number of items on the deque
-
-    // add the item to the front
+    /**
+     * add the item to the front
+     **/
     public void addFirst(T item) {
+        if (item == null) throw new IllegalArgumentException("Can't add a null item to deque");
         size++;
-        items[++first] = item;
+        Node oldFirst = first != null ? first : new Node(item);
+        Node node = new Node(item);
+        node.next = oldFirst;
+        oldFirst.prev = node;
+        if (last == null) {
+            last = oldFirst;
+        }
+        last.prev = oldFirst;
+        first = node;
     }
 
-    // add the item to the end
+    /**
+     * add the item to the end
+     **/
     public void addLast(T item) {
+        if (item == null) throw new IllegalArgumentException("Can't add a null item to deque");
         size++;
-        items[++last] = item;
+//        initFirstIfNull(item, () -> {
+//            Node node = new Node(item);
+//            last.next = node;
+//            node.prev = last;
+//            last = node;
+//        });
     }
 
-    // remove and return the item from the front
+    /**
+     * remove and return the item from the front
+     **/
     public T removeFirst() {
+        if (isEmpty()) throw new NoSuchElementException("Deque is empty");
         size--;
-        return (T) items[first++];
+        T item = first.item;
+        first = first.next;
+        return item;
     }
 
-    // remove and return the item from the end
+    /**
+     * remove and return the item from the end
+     **/
     public T removeLast() {
+        if (isEmpty()) throw new NoSuchElementException("Deque is empty");
         size--;
-        return (T) items[last--];
+        T item = last.item;
+        last = last.prev;
+        return item;
     }
 
+    /**
+     * return the number of items on the deque
+     **/
     public int size() {
         return size;
     }
 
-    // is the deque empty?
+    /**
+     * is the deque empty?
+     **/
     public boolean isEmpty() {
         return size() == 0;
     }
 
-    // return an iterator over items in order from front to end
+    /**
+     * return an iterator over items in order from front to end
+     **/
     public Iterator<T> iterator() {
         return null;
-    }
-
-    // unit testing (optional)
-    public static void main(String[] args) {
-
     }
 
 }
