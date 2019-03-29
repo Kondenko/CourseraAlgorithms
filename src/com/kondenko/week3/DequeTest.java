@@ -81,14 +81,14 @@ public class DequeTest {
     @Test
     public void highCapacityTest() {
         Deque<Integer> deque = new Deque<>();
-        int itemsCount = 100_000;
+        int itemsCount = 3;
         long additionTime = measureTime(() -> {
             for (int i = 1; i <= itemsCount; i++) {
                 deque.addFirst(i);
             }
         });
         long removalTime = measureTime(() -> {
-            for (int i = 1; i <= itemsCount; i++) {
+            while(!deque.isEmpty()) {
                 deque.removeLast();
             }
         });
