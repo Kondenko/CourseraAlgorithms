@@ -81,7 +81,7 @@ public class DequeTest {
     @Test
     public void highCapacityTest() {
         Deque<Integer> deque = new Deque<>();
-        int itemsCount = 3;
+        int itemsCount = 4;
         long additionTime = measureTime(() -> {
             for (int i = 1; i <= itemsCount; i++) {
                 deque.addFirst(i);

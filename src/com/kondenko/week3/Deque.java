@@ -2,24 +2,37 @@ package com.kondenko.week3;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 
-public class Deque<T> implements Iterable<T> {
+public class Deque<Item> implements Iterable<Item> {
 
     private class Node {
 
-        T item;
+        Item item;
 
         Node next;
 
         Node prev;
 
-        public Node(T item) {
+        public Node(Item item) {
             this.item = item;
         }
 
         @Override
         public String toString() {
-            return String.format("%s <- %s -> %s", prev.item.toString(), item.toString(), next.item.toString());
+            String left;
+            if (prev == null) {
+                left = "null";
+            } else {
+                left = prev.item.toString();
+            }
+            String right;
+            if (next == null) {
+                right = "null";
+            } else {
+                right = next.item.toString();
+            }
+            return String.format("%s <- %s -> %s", left, item, right);
         }
 
     }
@@ -33,12 +46,12 @@ public class Deque<T> implements Iterable<T> {
     /**
      * add the item to the front
      */
-    public void addFirst(T item) {
+    public void addFirst(Item item) {
         if (item == null) throw new IllegalArgumentException("Can't add a null item to deque");
         size++;
         Node oldFirst = first != null ? first : new Node(item);
         Node node = new Node(item);
-        node.next = oldFirst;
+        node.next = first != null ? oldFirst : null;
         oldFirst.prev = node;
         if (last == null) {
             last = oldFirst;
@@ -50,12 +63,12 @@ public class Deque<T> implements Iterable<T> {
     /**
      * add the item to the end
      */
-    public void addLast(T item) {
+    public void addLast(Item item) {
         if (item == null) throw new IllegalArgumentException("Can't add a null item to deque");
         size++;
         Node oldLast = last != null ? last : new Node(item);
         Node node = new Node(item);
-        node.prev = oldLast;
+        node.prev = last != null ? oldLast : null;
         oldLast.next = node;
         if (first == null) {
             first = oldLast;
@@ -67,10 +80,10 @@ public class Deque<T> implements Iterable<T> {
     /**
      * remove and return the item from the front
      */
-    public T removeFirst() {
+    public Item removeFirst() {
         if (isEmpty()) throw new NoSuchElementException("Deque is empty");
         size--;
-        T item = first.item;
+        Item item = first.item;
         first = first.next;
         resetIfEmpty();
         return item;
@@ -79,10 +92,10 @@ public class Deque<T> implements Iterable<T> {
     /**
      * remove and return the item from the end
      */
-    public T removeLast() {
+    public Item removeLast() {
         if (isEmpty()) throw new NoSuchElementException("Deque is empty");
         size--;
-        T item = last.item;
+        Item item = last.item;
         last = last.prev;
         resetIfEmpty();
         return item;
@@ -105,8 +118,8 @@ public class Deque<T> implements Iterable<T> {
     /**
      * return an iterator over items in order from front to end
      */
-    public Iterator<T> iterator() {
-        return null;
+    public Iterator<Item> iterator() {
+        return new DequeIterator();
     }
 
     private void resetIfEmpty() {
@@ -114,6 +127,41 @@ public class Deque<T> implements Iterable<T> {
             first = null;
             last = null;
         }
+    }
+
+    private class DequeIterator implements Iterator<Item> {
+
+        private Node currentNode;
+
+        public DequeIterator() {
+            this.currentNode = first;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return currentNode != null;
+        }
+
+        @Override
+        public Item next() {
+            if (isEmpty() || !hasNext()) throw new NoSuchElementException();
+            Item item = currentNode.item;
+            currentNode = currentNode.next;
+            return item;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Can't remove items from the deque");
+        }
+
+        @Override
+        public void forEachRemaining(Consumer<? super Item> action) {
+            while (hasNext()) {
+                action.accept(next());
+            }
+        }
+
     }
 
 }
