@@ -49,15 +49,17 @@ public class Deque<Item> implements Iterable<Item> {
     public void addFirst(Item item) {
         if (item == null) throw new IllegalArgumentException("Can't add a null item to deque");
         size++;
-        Node oldFirst = first != null ? first : new Node(item);
         Node node = new Node(item);
-        node.next = first != null ? oldFirst : null;
-        oldFirst.prev = node;
-        if (last == null) {
-            last = oldFirst;
+        if (first != null) {
+            Node oldFirst = first;
+            node.next = oldFirst;
+            oldFirst.prev = node;
         }
-        last.prev = oldFirst;
         first = node;
+        if (last == null) {
+            last = node;
+            last.prev = first;
+        }
     }
 
     /**
@@ -66,15 +68,17 @@ public class Deque<Item> implements Iterable<Item> {
     public void addLast(Item item) {
         if (item == null) throw new IllegalArgumentException("Can't add a null item to deque");
         size++;
-        Node oldLast = last != null ? last : new Node(item);
         Node node = new Node(item);
-        node.prev = last != null ? oldLast : null;
-        oldLast.next = node;
-        if (first == null) {
-            first = oldLast;
+        if (last != null) {
+            Node oldLast = last;
+            node.prev = oldLast;
+            oldLast.next = node;
         }
-        first.next = oldLast;
         last = node;
+        if (first == null) {
+            first = node;
+            first.next = last;
+        }
     }
 
     /**
@@ -85,7 +89,6 @@ public class Deque<Item> implements Iterable<Item> {
         size--;
         Item item = first.item;
         first = first.next;
-        resetIfEmpty();
         return item;
     }
 
@@ -97,7 +100,6 @@ public class Deque<Item> implements Iterable<Item> {
         size--;
         Item item = last.item;
         last = last.prev;
-        resetIfEmpty();
         return item;
     }
 
@@ -120,13 +122,6 @@ public class Deque<Item> implements Iterable<Item> {
      */
     public Iterator<Item> iterator() {
         return new DequeIterator();
-    }
-
-    private void resetIfEmpty() {
-        if (isEmpty()) {
-            first = null;
-            last = null;
-        }
     }
 
     private class DequeIterator implements Iterator<Item> {
