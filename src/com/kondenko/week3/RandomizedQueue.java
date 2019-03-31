@@ -1,6 +1,7 @@
 package com.kondenko.week3;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
@@ -36,6 +37,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      * @param item
      */
     public void enqueue(Item item) {
+        if (item == null) throw new IllegalArgumentException("Can't add a null element");
         shouldShuffle = true;
         if (size == queue.length) {
             resize(queue.length * 2);
@@ -48,6 +50,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      * remove and return a random item.
      */
     public Item dequeue() {
+        if (isEmpty()) throw new NoSuchElementException("Queue is empty");
         size--;
         Item item = queue[first++];
         if (size / 4 == queue.length / 2) {
@@ -63,6 +66,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      * return a random item (but do not remove it).
      */
     public Item sample() {
+        if (isEmpty()) throw new NoSuchElementException("Queue is empty");
         return queue[StdRandom.uniform(first, last)];
     }
 
