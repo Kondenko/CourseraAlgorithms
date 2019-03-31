@@ -1,5 +1,6 @@
 package com.kondenko.week3;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -88,7 +89,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      * return an independent iterator over items in random order.
      */
     public Iterator<Item> iterator() {
-        return null;
+        return new RandomizedIterator<>(queue, size);
     }
 
     private void shuffle() {
@@ -101,7 +102,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         @SuppressWarnings("unchecked")
         Item[] items = (Item[]) new Object[capacity];
         for (int i = 0; i < size; i++) {
-             items[i] = queue[(first + i) % queue.length];
+            items[i] = queue[(first + i) % queue.length];
         }
         queue = items;
         shufflePosition -= first; // TODO test if works correctly
@@ -109,13 +110,42 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         last = size;
     }
 
+    private static class RandomizedIterator<Item> implements Iterator<Item> {
+
+        private Item[] randomizedQueue;
+
+        private int pointer = 0;
+
+        private RandomizedIterator(Item[] q, int size) {
+            this.randomizedQueue = Arrays.copyOf(q, size);
+            StdRandom.shuffle(randomizedQueue);
+        }
+
+        @Override
+        public boolean hasNext() {
+            return pointer < randomizedQueue.length;
+        }
+
+        @Override
+        public Item next() {
+            return randomizedQueue[pointer++];
+        }
+
+    }
+
     public static void main(String[] args) {
         RandomizedQueue<Integer> rqueue = new RandomizedQueue<>();
         for (int i = 0; i < 10; i++) {
             rqueue.enqueue(i);
         }
+        StdOut.println("Using an iterator");
+        for (Integer integer : rqueue) {
+            StdOut.print(integer + " ");
+        }
+        StdOut.println();
+        StdOut.println("Dequeueing");
         while (!rqueue.isEmpty()) {
-            StdOut.println(rqueue.dequeue());
+            StdOut.print(rqueue.dequeue() + " ");
         }
     }
 
