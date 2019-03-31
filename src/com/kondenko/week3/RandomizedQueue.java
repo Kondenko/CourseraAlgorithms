@@ -9,16 +9,6 @@ import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
-    private static class RandomItem<Item> {
-        int index;
-        Item item;
-
-        public RandomItem(int index, Item item) {
-            this.index = index;
-            this.item = item;
-        }
-    }
-
     private Item[] queue = (Item[]) new Object[2];
 
     private int first = 0;
@@ -126,6 +116,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         @Override
         public Item next() {
+            if (!hasNext()) throw new NoSuchElementException();
             return randomizedQueue[pointer++];
         }
 

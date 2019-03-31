@@ -9,14 +9,9 @@ public class Permutation {
 
     public static void main(String[] args) {
         int k = Integer.parseInt(args[0]);
-        int n = Integer.parseInt(args[1]);
-        String[] input = new String[n];
-        for (int i = 0; i < n; i++) {
-            input[i] = StdIn.readString();
-        }
         RandomizedQueue<String> queue = new RandomizedQueue<>();
-        for (String s : input) {
-            queue.enqueue(s);
+        while (!StdIn.isEmpty()) {
+            queue.enqueue(StdIn.readString());
         }
         Iterator<String> iterator = queue.iterator();
         while (iterator.hasNext() && --k >= 0) {
