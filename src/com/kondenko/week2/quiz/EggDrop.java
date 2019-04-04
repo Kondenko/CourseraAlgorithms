@@ -1,4 +1,4 @@
-package com.kondenko.week2;
+package com.kondenko.week2.quiz;
 
 import static java.lang.Math.sqrt;
 import static java.lang.String.format;

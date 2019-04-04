@@ -1,4 +1,4 @@
-package com.kondenko.week2;
+package com.kondenko.week2.quiz;
 
 import java.util.ArrayList;
 import java.util.Arrays;

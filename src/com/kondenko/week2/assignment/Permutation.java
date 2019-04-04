@@ -1,4 +1,4 @@
-package com.kondenko.week3;
+package com.kondenko.week2.assignment;
 
 import java.util.Iterator;
 

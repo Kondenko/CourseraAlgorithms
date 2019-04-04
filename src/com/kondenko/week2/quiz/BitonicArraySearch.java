@@ -1,4 +1,4 @@
-package com.kondenko.week2;
+package com.kondenko.week2.quiz;
 
 import static com.kondenko.Utils.println;
 
