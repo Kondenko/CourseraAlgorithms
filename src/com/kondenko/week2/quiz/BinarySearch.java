@@ -6,14 +6,14 @@ public class BinarySearch {
         int left = 0;
         int mid = sortedArr.length / 2;
         int right = sortedArr.length - 1;
-        while (left != mid && right != mid) {
+        while (left <= right) {
             int comparison = item.compareTo(sortedArr[mid]);
             if (comparison == 0) {
                 return mid;
             } else if (comparison < 0) {
-                right = mid;
+                right = mid - 1;
             } else {
-                left = mid;
+                left = mid + 1;
             }
             mid = (right + left) / 2;
         }

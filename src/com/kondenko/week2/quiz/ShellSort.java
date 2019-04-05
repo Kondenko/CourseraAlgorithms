@@ -2,7 +2,7 @@ package com.kondenko.week2.quiz;
 
 public class ShellSort {
 
-    public static <T extends Comparable<T>> void shellSort(T[] arr) {
+    public static <T extends Comparable<T>> void sort(T[] arr) {
         int step = 1;
         while (step < arr.length / 3) {
             step = 3 * step + 1;

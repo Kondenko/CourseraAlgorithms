@@ -14,6 +14,16 @@ public class BinarySearchTest {
     }
 
     @Test
+    public void shouldFindFirstItem() {
+        assertEquals(0, BinarySearch.search(0, arr));
+    }
+
+    @Test
+    public void shouldFindLastItem() {
+        assertEquals(8, BinarySearch.search(8, arr));
+    }
+
+    @Test
     public void shouldFind2() {
         assertEquals(2, BinarySearch.search(2, arr));
     }
