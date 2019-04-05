@@ -20,5 +20,22 @@ public class BinarySearch {
         return -1;
     }
 
+    public static int search(int item, int[] sortedArr) {
+        int left = 0;
+        int mid = sortedArr.length / 2;
+        int right = sortedArr.length - 1;
+        while (left <= right) {
+            if (item == sortedArr[mid]) {
+                return mid;
+            } else if (item < sortedArr[mid]) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+            mid = (right + left) / 2;
+        }
+        return -1;
+    }
+
 
 }

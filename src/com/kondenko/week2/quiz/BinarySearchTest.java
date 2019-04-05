@@ -44,4 +44,15 @@ public class BinarySearchTest {
         assertEquals(itemToFind, BinarySearch.search(itemToFind, arr));
     }
 
+    @Test
+    public void shouldFindInArrayOfPrimitives() {
+        int length = 1_000_000;
+        int[] arr = new int[length];
+        for (int i = 0; i < length; i++) {
+            arr[i] = i;
+        }
+        int itemToFind = 888888;
+        assertEquals(itemToFind, BinarySearch.search(itemToFind, arr));
+    }
+
 }
