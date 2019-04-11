@@ -14,8 +14,20 @@ public class ArrayUtils {
         array[i] = array[i] - array[j];
     }
 
-    public static <T extends Comparable<T>> boolean less(T a, T b) {
+    public static <T extends Comparable<T>> boolean lt(T[] array, int a, int b) {
+        return lt(array[a], array[b]);
+    }
+
+    public static <T extends Comparable<T>> boolean gt(T[] array, int a, int b) {
+        return gt(array[a], array[b]);
+    }
+
+    public static <T extends Comparable<T>> boolean lt(T a, T b) {
         return a.compareTo(b) < 0;
+    }
+
+    public static <T extends Comparable<T>> boolean gt(T a, T b) {
+        return a.compareTo(b) > 0;
     }
 
 }
