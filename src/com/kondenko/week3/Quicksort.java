@@ -2,7 +2,6 @@ package com.kondenko.week3;
 
 import edu.princeton.cs.algs4.StdRandom;
 
-import static com.kondenko.ArrayUtils.gt;
 import static com.kondenko.ArrayUtils.lt;
 import static com.kondenko.ArrayUtils.swap;
 
@@ -22,28 +21,16 @@ public class Quicksort {
     }
 
     public static <T extends Comparable<T>> int partition(T[] array, int left, int right) {
-        return partition(array, left, right, median(array, left, right));
-    }
-
-    public static <T extends Comparable<T>> int partition(T[] array, int left, int right, int pivot) {
-        while (left < right) {
-            if (gt(array, right, pivot)) {
-                right--;
-            } else {
-                swap(array, left, right);
-            }
-            if (lt(array, left, pivot)) left++;
+        int i = left;
+        int j = right + 1;
+        while(true) {
+            while(lt(array, ++i, left)) if (i == right) break;
+            while (lt(array, left, --j)) if (j == left) break;
+            if (i >= j) break;
+            swap(array, i, j);
         }
-        swap(array, right, pivot);
-        return pivot;
-    }
-
-    private static <T extends Comparable<T>> int median(T[] array, int left, int right) {
-        int middle = (left + right) / 2;
-        if (lt(array, middle, left)) swap(array, left, middle);
-        if (lt(array, right, left)) swap(array, left, right);
-        if (lt(array, middle, right)) swap(array, middle, right);
-        return right;
+        swap(array, left, j);
+        return j;
     }
 
 }
