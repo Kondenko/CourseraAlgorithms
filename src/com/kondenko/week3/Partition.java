@@ -23,4 +23,26 @@ public class Partition {
         return j;
     }
 
+    public static <T extends Comparable<T>> int threeWayPartition(T[] array) {
+        return threeWayPartition(array, 0, array.length - 1);
+    }
+
+    public static <T extends Comparable<T>> int threeWayPartition(T[] array, int left, int right) {
+        return threeWayPartition(array, left, right, Comparable::compareTo);
+    }
+
+    public static <T extends Comparable<T>> int threeWayPartition(T[] array, int left, int right, Comparator<T> comparator) {
+        int i = left;
+        int lt = left;
+        int gt = right;
+        T v = array[left];
+        while (i <= gt) {
+            int comparison = comparator.compare(array[i], v);
+            if (comparison < 0) swap(array, lt++, i++);
+            else if (comparison > 0) swap(array, gt--, i);
+            else i++;
+        }
+        return left;
+    }
+
 }

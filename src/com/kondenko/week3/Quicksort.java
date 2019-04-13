@@ -23,4 +23,20 @@ public class Quicksort {
         }
     }
 
+    static <T extends Comparable<T>> void sortFewUniques(T[] array) {
+        sortFewUniques(array, Comparable::compareTo);
+    }
+
+    static <T extends Comparable<T>> void sortFewUniques(T[] array, Comparator<T> comparator) {
+        sortFewUniques(array, 0, array.length - 1, comparator);
+    }
+
+    private static <T extends Comparable<T>> void sortFewUniques(T[] array, int left, int right, Comparator<T> comparator) {
+        if (left < right) {
+            int pivot = Partition.threeWayPartition(array, left, right, comparator);
+            sort(array, left, pivot - 1, comparator);
+            sort(array, pivot + 1, right, comparator);
+        }
+    }
+
 }

@@ -27,7 +27,7 @@ public class PartitionTest {
         for (int i = 0; i < size; i++) {
             actual[i] = size - 1 - i;
         }
-        int pivotIndex = Partition.partition(actual, 0, size -1);
+        int pivotIndex = Partition.partition(actual, 0, size - 1);
         int pivotItem = actual[pivotIndex];
         for (int i = 0; i < actual.length; i++) {
             if (i < pivotIndex) {

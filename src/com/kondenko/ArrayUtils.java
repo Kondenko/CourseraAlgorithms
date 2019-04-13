@@ -1,6 +1,20 @@
 package com.kondenko;
 
+import java.util.Iterator;
+
+import edu.princeton.cs.algs4.Stack;
+
 public class ArrayUtils {
+
+    public static <T> T[] toArray(Stack<T> stack) {
+        @SuppressWarnings("unchecked")
+        T[] array = (T[]) new Object[stack.size()];
+        Iterator<T> iter = stack.iterator();
+        for (int i = 0; i < stack.size() && iter.hasNext(); i++) {
+            array[i] = iter.next();
+        }
+        return array;
+    }
 
     public static <T> void swap(T[] array, int i, int j) {
         T temp = array[i];
