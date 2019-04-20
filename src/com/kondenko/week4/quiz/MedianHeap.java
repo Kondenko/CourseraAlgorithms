@@ -7,9 +7,9 @@ import static com.kondenko.ArrayUtils.gt;
 
 public class MedianHeap<T extends Comparable<T>> {
 
-    private BinaryHeap<T> minHeap = BinaryHeap.min();
+    private PriorityQueue<T> minHeap = PriorityQueue.min();
 
-    private BinaryHeap<T> maxHeap = BinaryHeap.max();
+    private PriorityQueue<T> maxHeap = PriorityQueue.max();
 
     public void insert(T item) {
         T median = findMedian();

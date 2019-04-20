@@ -5,35 +5,39 @@ import java.util.Comparator;
 
 import static com.kondenko.ArrayUtils.swap;
 
-public class BinaryHeap<T extends Comparable<T>> {
+public class PriorityQueue<T extends Comparable<T>> {
 
-    public static <T extends Comparable<T>> BinaryHeap<T> min(T... items) {
-        BinaryHeap<T> bh = new BinaryHeap<T>(Comparator.reverseOrder());
+    public static <T extends Comparable<T>> PriorityQueue<T> min(T... items) {
+        PriorityQueue<T> bh = new PriorityQueue<T>(Comparator.reverseOrder());
         bh.add(items);
         return bh;
     }
 
-    public static <T extends Comparable<T>> BinaryHeap<T> max(T... items) {
-        BinaryHeap<T> bh = new BinaryHeap<>();
+    public static <T extends Comparable<T>> PriorityQueue<T> max(T... items) {
+        PriorityQueue<T> bh = new PriorityQueue<>();
         bh.add(items);
         return bh;
     }
 
     @SuppressWarnings("unchecked")
-    private T[] items = (T[]) new Comparable[3];
+    protected T[] items = (T[]) new Comparable[3];
 
-    private int size = 0;
+    protected int size = 0;
 
-    private Comparator<T> comparator = Comparable::compareTo;
+    protected Comparator<T> comparator = Comparable::compareTo;
 
-    public BinaryHeap() { }
+    public PriorityQueue() { }
 
-    public BinaryHeap(Comparator<T> comparator) {
+    public PriorityQueue(Comparator<T> comparator) {
         this.comparator = comparator;
     }
 
     public int size() {
         return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     public void add(T... items) {
@@ -62,7 +66,7 @@ public class BinaryHeap<T extends Comparable<T>> {
         return items[1];
     }
 
-    private void swim(int i) {
+    protected final void swim(int i) {
         int k = i;
         while (k > 1 && gt(k, k / 2)) {
             swap(items, k / 2, k);
@@ -70,7 +74,7 @@ public class BinaryHeap<T extends Comparable<T>> {
         }
     }
 
-    private void sink(int i) {
+    protected final void sink(int i) {
         int k = i;
         while (k * 2 <= size) {
             int j = k * 2;
