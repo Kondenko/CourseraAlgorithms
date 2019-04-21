@@ -2,10 +2,11 @@ package com.kondenko.week4.quiz;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 
 import static com.kondenko.ArrayUtils.swap;
 
-public class PriorityQueue<T extends Comparable<T>> {
+public class PriorityQueue<T extends Comparable<T>> implements Iterable<T> {
 
     public static <T extends Comparable<T>> PriorityQueue<T> min(T... items) {
         PriorityQueue<T> bh = new PriorityQueue<T>(Comparator.reverseOrder());
@@ -54,6 +55,7 @@ public class PriorityQueue<T extends Comparable<T>> {
     }
 
     public T removeRoot() {
+        if (size == 0) throw new IndexOutOfBoundsException("Heap is empty");
         T root = items[1];
         swap(items, 1, size);
         items[size--] = null;
@@ -64,6 +66,15 @@ public class PriorityQueue<T extends Comparable<T>> {
 
     public T root() {
         return items[1];
+    }
+
+    public boolean contains(T item) {
+        for (int i = 1; i < items.length && items[i] != null; i++) {
+            if (items[i].equals(item)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected final void swim(int i) {
@@ -103,6 +114,27 @@ public class PriorityQueue<T extends Comparable<T>> {
 
     private boolean gt(int i, int j) {
         return comparator.compare(items[i], items[j]) > 0;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new PQIterator();
+    }
+
+    private class PQIterator implements Iterator<T> {
+
+        private int i = 1;
+
+        @Override
+        public boolean hasNext() {
+            return i <= size;
+        }
+
+        @Override
+        public T next() {
+            return items[i++];
+        }
+
     }
 
 }

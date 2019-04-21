@@ -1,16 +1,24 @@
 package com.kondenko;
 
+import com.kondenko.week4.quiz.PriorityQueue;
+
 import java.util.Iterator;
 
 import edu.princeton.cs.algs4.Stack;
 
 public class ArrayUtils {
 
-    public static <T> T[] toArray(Stack<T> stack) {
-        @SuppressWarnings("unchecked")
-        T[] array = (T[]) new Object[stack.size()];
+    public static <T> T[] toArray(Stack<T> stack, T[] array) {
         Iterator<T> iter = stack.iterator();
         for (int i = 0; i < stack.size() && iter.hasNext(); i++) {
+            array[i] = iter.next();
+        }
+        return array;
+    }
+
+    public static <T extends Comparable<T>> T[] toArray(PriorityQueue<T> pq, T[] array) {
+        Iterator<T> iter = pq.iterator();
+        for (int i = 0; i < pq.size() && iter.hasNext(); i++) {
             array[i] = iter.next();
         }
         return array;
