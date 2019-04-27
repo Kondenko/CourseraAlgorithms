@@ -3,6 +3,12 @@ package com.kondenko.week4.assignment;
 import com.kondenko.ArrayUtils;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
+
+import edu.princeton.cs.algs4.Stack;
+
+import static com.kondenko.ArrayUtils.copyOf;
+import static com.kondenko.ArrayUtils.swap;
 
 /*
 1  2  3
@@ -77,7 +83,7 @@ public class Board {
         if (blocks.length < 1) {
             throw new IllegalArgumentException("Can't create a twin of a 1-element array");
         }
-        int[][] twin = ArrayUtils.copyOf(blocks);
+        int[][] twin = copyOf(blocks);
         ArrayUtils.swap(twin, 0, 1);
         return new Board(twin);
     }
@@ -90,7 +96,7 @@ public class Board {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Board board = (Board) o;
-        return Arrays.equals(blocks, board.blocks);
+        return Arrays.deepEquals(blocks, board.blocks);
     }
 
     @Override
@@ -102,14 +108,63 @@ public class Board {
      * all neighboring boards
      */
     public Iterable<Board> neighbors() {
-        return null;
+        final Stack<Board> neighbors = new Stack<>();
+        int[] emptyBlockCoordinates = findEmptyBlock();
+        int x = emptyBlockCoordinates[0];
+        int y = emptyBlockCoordinates[1];
+        produceIfInBounds(x, y, x - 1, y, neighbors::push);
+        produceIfInBounds(x, y, x + 1, y, neighbors::push);
+        produceIfInBounds(x, y, x, y - 1, neighbors::push);
+        produceIfInBounds(x, y, x, y + 1, neighbors::push);
+        return neighbors;
+    }
+
+    private void produceIfInBounds(int emptyX, int emptyY, int i, int j, Consumer<Board> accept) {
+        if (isInBounds(i, j)) {
+            accept.accept(new Board(copyBlocksAndSwap(emptyX, emptyY, i, j)));
+        }
     }
 
     /**
      * string representation of this board (in the output format specified below)
      */
     public String toString() {
-        return null;
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n");
+        for (int[] row : blocks) {
+            for (int item : row) {
+                sb.append(item).append(" ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    private int[] findEmptyBlock() {
+        for (int i = 0; i < blocks.length; i++) {
+            for (int j = 0; j < blocks.length; j++) {
+                if (blocks[i][j] == 0) {
+                    return new int[]{i, j};
+                }
+            }
+        }
+        throw new RuntimeException("Empty block not found");
+    }
+
+    ;
+
+    private int[][] copyBlocksAndSwap(int x, int y, int i, int j) {
+        int[][] copy = copyOf(blocks);
+        swap(copy, x, y, i, j);
+        return copy;
+    }
+
+    private boolean isInBounds(int i, int j) {
+        return isInBounds(i) && isInBounds(j);
+    }
+
+    private boolean isInBounds(int i) {
+        return i >= 0 && i < dimension();
     }
 
     protected final int[] goalPosition(int n) {
@@ -119,13 +174,6 @@ public class Board {
         }
         n--;
         return new int[]{(int) Math.floor(n / blocks.length), n % blocks.length};
-    }
-
-    /**
-     * unit tests (not graded)
-     */
-    public static void main(String[] args) {
-
     }
 
 }

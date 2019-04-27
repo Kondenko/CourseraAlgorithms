@@ -1,9 +1,17 @@
 package com.kondenko;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Utils {
+
+    public static <T> List<T> toList(Iterable<T> iterable) {
+        ArrayList<T> list = new ArrayList<>();
+        iterable.iterator().forEachRemaining(list::add);
+        return list;
+    }
 
     public static long measureTime(Runnable algorithm) {
         long start = System.currentTimeMillis();
