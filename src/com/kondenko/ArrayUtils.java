@@ -8,6 +8,14 @@ import edu.princeton.cs.algs4.Stack;
 
 public class ArrayUtils {
 
+    public static int[][] copyOf(int[][] array) {
+        int[][] copy = new int[array.length][array[0].length];
+        for (int i = 0; i < array.length; i++) {
+            System.arraycopy(array[i], 0, copy[i], 0, array.length);
+        }
+        return copy;
+    }
+
     public static <T> T[] toArray(Stack<T> stack, T[] array) {
         Iterator<T> iter = stack.iterator();
         for (int i = 0; i < stack.size() && iter.hasNext(); i++) {

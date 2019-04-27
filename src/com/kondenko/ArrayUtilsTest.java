@@ -8,9 +8,21 @@ import edu.princeton.cs.algs4.Stack;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ArrayUtilsTest {
+
+    @Test
+    public void copyOf() {
+        int[][] expected = new int[][]{
+            {1, 2},
+            {3, 4},
+        };
+        int[][] actual = ArrayUtils.copyOf(expected);
+        assertArrayEquals(expected, actual);
+        assertNotEquals(expected, actual);
+    }
 
     @Test
     public void stackToArray() {

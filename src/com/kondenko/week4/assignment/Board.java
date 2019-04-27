@@ -1,5 +1,9 @@
 package com.kondenko.week4.assignment;
 
+import com.kondenko.ArrayUtils;
+
+import java.util.Arrays;
+
 /*
 1  2  3
 4  5  6
@@ -20,7 +24,7 @@ public class Board {
      * board dimension n
      */
     public int dimension() {
-        return 0;
+        return blocks.length;
     }
 
     /**
@@ -63,21 +67,35 @@ public class Board {
      * is this board the goal board?
      */
     public boolean isGoal() {
-        return false;
+        return hamming() == 0;
     }
 
     /**
      * a board that is obtained by exchanging any pair of blocks
      */
     public Board twin() {
-        return null;
+        if (blocks.length < 1) {
+            throw new IllegalArgumentException("Can't create a twin of a 1-element array");
+        }
+        int[][] twin = ArrayUtils.copyOf(blocks);
+        ArrayUtils.swap(twin, 0, 1);
+        return new Board(twin);
     }
 
     /**
      * does this board equal y?
      */
-    public boolean equals(Object y) {
-        return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Board board = (Board) o;
+        return Arrays.equals(blocks, board.blocks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(blocks);
     }
 
     /**
@@ -94,13 +112,13 @@ public class Board {
         return null;
     }
 
-    protected int[] goalPosition(int n) {
+    protected final int[] goalPosition(int n) {
         if (n == 0) {
             int lastIndex = blocks.length - 1;
             return new int[]{lastIndex, lastIndex};
         }
         n--;
-        return new int[]{(int) Math.floor(n / blocks.length), n % blocks.length };
+        return new int[]{(int) Math.floor(n / blocks.length), n % blocks.length};
     }
 
     /**
