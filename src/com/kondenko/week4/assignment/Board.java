@@ -84,7 +84,11 @@ public class Board {
             throw new IllegalArgumentException("Can't create a twin of a 1-element array");
         }
         int[][] twin = copyOf(blocks);
-        ArrayUtils.swap(twin, 0, 1);
+        int a = 0;
+        int b = 1;
+        while (blocks[a][a] == 0) b++;
+        while (blocks[b][b] == 0) b++;
+        ArrayUtils.swap(twin, a, a, b, b);
         return new Board(twin);
     }
 
@@ -129,15 +133,15 @@ public class Board {
      * string representation of this board (in the output format specified below)
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n");
-        for (int[] row : blocks) {
-            for (int item : row) {
-                sb.append(item).append(" ");
+        StringBuilder s = new StringBuilder();
+//        s.append(blocks.length + "\n");
+        for (int i = 0; i < blocks.length; i++) {
+            for (int j = 0; j < blocks.length; j++) {
+                s.append(String.format("%2d ", blocks[i][j]));
             }
-            sb.append("\n");
+            s.append("\n");
         }
-        return sb.toString();
+        return s.toString();
     }
 
     private int[] findEmptyBlock() {
