@@ -27,25 +27,36 @@ public class Board {
      * number of blocks out of place
      */
     public int hamming() {
-        int n = 0;
+        int num = 0;
         for (int i = 0; i < blocks.length; i++) {
             for (int j = 0; j < blocks.length; j++) {
                 int block = blocks[i][j];
                 boolean isLastNumber = i == blocks.length - 1 && j == blocks.length - 1;
                 int correctBlock = isLastNumber ? 0 : i * (blocks.length) + j + 1;
                 if (block != correctBlock) {
-                    n++;
+                    num++;
                 }
             }
         }
-        return n;
+        return num;
     }
 
     /**
      * sum of Manhattan distances between blocks and goal
      */
     public int manhattan() {
-        return 0;
+        int distancesSum = 0;
+        for (int i = 0; i < blocks.length; i++) {
+            for (int j = 0; j < blocks.length; j++) {
+                int block = blocks[i][j];
+                int[] goalPosition = goalPosition(block);
+                int distanceX = goalPosition[0];
+                int distanceY = goalPosition[1];
+                int manhattanDistance = (distanceX - i) + (distanceY - j);
+                distancesSum += Math.abs(manhattanDistance);
+            }
+        }
+        return distancesSum;
     }
 
     /**
@@ -81,6 +92,15 @@ public class Board {
      */
     public String toString() {
         return null;
+    }
+
+    protected int[] goalPosition(int n) {
+        if (n == 0) {
+            int lastIndex = blocks.length - 1;
+            return new int[]{lastIndex, lastIndex};
+        }
+        n--;
+        return new int[]{(int) Math.floor(n / blocks.length), n % blocks.length };
     }
 
     /**
