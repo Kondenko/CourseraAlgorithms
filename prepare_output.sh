@@ -11,4 +11,4 @@ do
     INPUTS="$INPUTS $FILE" # add the modified file to the list of inputs
 done
 
-zip $OUTPUT $INPUTS # zip the files
+zip -r -j $OUTPUT $INPUTS # zip the files
