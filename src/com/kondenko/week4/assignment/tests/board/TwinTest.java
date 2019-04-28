@@ -4,12 +4,17 @@ import com.kondenko.week4.assignment.Board;
 
 import org.junit.Test;
 
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIn.in;
 import static org.junit.Assert.assertNotEquals;
 
 public class TwinTest {
 
     @Test
-    public void twin() {
+    public void twin1() {
         Board board = new Board(
                 new int[][]{
                         {1, 2, 3},
@@ -19,7 +24,38 @@ public class TwinTest {
         );
         Board twin = board.twin();
         assertNotEquals(board, twin);
+    }
 
+    @Test
+    public void twin2() {
+        Board board = new Board(
+                new int[][]{
+                        {1, 2},
+                        {3, 0},
+                }
+        );
+        List<Board> twins = List.of(
+                new Board(
+                        new int[][]{
+                                {3, 2},
+                                {1, 0},
+                        }
+                ),
+                new Board(
+                        new int[][]{
+                                {1, 3},
+                                {2, 0},
+                        }
+                ),
+                new Board(
+                        new int[][]{
+                                {2, 1},
+                                {1, 0},
+                        }
+                )
+        );
+        Board twin = board.twin();
+        assertThat(twin, is(in(twins)));
     }
 
 }

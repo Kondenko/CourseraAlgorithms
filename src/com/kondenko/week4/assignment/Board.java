@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 import edu.princeton.cs.algs4.Stack;
+import edu.princeton.cs.algs4.StdRandom;
 
 public class Board {
 
@@ -75,12 +76,23 @@ public class Board {
             throw new IllegalArgumentException("Can't create a twin of a 1-element array");
         }
         int[][] twin = copyOf(blocks);
-        int a = 0;
-        int b = 1;
-        while (blocks[a][a] == 0) a++;
-        while (blocks[b][b] == 0) b++;
-        swap(twin, a, a, b, b);
+        int[] a = randomNonEmptyBlockCoordinates();
+        int[] b = a;
+        while(Arrays.equals(a, b)) b = randomNonEmptyBlockCoordinates();
+        swap(twin, a[0], a[1], b[0], b[1]);
         return new Board(twin);
+    }
+
+    private int[] randomNonEmptyBlockCoordinates() {
+        int[] coords = new int[2];
+        for (int x = randomIndex(), y = randomIndex(); blocks[x][y] != 0; x = randomIndex(), y = randomIndex()) {
+            coords = new int[]{x, y};
+        }
+        return coords;
+    }
+
+    private int randomIndex() {
+        return StdRandom.uniform(0, dimension());
     }
 
     /**
