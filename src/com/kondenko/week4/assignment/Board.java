@@ -86,7 +86,7 @@ public class Board {
         int[][] twin = copyOf(blocks);
         int a = 0;
         int b = 1;
-        while (blocks[a][a] == 0) b++;
+        while (blocks[a][a] == 0) a++;
         while (blocks[b][b] == 0) b++;
         ArrayUtils.swap(twin, a, a, b, b);
         return new Board(twin);

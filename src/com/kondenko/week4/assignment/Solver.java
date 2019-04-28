@@ -1,5 +1,6 @@
 package com.kondenko.week4.assignment;
 
+
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Queue;
@@ -8,50 +9,69 @@ import static edu.princeton.cs.algs4.StdOut.println;
 
 public class Solver {
 
-    private MinPQ<Node> pq = new MinPQ<>();
 
     private int moves = 0;
+
+    private Queue<Board> solution = new Queue<>();
+
+    private boolean isSolvable;
 
     /**
      * find a solution to the initial board (using the A* algorithm)
      */
     public Solver(Board initial) {
+        if (initial == null) throw new IllegalArgumentException("Initial board shouldn't be null");
+        MinPQ<Node> pq = new MinPQ<>();
         pq.insert(new Node(initial));
+        MinPQ<Node> twinPq = new MinPQ<>();
+        twinPq.insert(new Node(initial.twin()));
+        Node node;
+        Node twinNode;
+        while (true) {
+            node = pq.delMin();
+            twinNode = twinPq.delMin();
+            solution.enqueue(node.board);
+            for (Board neighbor : node.board.neighbors()) {
+                if (node.prev == null || !neighbor.equals(node.prev.board)) {
+                    pq.insert(new Node(node, neighbor));
+                }
+            }
+            for (Board twinNeighbor : twinNode.board.neighbors()) {
+                if (twinNode.prev == null || !twinNeighbor.equals(twinNode.prev.board)) {
+                    twinPq.insert(new Node(twinNode, twinNeighbor));
+                }
+            }
+            moves++;
+            if (node.board.isGoal()) {
+                isSolvable = true;
+                break;
+            } else if (twinNode.board.isGoal()) {
+                isSolvable = false;
+                solution = null;
+                break;
+            }
+        }
     }
 
     /**
      * is the initial board solvable?
      */
     public boolean isSolvable() {
-        // TODO Implementation
-        return true;
+        return isSolvable;
     }
 
     /**
      * min number of moves to solve initial board; -1 if unsolvable
      */
     public int moves() {
-        return moves;
+        return isSolvable() ? moves : -1;
     }
 
     /**
      * sequence of boards in a shortest solution; null if unsolvable
      */
     public Iterable<Board> solution() {
-        Queue<Board> steps = new Queue<>();
-        Node node;
-        do {
-            node = pq.delMin();
-            steps.enqueue(node.board);
-            for (Board neighbor : node.board.neighbors()) {
-                if (node.prev == null || !neighbor.equals(node.prev.board)) {
-                    Node neighborNode = new Node(node, neighbor);
-                    pq.insert(neighborNode);
-                }
-            }
-            moves++;
-        } while (!node.board.isGoal());
-        return steps;
+        return solution;
     }
 
     private class Node implements Comparable<Node> {
