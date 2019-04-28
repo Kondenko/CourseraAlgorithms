@@ -30,7 +30,7 @@ public class Hamming {
                         {4, 5, 6},
                 }
         );
-        assertEquals(9, board.hamming());
+        assertEquals(8, board.hamming());
     }
 
     @Test
@@ -42,7 +42,31 @@ public class Hamming {
                         {7, 8, 1},
                 }
         );
-        assertEquals(2, board.hamming());
+        assertEquals(1, board.hamming());
+    }
+
+    @Test
+    public void hamming4() {
+        Board board = new Board(
+                new int[][]{
+                        {0, 1, 3},
+                        {4, 2, 5},
+                        {7, 8, 6},
+                }
+        );
+        assertEquals(4, board.hamming());
+    }
+
+    @Test
+    public void hamming5() {
+        Board board = new Board(
+                new int[][]{
+                        {1, 2, 3},
+                        {0, 7, 6},
+                        {5, 4, 8},
+                }
+        );
+        assertEquals(4, board.hamming());
     }
 
 }

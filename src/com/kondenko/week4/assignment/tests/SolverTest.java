@@ -1,4 +1,7 @@
-package com.kondenko.week4.assignment;
+package com.kondenko.week4.assignment.tests;
+
+import com.kondenko.week4.assignment.Board;
+import com.kondenko.week4.assignment.Solver;
 
 import org.junit.Test;
 

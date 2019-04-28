@@ -31,9 +31,9 @@ public class Board {
         for (int i = 0; i < blocks.length; i++) {
             for (int j = 0; j < blocks.length; j++) {
                 int block = blocks[i][j];
-                boolean isLastNumber = i == blocks.length - 1 && j == blocks.length - 1;
-                int correctBlock = isLastNumber ? 0 : i * (blocks.length) + j + 1;
-                if (block != correctBlock) {
+                boolean isLastNumber = i == dimension() - 1 && j == dimension() - 1;
+                int correctBlock = i * (dimension()) + j + 1;
+                if (block != correctBlock && !isLastNumber) {
                     num++;
                 }
             }
@@ -120,7 +120,7 @@ public class Board {
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append(blocks.length).append("\n");
-        for (int[] row  : blocks) {
+        for (int[] row : blocks) {
             for (int j = 0; j < blocks.length; j++) {
                 s.append(String.format("%2d ", row[j]));
             }
