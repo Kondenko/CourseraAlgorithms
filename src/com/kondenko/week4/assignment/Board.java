@@ -93,11 +93,6 @@ public class Board {
         return Arrays.deepEquals(blocks, board.blocks);
     }
 
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(blocks);
-    }
-
     /**
      * all neighboring boards
      */
@@ -161,7 +156,7 @@ public class Board {
         return i >= 0 && i < dimension();
     }
 
-    protected final int[] goalPosition(int n) {
+    private final int[] goalPosition(int n) {
         if (n == 0) {
             int lastIndex = blocks.length - 1;
             return new int[]{lastIndex, lastIndex};

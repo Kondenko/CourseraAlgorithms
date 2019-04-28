@@ -1,11 +1,9 @@
 package com.kondenko.week4.assignment;
 
-
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Queue;
-
-import static edu.princeton.cs.algs4.StdOut.println;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Solver {
 
@@ -121,11 +119,11 @@ public class Solver {
 
         // print solution to standard output
         if (!solver.isSolvable())
-            println("No solution possible");
+            StdOut.println("No solution possible");
         else {
-            println("Minimum number of moves = " + solver.moves());
+            StdOut.println("Minimum number of moves = " + solver.moves());
             for (Board board : solver.solution())
-                println(board);
+                StdOut.println(board);
         }
     }
 
