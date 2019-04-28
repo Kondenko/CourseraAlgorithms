@@ -49,11 +49,12 @@ public class Board {
         for (int i = 0; i < blocks.length; i++) {
             for (int j = 0; j < blocks.length; j++) {
                 int block = blocks[i][j];
-                int[] goalPosition = goalPosition(block);
-                int distanceX = goalPosition[0];
-                int distanceY = goalPosition[1];
-                int manhattanDistance = (distanceX - i) + (distanceY - j);
-                distancesSum += Math.abs(manhattanDistance);
+                if (block != 0) {
+                    int[] goalPosition = goalPosition(block);
+                    int goalX = goalPosition[0];
+                    int goalY = goalPosition[1];
+                    distancesSum += Math.abs(goalX - i) + Math.abs(goalY - j);
+                }
             }
         }
         return distancesSum;

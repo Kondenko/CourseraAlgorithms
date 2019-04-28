@@ -13,12 +13,12 @@ public class Manhattan {
     public void manhattan1() {
         Board board = new Board(
                 new int[][]{
-                        {1, 2, 3},
-                        {4, 5, 6},
-                        {7, 8, 0},
+                        {0, 1, 3},
+                        {4, 2, 5},
+                        {7, 8, 6},
                 }
         );
-        assertEquals(0, board.manhattan());
+        assertEquals(4, board.manhattan());
 
     }
 
@@ -26,12 +26,11 @@ public class Manhattan {
     public void manhattan2() {
         Board board = new Board(
                 new int[][]{
-                        {5, 2, 3},
-                        {4, 1, 6},
-                        {7, 8, 0},
+                        {1, 0},
+                        {2, 3},
                 }
         );
-        assertEquals(2 * 2, board.manhattan());
+        assertEquals(3, board.manhattan());
     }
 
 }
