@@ -1,20 +1,10 @@
 package com.kondenko.week4.assignment;
 
-import com.kondenko.ArrayUtils;
-
 import java.util.Arrays;
 import java.util.function.Consumer;
 
 import edu.princeton.cs.algs4.Stack;
 
-import static com.kondenko.ArrayUtils.copyOf;
-import static com.kondenko.ArrayUtils.swap;
-
-/*
-1  2  3
-4  5  6
-8  7  0
- */
 public class Board {
 
     private int[][] blocks;
@@ -88,7 +78,7 @@ public class Board {
         int b = 1;
         while (blocks[a][a] == 0) a++;
         while (blocks[b][b] == 0) b++;
-        ArrayUtils.swap(twin, a, a, b, b);
+        swap(twin, a, a, b, b);
         return new Board(twin);
     }
 
@@ -134,10 +124,10 @@ public class Board {
      */
     public String toString() {
         StringBuilder s = new StringBuilder();
-//        s.append(blocks.length + "\n");
-        for (int i = 0; i < blocks.length; i++) {
+        s.append(blocks.length).append("\n");
+        for (int[] row  : blocks) {
             for (int j = 0; j < blocks.length; j++) {
-                s.append(String.format("%2d ", blocks[i][j]));
+                s.append(String.format("%2d ", row[j]));
             }
             s.append("\n");
         }
@@ -178,6 +168,20 @@ public class Board {
         }
         n--;
         return new int[]{(int) Math.floor(n / blocks.length), n % blocks.length};
+    }
+
+    private static void swap(int[][] array, int x_from, int y_from, int x_to, int y_to) {
+        int temp = array[x_from][y_from];
+        array[x_from][y_from] = array[x_to][y_to];
+        array[x_to][y_to] = temp;
+    }
+
+    private static int[][] copyOf(int[][] array) {
+        int[][] copy = new int[array.length][array[0].length];
+        for (int i = 0; i < array.length; i++) {
+            System.arraycopy(array[i], 0, copy[i], 0, array.length);
+        }
+        return copy;
     }
 
 }

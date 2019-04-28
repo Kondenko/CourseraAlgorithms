@@ -9,7 +9,6 @@ import static edu.princeton.cs.algs4.StdOut.println;
 
 public class Solver {
 
-
     private int moves = 0;
 
     private Queue<Board> solution = new Queue<>();
