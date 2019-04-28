@@ -50,12 +50,26 @@ public class TwinTest {
                 new Board(
                         new int[][]{
                                 {2, 1},
-                                {1, 0},
+                                {3, 0},
                         }
                 )
         );
         Board twin = board.twin();
         assertThat(twin, is(in(twins)));
+    }
+
+    @Test
+    public void twin3() {
+        Board board = new Board(
+                new int[][]{
+                        {6, 1, 2, 3},
+                        {5, 0, 7, 4},
+                        {9, 10, 11, 8},
+                        {13, 14, 15, 12},
+                }
+        );
+        Board twin = board.twin();
+        assertNotEquals(board, twin);
     }
 
 }

@@ -8,13 +8,19 @@ import edu.princeton.cs.algs4.StdRandom;
 
 public class Board {
 
-    private int[][] blocks;
+    private final int[][] blocks;
+
+    private final Stack<Board> neighbors = new Stack<>();
+
+    private int hamming = -1;
+
+    private int manhattan = -1;
 
     /**
      * construct a board from an n-by-n array of blocks (where blocks[i][j] = block in row i, column j)
      */
     public Board(int[][] blocks) {
-        this.blocks = blocks;
+        this.blocks = copyOf(blocks);
     }
 
     /**
@@ -28,37 +34,41 @@ public class Board {
      * number of blocks out of place
      */
     public int hamming() {
-        int num = 0;
-        for (int i = 0; i < blocks.length; i++) {
-            for (int j = 0; j < blocks.length; j++) {
-                int block = blocks[i][j];
-                boolean isLastNumber = i == dimension() - 1 && j == dimension() - 1;
-                int correctBlock = i * (dimension()) + j + 1;
-                if (block != correctBlock && !isLastNumber) {
-                    num++;
+        if (hamming == -1) {
+            hamming = 0;
+            for (int i = 0; i < blocks.length; i++) {
+                for (int j = 0; j < blocks.length; j++) {
+                    int block = blocks[i][j];
+                    boolean isLastNumber = i == dimension() - 1 && j == dimension() - 1;
+                    int correctBlock = i * (dimension()) + j + 1;
+                    if (block != correctBlock && !isLastNumber) {
+                        hamming++;
+                    }
                 }
             }
         }
-        return num;
+        return hamming;
     }
 
     /**
      * sum of Manhattan distances between blocks and goal
      */
     public int manhattan() {
-        int distancesSum = 0;
-        for (int i = 0; i < blocks.length; i++) {
-            for (int j = 0; j < blocks.length; j++) {
-                int block = blocks[i][j];
-                if (block != 0) {
-                    int[] goalPosition = goalPosition(block);
-                    int goalX = goalPosition[0];
-                    int goalY = goalPosition[1];
-                    distancesSum += Math.abs(goalX - i) + Math.abs(goalY - j);
+        if (manhattan == -1) {
+            manhattan = 0;
+            for (int i = 0; i < blocks.length; i++) {
+                for (int j = 0; j < blocks.length; j++) {
+                    int block = blocks[i][j];
+                    if (block != 0) {
+                        int[] goalPosition = goalPosition(block);
+                        int goalX = goalPosition[0];
+                        int goalY = goalPosition[1];
+                        manhattan += Math.abs(goalX - i) + Math.abs(goalY - j);
+                    }
                 }
             }
         }
-        return distancesSum;
+        return manhattan;
     }
 
     /**
@@ -110,14 +120,15 @@ public class Board {
      * all neighboring boards
      */
     public Iterable<Board> neighbors() {
-        final Stack<Board> neighbors = new Stack<>();
-        int[] emptyBlockCoordinates = findEmptyBlock();
-        int x = emptyBlockCoordinates[0];
-        int y = emptyBlockCoordinates[1];
-        produceIfInBounds(x, y, x - 1, y, neighbors::push);
-        produceIfInBounds(x, y, x + 1, y, neighbors::push);
-        produceIfInBounds(x, y, x, y - 1, neighbors::push);
-        produceIfInBounds(x, y, x, y + 1, neighbors::push);
+        if (neighbors.isEmpty() && dimension() > 1) {
+            int[] emptyBlockCoordinates = findEmptyBlock();
+            int x = emptyBlockCoordinates[0];
+            int y = emptyBlockCoordinates[1];
+            produceIfInBounds(x, y, x - 1, y, neighbors::push);
+            produceIfInBounds(x, y, x + 1, y, neighbors::push);
+            produceIfInBounds(x, y, x, y - 1, neighbors::push);
+            produceIfInBounds(x, y, x, y + 1, neighbors::push);
+        }
         return neighbors;
     }
 
