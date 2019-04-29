@@ -57,7 +57,6 @@ public class TwinTest {
         Board twin = board.twin();
         assertThat(twin, is(in(twins)));
     }
-
     @Test
     public void twin3() {
         Board board = new Board(
@@ -69,6 +68,39 @@ public class TwinTest {
                 }
         );
         Board twin = board.twin();
+        assertNotEquals(board, twin);
+    }
+
+    @Test
+    public void twin4() {
+        Board board = new Board(
+                new int[][]{
+                        {2, 3},
+                        {1, 0},
+                }
+        );
+        List<Board> twins = List.of(
+                new Board(
+                        new int[][]{
+                                {3, 2},
+                                {1, 0},
+                        }
+                ),
+                new Board(
+                        new int[][]{
+                                {1, 3},
+                                {2, 0},
+                        }
+                ),
+                new Board(
+                        new int[][]{
+                                {2, 1},
+                                {3, 0},
+                        }
+                )
+        );
+        Board twin = board.twin();
+        assertThat(twin, is(in(twins)));
         assertNotEquals(board, twin);
     }
 

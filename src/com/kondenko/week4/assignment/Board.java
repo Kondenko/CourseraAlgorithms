@@ -12,6 +12,8 @@ public class Board {
 
     private final Stack<Board> neighbors = new Stack<>();
 
+    private Board twin = null;
+
     private int hamming = -1;
 
     private int manhattan = -1;
@@ -84,13 +86,15 @@ public class Board {
     public Board twin() {
         if (blocks.length < 1) {
             throw new IllegalArgumentException("Can't create a twin of a 1-element array");
+        } else if (twin == null) {
+            int[][] twinArray = copyOf(blocks);
+            int[] a = randomNonEmptyBlockCoordinates();
+            int[] b = a;
+            while (Arrays.equals(a, b)) b = randomNonEmptyBlockCoordinates();
+            swap(twinArray, a[0], a[1], b[0], b[1]);
+            twin = new Board(twinArray);
         }
-        int[][] twin = copyOf(blocks);
-        int[] a = randomNonEmptyBlockCoordinates();
-        int[] b = a;
-        while(Arrays.equals(a, b)) b = randomNonEmptyBlockCoordinates();
-        swap(twin, a[0], a[1], b[0], b[1]);
-        return new Board(twin);
+        return twin;
     }
 
     private int[] randomNonEmptyBlockCoordinates() {
