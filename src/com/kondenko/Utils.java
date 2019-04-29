@@ -7,6 +7,14 @@ import java.util.Random;
 
 public class Utils {
 
+    public static int size(Iterable<?> iterable) {
+        int size = 0;
+        for (Object o : iterable) {
+            size++;
+        }
+        return size;
+    }
+
     public static <T> List<T> toList(Iterable<T> iterable) {
         ArrayList<T> list = new ArrayList<>();
         iterable.iterator().forEachRemaining(list::add);

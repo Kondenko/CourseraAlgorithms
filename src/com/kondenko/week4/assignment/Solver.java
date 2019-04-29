@@ -26,20 +26,20 @@ public class Solver {
         Node twinNode;
         while (true) {
             node = pq.delMin();
-            clear(pq);
+            pq = new MinPQ<>();
             twinNode = twinPq.delMin();
-            clear(twinPq);
+            twinPq = new MinPQ<>();
             solution.enqueue(node.board);
             Iterable<Board> neighbors = node.board.neighbors();
             for (Board neighbor : neighbors) {
                 if (node.prev == null || !neighbor.equals(node.prev.board)) {
-                    pq.insert(new Node(node, neighbor, moves ));
+                    pq.insert(new Node(node, neighbor, moves));
                 }
             }
             Iterable<Board> twinNeighbors = twinNode.board.neighbors();
             for (Board twinNeighbor : twinNeighbors) {
                 if (twinNode.prev == null || !twinNeighbor.equals(twinNode.prev.board)) {
-                    twinPq.insert(new Node(twinNode, twinNeighbor, moves ));
+                    twinPq.insert(new Node(twinNode, twinNeighbor, moves));
                 }
             }
             if (node.board.isGoal()) {
@@ -52,10 +52,6 @@ public class Solver {
             }
             moves++;
         }
-    }
-
-    private void clear(MinPQ<?> pq) {
-        while(!pq.isEmpty()) pq.delMin();
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.kondenko.week4.assignment.tests;
 
+import com.kondenko.Utils;
 import com.kondenko.week4.assignment.Board;
 import com.kondenko.week4.assignment.Solver;
 
@@ -34,13 +35,33 @@ public class SolverTest {
     @Test
     public void solvable3() {
         Solver solver = new Solver(new Board(new int[][]{
-                {1,  2,  3,  4,  5},
-                {12, 6,  8,  9,  10},
-                {0,  7,  13, 19, 14},
+                {1, 2, 3, 4, 5},
+                {12, 6, 8, 9, 10},
+                {0, 7, 13, 19, 14},
                 {11, 16, 17, 18, 15},
                 {21, 22, 23, 24, 20},
         }));
         assertEquals(12, solver.moves());
+    }
+
+    @Test
+    public void solvable4() {
+        Solver solver = new Solver(new Board(new int[][]{
+                {1, 2, 3},
+                {0, 7, 6},
+                {5, 4, 8},
+        }));
+        assertEquals(7, solver.moves());
+    }
+
+    @Test
+    public void solvable5() {
+        Solver solver = new Solver(new Board(new int[][]{
+                {1, 2, 3},
+                {0, 7, 6},
+                {5, 4, 8},
+        }));
+        assertEquals(8, Utils.size(solver.solution()));
     }
 
     @Test
