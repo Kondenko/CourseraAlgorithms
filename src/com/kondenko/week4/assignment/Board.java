@@ -1,10 +1,8 @@
 package com.kondenko.week4.assignment;
 
 import java.util.Arrays;
-import java.util.function.Consumer;
 
 import edu.princeton.cs.algs4.Stack;
-import edu.princeton.cs.algs4.StdRandom;
 
 public class Board {
 
@@ -13,6 +11,8 @@ public class Board {
     private final Stack<Board> neighbors = new Stack<>();
 
     private Board twin = null;
+
+    private int[] emptyBlock = null;
 
     private int hamming = -1;
 
@@ -88,25 +88,16 @@ public class Board {
             throw new IllegalArgumentException("Can't create a twin of a 1-element array");
         } else if (twin == null) {
             int[][] twinArray = copyOf(blocks);
-            int[] a = randomNonEmptyBlockCoordinates();
-            int[] b = a;
-            while (Arrays.equals(a, b)) b = randomNonEmptyBlockCoordinates();
-            swap(twinArray, a[0], a[1], b[0], b[1]);
+            int[] emptyBlockCoords = findEmptyBlock();
+            int x = emptyBlockCoords[0];
+            int y = emptyBlockCoords[1];
+            Stack<int[]> neighbors = getLegalNeighbors(x, y);
+            int[] from = neighbors.pop();
+            int[] to = neighbors.pop();
+            swap(twinArray, from[0], from[1], to[0], to[1]);
             twin = new Board(twinArray);
         }
         return twin;
-    }
-
-    private int[] randomNonEmptyBlockCoordinates() {
-        int[] coords = new int[2];
-        for (int x = randomIndex(), y = randomIndex(); blocks[x][y] != 0; x = randomIndex(), y = randomIndex()) {
-            coords = new int[]{x, y};
-        }
-        return coords;
-    }
-
-    private int randomIndex() {
-        return StdRandom.uniform(0, dimension());
     }
 
     /**
@@ -128,18 +119,11 @@ public class Board {
             int[] emptyBlockCoordinates = findEmptyBlock();
             int x = emptyBlockCoordinates[0];
             int y = emptyBlockCoordinates[1];
-            produceIfInBounds(x, y, x - 1, y, neighbors::push);
-            produceIfInBounds(x, y, x + 1, y, neighbors::push);
-            produceIfInBounds(x, y, x, y - 1, neighbors::push);
-            produceIfInBounds(x, y, x, y + 1, neighbors::push);
+            getLegalNeighbors(x, y).forEach(coords -> {
+                neighbors.push(new Board(copyBlocksAndSwap(x, y, coords[0], coords[1])));
+            });
         }
         return neighbors;
-    }
-
-    private void produceIfInBounds(int emptyX, int emptyY, int i, int j, Consumer<Board> accept) {
-        if (isInBounds(i, j)) {
-            accept.accept(new Board(copyBlocksAndSwap(emptyX, emptyY, i, j)));
-        }
     }
 
     /**
@@ -157,18 +141,27 @@ public class Board {
         return s.toString();
     }
 
+    private Stack<int[]> getLegalNeighbors(int x, int y) {
+        Stack<int[]> neighborCoods = new Stack<>();
+        if (isInBounds(x - 1, y)) neighborCoods.push(new int[]{x - 1, y});
+        if (isInBounds(x + 1, y)) neighborCoods.push(new int[]{x + 1, y});
+        if (isInBounds(x, y - 1)) neighborCoods.push(new int[]{x, y - 1});
+        if (isInBounds(x, y + 1)) neighborCoods.push(new int[]{x, y + 1});
+        return neighborCoods;
+    }
+
     private int[] findEmptyBlock() {
-        for (int i = 0; i < blocks.length; i++) {
-            for (int j = 0; j < blocks.length; j++) {
-                if (blocks[i][j] == 0) {
-                    return new int[]{i, j};
+        if (emptyBlock == null) {
+            for (int i = 0; i < blocks.length; i++) {
+                for (int j = 0; j < blocks.length; j++) {
+                    if (blocks[i][j] == 0) {
+                        emptyBlock = new int[]{i, j};
+                    }
                 }
             }
         }
-        throw new RuntimeException("Empty block not found");
+        return emptyBlock;
     }
-
-    ;
 
     private int[][] copyBlocksAndSwap(int x, int y, int i, int j) {
         int[][] copy = copyOf(blocks);
@@ -184,7 +177,7 @@ public class Board {
         return i >= 0 && i < dimension();
     }
 
-    private final int[] goalPosition(int n) {
+    private int[] goalPosition(int n) {
         if (n == 0) {
             int lastIndex = blocks.length - 1;
             return new int[]{lastIndex, lastIndex};
