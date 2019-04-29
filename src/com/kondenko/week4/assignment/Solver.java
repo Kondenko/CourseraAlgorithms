@@ -38,7 +38,6 @@ public class Solver {
                     twinPq.insert(new Node(twinNode, twinNeighbor));
                 }
             }
-            moves++;
             if (node.board.isGoal()) {
                 isSolvable = true;
                 break;
@@ -47,6 +46,7 @@ public class Solver {
                 solution = null;
                 break;
             }
+            moves++;
         }
     }
 
