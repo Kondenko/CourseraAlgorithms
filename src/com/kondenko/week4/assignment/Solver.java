@@ -26,16 +26,20 @@ public class Solver {
         Node twinNode;
         while (true) {
             node = pq.delMin();
+            clear(pq);
             twinNode = twinPq.delMin();
+            clear(twinPq);
             solution.enqueue(node.board);
-            for (Board neighbor : node.board.neighbors()) {
+            Iterable<Board> neighbors = node.board.neighbors();
+            for (Board neighbor : neighbors) {
                 if (node.prev == null || !neighbor.equals(node.prev.board)) {
-                    pq.insert(new Node(node, neighbor));
+                    pq.insert(new Node(node, neighbor, moves ));
                 }
             }
-            for (Board twinNeighbor : twinNode.board.neighbors()) {
+            Iterable<Board> twinNeighbors = twinNode.board.neighbors();
+            for (Board twinNeighbor : twinNeighbors) {
                 if (twinNode.prev == null || !twinNeighbor.equals(twinNode.prev.board)) {
-                    twinPq.insert(new Node(twinNode, twinNeighbor));
+                    twinPq.insert(new Node(twinNode, twinNeighbor, moves ));
                 }
             }
             if (node.board.isGoal()) {
@@ -48,6 +52,10 @@ public class Solver {
             }
             moves++;
         }
+    }
+
+    private void clear(MinPQ<?> pq) {
+        while(!pq.isEmpty()) pq.delMin();
     }
 
     /**
@@ -71,7 +79,7 @@ public class Solver {
         return solution;
     }
 
-    private class Node implements Comparable<Node> {
+    private static class Node implements Comparable<Node> {
 
         public final Board board;
 
@@ -79,19 +87,30 @@ public class Solver {
 
         private int manhattanDistance = -1;
 
+        private int moves = 0;
+
         public Node(Board board) {
             this.prev = null;
             this.board = board;
         }
 
-        public Node(Node prev, Board board) {
+        public Node(Node prev, Board board, int moves) {
             this.prev = prev;
             this.board = board;
+            this.moves = moves;
         }
 
         public int priority() {
             if (manhattanDistance == -1) manhattanDistance = board.manhattan() + moves;
             return manhattanDistance;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("priority = ").append(priority()).append("\n");
+            sb.append("Board:\n").append(board.toString());
+            return sb.toString();
         }
 
         @Override
