@@ -7,7 +7,7 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class Solver {
 
-    private int moves = 0;
+    private final int moves;
 
     private Queue<Board> solution = new Queue<>();
 
@@ -26,31 +26,28 @@ public class Solver {
         Node twinNode;
         while (true) {
             node = pq.delMin();
-            pq = new MinPQ<>();
             twinNode = twinPq.delMin();
-            twinPq = new MinPQ<>();
             solution.enqueue(node.board);
-            Iterable<Board> neighbors = node.board.neighbors();
-            for (Board neighbor : neighbors) {
+            for (Board neighbor : node.board.neighbors()) {
                 if (node.prev == null || !neighbor.equals(node.prev.board)) {
-                    pq.insert(new Node(node, neighbor, moves));
+                    pq.insert(new Node(node, neighbor, node.moves + 1));
                 }
             }
-            Iterable<Board> twinNeighbors = twinNode.board.neighbors();
-            for (Board twinNeighbor : twinNeighbors) {
+            for (Board twinNeighbor : twinNode.board.neighbors()) {
                 if (twinNode.prev == null || !twinNeighbor.equals(twinNode.prev.board)) {
-                    twinPq.insert(new Node(twinNode, twinNeighbor, moves));
+                    twinPq.insert(new Node(twinNode, twinNeighbor, twinNode.moves + 1));
                 }
             }
             if (node.board.isGoal()) {
                 isSolvable = true;
+                moves = node.moves;
                 break;
             } else if (twinNode.board.isGoal()) {
                 isSolvable = false;
                 solution = null;
+                moves = -1;
                 break;
             }
-            moves++;
         }
     }
 
@@ -65,7 +62,7 @@ public class Solver {
      * min number of moves to solve initial board; -1 if unsolvable
      */
     public int moves() {
-        return isSolvable() ? moves : -1;
+        return moves;
     }
 
     /**
@@ -81,13 +78,14 @@ public class Solver {
 
         public final Node prev;
 
-        private int manhattanDistance = -1;
+        private int moves;
 
-        private int moves = 0;
+        private int priority = -1;
 
         public Node(Board board) {
             this.prev = null;
             this.board = board;
+            this.moves = 0;
         }
 
         public Node(Node prev, Board board, int moves) {
@@ -97,16 +95,13 @@ public class Solver {
         }
 
         public int priority() {
-            if (manhattanDistance == -1) manhattanDistance = board.manhattan() + moves;
-            return manhattanDistance;
+            if (priority == -1) priority = board.manhattan() + moves;
+            return priority;
         }
 
         @Override
         public String toString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append("priority = ").append(priority()).append("\n");
-            sb.append("Board:\n").append(board.toString());
-            return sb.toString();
+            return "priority = " + priority() + "\n" + "Board:\n" + board.toString();
         }
 
         @Override
