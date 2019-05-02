@@ -8,6 +8,11 @@ import edu.princeton.cs.algs4.Stack;
 
 public class ArrayUtils {
 
+    public static <T> boolean contains(T[] array, T item) {
+        for (T t : array) if (t.equals(item)) return true;
+        return false;
+    }
+
     public static int[][] copyOf(int[][] array) {
         int[][] copy = new int[array.length][array[0].length];
         for (int i = 0; i < array.length; i++) {
