@@ -1,9 +1,8 @@
 package com.kondenko.week4.quiz;
 
 
-import com.kondenko.ArrayUtils;
-
-import static com.kondenko.ArrayUtils.gt;
+import static com.kondenko.CompareUtils.gt;
+import static com.kondenko.CompareUtils.min;
 
 public class MedianHeap<T extends Comparable<T>> {
 
@@ -34,7 +33,7 @@ public class MedianHeap<T extends Comparable<T>> {
         }
         T minRoot = remove ? minHeap.removeRoot() : minHeap.root();
         T maxRoot = remove ? maxHeap.removeRoot() : maxHeap.root();
-        if (minRoot != null && maxRoot != null) return ArrayUtils.min(minRoot, maxRoot);
+        if (minRoot != null && maxRoot != null) return min(minRoot, maxRoot);
         if (minRoot != null) return minRoot;
         return maxRoot;
     }

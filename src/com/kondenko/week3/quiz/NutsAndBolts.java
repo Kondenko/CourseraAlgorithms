@@ -1,8 +1,9 @@
 package com.kondenko.week3.quiz;
 
+import com.kondenko.CompareUtils;
+
 import edu.princeton.cs.algs4.StdRandom;
 
-import static com.kondenko.ArrayUtils.lt;
 import static com.kondenko.ArrayUtils.swap;
 
 public class NutsAndBolts {
@@ -12,7 +13,7 @@ public class NutsAndBolts {
 
     public static class Bolt extends Item<Nut> implements Comparable<Nut> {
 
-        int value = 0;
+        int value;
 
         public Bolt(int value) {
             this.value = value;
@@ -58,7 +59,7 @@ public class NutsAndBolts {
     private static <T extends Comparable> int partition(T[] a, int left, int right, T pivot) {
         int i = left;
         for (int j = left; j < right; j++) {
-            if (lt(a[j], pivot)) {
+            if (CompareUtils.lt(a[j], pivot)) {
                 swap(a, i++, j);
             } else if (a[j].compareTo(pivot) == 0) {
                 swap(a, j--, right);

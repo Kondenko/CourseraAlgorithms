@@ -1,6 +1,7 @@
 package com.kondenko.week2.quiz;
 
 import com.kondenko.ArrayUtils;
+import com.kondenko.CompareUtils;
 
 
 public class ShellSort {
@@ -12,7 +13,7 @@ public class ShellSort {
         }
         while (step >= 1) {
             for (int i = step; i < arr.length; i++) {
-                for (int j = i; j >= step && ArrayUtils.lt(arr[i], arr[j - step]); j -= step) {
+                for (int j = i; j >= step && CompareUtils.lt(arr[i], arr[j - step]); j -= step) {
                     ArrayUtils.swap(arr, j, j - step);
                     i--;
                 }
