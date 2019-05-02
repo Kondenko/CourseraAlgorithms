@@ -18,7 +18,7 @@ public class CompareUtils {
         return lt(array, a, b, Comparable::compareTo);
     }
 
-    public static <T extends Comparable<T>> boolean lt(T[] array, int a, int b, Comparator<T> comparator) {
+    public static <T> boolean lt(T[] array, int a, int b, Comparator<T> comparator) {
         return compare(array, a, b, comparator) < 0;
     }
 
@@ -26,7 +26,7 @@ public class CompareUtils {
         return gt(array, a, b, Comparable::compareTo);
     }
 
-    public static <T extends Comparable<T>> boolean gt(T[] array, int a, int b, Comparator<T> comparator) {
+    public static <T> boolean gt(T[] array, int a, int b, Comparator<T> comparator) {
         return compare(array, a, b, comparator) > 0;
     }
 
@@ -38,16 +38,16 @@ public class CompareUtils {
         return comparator.compare(a, b) < 0;
     }
 
-    private static <T extends Comparable<T>> int compare(T[] array, int a, int b, Comparator<T> comparator) {
-        return comparator.compare(array[a], array[b]);
-    }
-
     public static <T extends Comparable<T>> boolean gt(T a, T b) {
         return a.compareTo(b) > 0;
     }
 
     public static <T extends Comparable<T>> boolean lt(T a, T b) {
         return a.compareTo(b) < 0;
+    }
+
+    private static <T> int compare(T[] array, int a, int b, Comparator<T> comparator) {
+        return comparator.compare(array[a], array[b]);
     }
 
 }
