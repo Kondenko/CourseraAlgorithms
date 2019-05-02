@@ -1,12 +1,12 @@
-package com.kondenko.week3;
+package com.kondenko.week3.quiz;
 
 import org.hamcrest.comparator.ComparatorMatcherBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static com.kondenko.week3.NutsAndBolts.Bolt;
-import static com.kondenko.week3.NutsAndBolts.Item;
-import static com.kondenko.week3.NutsAndBolts.Nut;
+import static com.kondenko.week3.quiz.NutsAndBolts.Bolt;
+import static com.kondenko.week3.quiz.NutsAndBolts.Item;
+import static com.kondenko.week3.quiz.NutsAndBolts.Nut;
 
 public class NutsAndBoltsTest {
 

@@ -1,4 +1,4 @@
-package com.kondenko.week3;
+package com.kondenko.week3.quiz;
 
 import java.util.Comparator;
 
