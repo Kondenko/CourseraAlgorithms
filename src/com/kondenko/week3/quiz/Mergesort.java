@@ -29,15 +29,14 @@ public class Mergesort {
     protected static <T> void merge(T[] arr, T[] aux, final int lo, int mid, final int hi, Comparator<T> comparator) {
         assert isSorted(arr, lo, mid, comparator);
         assert isSorted(arr, mid + 1, hi, comparator);
-        mid = Math.max(1, mid);
         System.arraycopy(arr, lo, aux, lo, hi - lo + 1);
         int i = lo;
-        int j = mid;
+        int j = mid + 1;
         for (int k = lo; k <= hi; k++) {
-            if (i >= mid) arr[k] = aux[j++];
+            if (i > mid) arr[k] = aux[j++];
             else if (j > hi) arr[k] = aux[i++];
-            else if (lt(aux, i, j, comparator)) arr[k] = aux[i++];
-            else arr[k] = aux[j++];
+            else if (lt(aux, j, i, comparator)) arr[k] = aux[j++];
+            else arr[k] = aux[i++];
         }
         assert isSorted(arr, lo, hi, comparator);
     }

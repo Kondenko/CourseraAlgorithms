@@ -22,4 +22,17 @@ public class ShellSortTest {
         assertArrayEquals(expected, original);
     }
 
+    @Test
+    public void sortLargeArray() {
+        int size = 1_000_00;
+        Integer[] actual = new Integer[size];
+        Integer[] expected = new Integer[size];
+        for (int i = 0; i < size; i++) {
+            expected[i] = i;
+            actual[i] = size - i - 1;
+        }
+        ShellSort.sort(actual);
+        assertArrayEquals(expected, actual);
+    }
+
 }
