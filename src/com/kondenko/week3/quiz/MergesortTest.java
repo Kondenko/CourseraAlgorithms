@@ -10,8 +10,10 @@ public class MergesortTest {
 
     @Test
     public void sort1() {
-        Integer[] actual = {9, 7, 5, 3, 1, 8, 6, 4, 2};
-        Integer[] expected = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+//        Integer[] actual = {9, 7, 5, 3, 1, 8, 6, 4, 2};
+//        Integer[] expected = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        Integer[] actual = {3, 2, 1};
+        Integer[] expected = {1, 2, 3};
         Mergesort.sort(actual);
         assertArrayEquals(expected, actual);
     }
@@ -22,7 +24,7 @@ public class MergesortTest {
         Integer[] aux = new Integer[arr.length];
         int lo = 0;
         int mid = 3;
-        int hi = arr.length;
+        int hi = arr.length - 1;
         Integer[] expected = {1, 2, 3, 4, 5, 6};
         Mergesort.merge(arr, aux, lo, mid, hi, Comparator.naturalOrder());
         assertArrayEquals(expected, arr);
@@ -34,7 +36,7 @@ public class MergesortTest {
         Integer[] aux = new Integer[arr.length];
         int lo = 0;
         int mid = 3;
-        int hi = arr.length;
+        int hi = arr.length - 1;
         Integer[] expected = {1, 2, 3, 4, 5, 6};
         Mergesort.merge(arr, aux, lo, mid, hi, Comparator.naturalOrder());
         assertArrayEquals(expected, arr);
@@ -69,9 +71,21 @@ public class MergesortTest {
         Integer[] arr = {1, 3, 2, 5, 4, 6};
         Integer[] aux = new Integer[arr.length];
         int lo = 4;
-        int hi = arr.length; // TODO Use length - 1 everywhere and fix the algo
-        int mid = (hi - lo) / 2;
+        int hi = arr.length - 1;
+        int mid = 4;
         Integer[] expected = {1, 3, 2, 5, 4, 6};
+        Mergesort.merge(arr, aux, lo, mid, hi, Comparator.naturalOrder());
+        assertArrayEquals(expected, arr);
+    }
+
+    @Test
+    public void merge6() {
+        Integer[] arr = {1, 3, 2};
+        Integer[] aux = new Integer[arr.length];
+        int lo = 0;
+        int hi = arr.length - 1;
+        int mid = 1;
+        Integer[] expected = {1, 2, 3};
         Mergesort.merge(arr, aux, lo, mid, hi, Comparator.naturalOrder());
         assertArrayEquals(expected, arr);
     }

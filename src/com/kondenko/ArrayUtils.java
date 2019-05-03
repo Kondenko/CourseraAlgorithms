@@ -2,11 +2,38 @@ package com.kondenko;
 
 import com.kondenko.week4.quiz.PriorityQueue;
 
+import java.util.Comparator;
 import java.util.Iterator;
 
 import edu.princeton.cs.algs4.Stack;
 
 public class ArrayUtils {
+
+    public static <T extends Comparable<T>> boolean isSorted(T[] array, boolean ascending) {
+        return isSorted(array, 0, array.length, Comparator.naturalOrder(), ascending);
+    }
+
+    public static <T extends Comparable<T>> boolean isSorted(T[] array, int lo, int hi) {
+        return isSorted(array, lo, hi, Comparator.naturalOrder(), true);
+    }
+
+    public static <T extends Comparable<T>> boolean isSorted(T[] array, int lo, int hi, boolean ascending) {
+        return isSorted(array, lo, hi, Comparator.naturalOrder(), ascending);
+    }
+
+    public static <T> boolean isSorted(T[] array, int lo, int hi, Comparator<T> comparator) {
+        return isSorted(array, lo, hi, comparator, true);
+    }
+
+    public static <T> boolean isSorted(T[] array, int lo, int hi, Comparator<T> comparator, boolean ascending) {
+        if (array.length <= 1) return true;
+        for (int i = lo + 1; i < hi; i++) {
+            int comparison = comparator.compare(array[i], array[i - 1]);
+            if (ascending && comparison < 0) return false;
+            else if (!ascending && comparison > 0) return false;
+        }
+        return true;
+    }
 
     public static <T> boolean contains(T[] array, T item) {
         for (T t : array) if (t.equals(item)) return true;

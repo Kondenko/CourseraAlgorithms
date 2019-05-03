@@ -51,5 +51,28 @@ public class ArrayUtilsTest {
         assertArrayEquals(items, actual);
     }
 
+    @Test
+    public void isSorted() {
+        Integer[] arr = { 1, 2, 3, 4, 5};
+        assertTrue(ArrayUtils.isSorted(arr, true));
+    }
+
+    @Test
+    public void isSorted2() {
+        Integer[] arr = { 1, 1, 1 };
+        assertTrue(ArrayUtils.isSorted(arr, true));
+    }
+
+    @Test
+    public void isSortedPartial() {
+        Integer[] arr = { 5, 4, 1, 2, 3, 0 };
+        assertTrue(ArrayUtils.isSorted(arr, 2, 5, true));
+    }
+
+    @Test
+    public void isNotSorted() {
+        Integer[] arr = { 2, 1, 1 };
+        assertFalse(ArrayUtils.isSorted(arr, true));
+    }
 
 }
