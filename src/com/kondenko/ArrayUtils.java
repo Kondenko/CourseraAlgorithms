@@ -13,21 +13,21 @@ public class ArrayUtils {
         return isSorted(array, 0, array.length, Comparator.naturalOrder(), ascending);
     }
 
-    public static <T extends Comparable<T>> boolean isSorted(T[] array, int lo, int hi) {
-        return isSorted(array, lo, hi, Comparator.naturalOrder(), true);
+    public static <T extends Comparable<T>> boolean isSorted(T[] array, int from, int to) {
+        return isSorted(array, from, to, Comparator.naturalOrder(), true);
     }
 
-    public static <T extends Comparable<T>> boolean isSorted(T[] array, int lo, int hi, boolean ascending) {
-        return isSorted(array, lo, hi, Comparator.naturalOrder(), ascending);
+    public static <T extends Comparable<T>> boolean isSorted(T[] array, int from, int to, boolean ascending) {
+        return isSorted(array, from, to, Comparator.naturalOrder(), ascending);
     }
 
-    public static <T> boolean isSorted(T[] array, int lo, int hi, Comparator<T> comparator) {
-        return isSorted(array, lo, hi, comparator, true);
+    public static <T> boolean isSorted(T[] array, int from, int to, Comparator<T> comparator) {
+        return isSorted(array, from, to, comparator, true);
     }
 
-    public static <T> boolean isSorted(T[] array, int lo, int hi, Comparator<T> comparator, boolean ascending) {
+    public static <T> boolean isSorted(T[] array, int from, int to, Comparator<T> comparator, boolean ascending) {
         if (array.length <= 1) return true;
-        for (int i = lo + 1; i < hi; i++) {
+        for (int i = from + 1; i < to; i++) {
             int comparison = comparator.compare(array[i], array[i - 1]);
             if (ascending && comparison < 0) return false;
             else if (!ascending && comparison > 0) return false;

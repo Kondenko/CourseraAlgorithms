@@ -36,4 +36,33 @@ public class MergingWithSmallerArrayTest {
         assertArrayEquals(expected, actual);
     }
 
+    @Test
+    public void merge3() {
+        Integer[] actual = {2, 1};
+        Integer[] expected = {1, 2};
+        MergingWithSmallerArray.merge(actual);
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void merge4() {
+        Integer[] actual = {1};
+        Integer[] expected = {1};
+        MergingWithSmallerArray.merge(actual);
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void merge5() {
+        int size = 100;
+        Integer[] actual = new Integer[size];
+        Integer[] expected = new Integer[size];
+        for (int i = 0; i < size; i++) {
+            expected[i] = i;
+            actual[i] = (i < size / 2) ? i + size / 2 : i - size / 2;
+        }
+        MergingWithSmallerArray.merge(actual);
+        assertArrayEquals(expected, actual);
+    }
+
 }
