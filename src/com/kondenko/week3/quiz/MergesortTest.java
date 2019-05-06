@@ -22,7 +22,7 @@ public class MergesortTest {
 
     @Test
     public void sortLargeArray() {
-        int size = 100_000;
+        int size = 1_000_000;
         Integer[] actual = new Integer[size];
         Integer[] expected = new Integer[size];
         for (int i = 0; i < size; i++) {
