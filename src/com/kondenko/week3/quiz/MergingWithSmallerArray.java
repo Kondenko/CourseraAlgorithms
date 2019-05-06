@@ -2,18 +2,18 @@ package com.kondenko.week3.quiz;
 
 import static com.kondenko.ArrayUtils.isSorted;
 import static com.kondenko.ArrayUtils.swap;
+import static com.kondenko.CompareUtils.gt;
 
 public class MergingWithSmallerArray {
 
-    public static void merge(Integer[] arr) {
+    public static <T extends Comparable<T>> void merge(T[] arr) {
         final int n = arr.length / 2;
         assert isSorted(arr, 0, n - 1);
         assert isSorted(arr, n, 2 * n - 1);
-        Integer[] aux = new Integer[n];
+        T[] aux = (T[]) new Comparable[n];
         int i = 0;
         int j = n;
-        int pass = 0;
-        for (int k = 0; pass < 2; k++) {
+        for (int k = 0, pass = 0; pass < 2; k++) {
             if (k == aux.length) {
                 if (pass == 0) {
                     int[] ij = shrink(arr, i, j);
@@ -30,7 +30,7 @@ public class MergingWithSmallerArray {
                 } else if (j >= arr.length) {
                     aux[k] = arr[i];
                     arr[i++] = null;
-                } else if (arr[i] > arr[j]) {
+                } else if (gt(arr, i, j)) {
                     aux[k] = arr[j];
                     arr[j++] = null;
                 } else {
@@ -41,14 +41,14 @@ public class MergingWithSmallerArray {
         }
     }
 
-    protected static void append(Integer[] aux, Integer[] arr, int padding) {
+    protected static <T extends Comparable<T>> void append(T[] aux, T[] arr, int padding) {
         for (int i = 0; i < aux.length; i++) {
             arr[i + aux.length * padding] = aux[i];
             aux[i] = null;
         }
     }
 
-    protected static int[] shrink(Integer[] arr, Integer i, Integer j) {
+    protected static <T extends Comparable<T>> int[] shrink(T[] arr, int i, int j) {
         for (int k = arr.length - 1; k >= 0; k--) {
             if (arr[k] == null) {
                 for (int m = k - 1; m >= 0; m--) {
