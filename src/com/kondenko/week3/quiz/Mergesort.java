@@ -49,10 +49,12 @@ public class Mergesort {
         int i = lo;
         int j = mid + 1;
         for (int k = lo; k <= hi; k++) {
-            if (i > mid) arr[k] = aux[j++];
-            else if (j > hi) arr[k] = aux[i++];
-            else if (lt(aux, j, i, comparator)) arr[k] = aux[j++];
-            else arr[k] = aux[i++];
+            int indexAux;
+            if (i > mid) indexAux = j++;
+            else if (j > hi) indexAux = i++;
+            else if (lt(aux, j, i, comparator)) indexAux = j++;
+            else indexAux = i++;
+            arr[k] = aux[indexAux];
         }
         assert isSorted(arr, lo, hi, comparator);
     }

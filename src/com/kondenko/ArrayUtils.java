@@ -82,4 +82,27 @@ public class ArrayUtils {
         array[i] = array[i] - array[j];
     }
 
+    public static boolean isLegalIndex(int[] array, int index) {
+        return isInBounds(array.length, index);
+    }
+
+    public static boolean isLegalIndex(Object[] array, int index) {
+        return isInBounds(array.length, index);
+    }
+
+    public static boolean isInBounds(int length, int index) {
+        return index >= 0 && index < (length - 1);
+    }
+
+    public static String toString(int[] array) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < array.length; i++) {
+            sb.append(array[i]);
+            if (i < array.length - 1) sb.append(", ");
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
 }
