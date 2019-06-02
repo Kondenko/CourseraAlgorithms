@@ -48,10 +48,10 @@ public class InversionsTest {
         assertEquals(4, Inversions.count(array));
     }
 
-//    @Test
+    @Test
     public void countLargeArray() {
         int size = 100000;
-        int[] array = new int[size];
+        Integer[] array = new Integer[size];
         array[0] = size;
         for (int i = 1; i < array.length; i++) {
             array[i] = i;
