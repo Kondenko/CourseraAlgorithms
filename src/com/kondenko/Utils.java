@@ -4,6 +4,8 @@ package com.kondenko;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 
 public class Utils {
 
@@ -19,6 +21,11 @@ public class Utils {
         ArrayList<T> list = new ArrayList<>();
         iterable.iterator().forEachRemaining(list::add);
         return list;
+    }
+
+    public static <T> void forEachIndexed(Iterable<T> iterable, BiConsumer<T, Integer> action) {
+        AtomicInteger index = new AtomicInteger(0);
+        iterable.forEach(t -> action.accept(t, index.getAndIncrement()));
     }
 
     public static long measureTime(Runnable algorithm) {
