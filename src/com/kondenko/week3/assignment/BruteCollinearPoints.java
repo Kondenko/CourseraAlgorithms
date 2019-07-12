@@ -1,13 +1,15 @@
 package com.kondenko.week3.assignment;
 
 import java.awt.Color;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Stack;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
+
+import static com.kondenko.ArrayUtils.areEqual;
+import static com.kondenko.ArrayUtils.areUnique;
 
 public class BruteCollinearPoints {
 
@@ -50,25 +52,32 @@ public class BruteCollinearPoints {
         return segments.toArray(new LineSegment[0]);
     }
 
+    @SuppressWarnings("ForLoopReplaceableByForEach")
     private Stack<LineSegment> findLineSegments() {
         Stack<LineSegment> segments = new Stack<>();
-        for (int i = 0; i < points.length - pointsNumber; i++) {
-            int lastPointIndex = i + pointsNumber;
-            boolean isLine = isLine(Arrays.copyOfRange(points, i, lastPointIndex));
-            if (isLine) segments.push(new LineSegment(points[i], points[lastPointIndex]));
+        for (int p = 0; p < points.length; p++) {
+            for (int q = 0; q < points.length; q++) {
+                for (int r = 0; r < points.length; r++) {
+                    for (int s = 0; s < points.length; s++) {
+                        Point pp = points[p];
+                        Point qq = points[q];
+                        Point rr = points[r];
+                        Point ss = points[s];
+                        if (areUnique(pp, qq, rr, ss) && isLine(pp, qq, rr, ss)) {
+                            segments.push(new LineSegment(pp, ss));
+                        }
+                    }
+                }
+            }
         }
         return segments;
     }
 
-    private boolean isLine(Point[] points) {
-        Point initial = points[0];
-        double prevSlop = initial.slopeTo(points[1]);
-        for (int i = 2; i < points.length; i++) {
-            var currentSlope = initial.slopeTo(points[i]);
-            if (currentSlope != prevSlop) return false;
-            prevSlop = currentSlope;
-        }
-        return true;
+    private boolean isLine(Point p, Point q, Point r, Point s) {
+        double pq = p.slopeTo(q);
+        double pr = p.slopeTo(r);
+        double ps = p.slopeTo(s);
+        return areEqual(pq, pr, ps);
     }
 
     public static void main(String[] args) {
@@ -86,7 +95,6 @@ public class BruteCollinearPoints {
         StdDraw.enableDoubleBuffering();
         StdDraw.setXscale(0, 32768);
         StdDraw.setYscale(0, 32768);
-
         // print and draw the line segments
         StdDraw.setPenColor(Color.BLUE);
         StdDraw.setPenRadius(0.01);
@@ -94,15 +102,12 @@ public class BruteCollinearPoints {
             StdOut.println(segment);
             segment.draw();
         }
-
         StdDraw.setPenRadius(0.02);
         StdDraw.setPenColor(Color.BLACK);
         for (Point p : points) {
             p.draw();
         }
-
         StdDraw.show();
-
     }
 
 }
