@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.HashSet;
 import java.util.Stack;
 
-import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
@@ -14,11 +13,9 @@ import static edu.princeton.cs.algs4.StdOut.printf;
 
 public class BruteCollinearPoints {
 
-    private final int pointsNumber = 4;
-
     private final Point[] points;
 
-    private Stack<LineSegment> segments = null;
+    private Stack<LineSegment> segments;
 
     /**
      * finds all line segments containing 4 points
@@ -36,6 +33,7 @@ public class BruteCollinearPoints {
             throw new IllegalArgumentException("The array contains a repeating point");
         }
         this.points = points;
+        this.segments = findLineSegments();
     }
 
     /**
@@ -49,7 +47,6 @@ public class BruteCollinearPoints {
      * the line segments
      */
     public LineSegment[] segments() {
-        if (segments == null) segments = findLineSegments();
         return segments.toArray(new LineSegment[0]);
     }
 
@@ -90,15 +87,8 @@ public class BruteCollinearPoints {
     }
 
     public static void main(String[] args) {
-        String file = "/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/input6.txt";
-        In input = new In(file);
-        int size = input.readInt();
-        Point[] points = new Point[size];
-        for (int i = 0; i < size; i++) {
-            int x = input.readInt();
-            int y = input.readInt();
-            points[i] = new Point(x, y);
-        }
+        String file = "/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/input20.txt";
+        Point[] points = PointsFactory.fromFile(file);
         BruteCollinearPoints collinear = new BruteCollinearPoints(points);
 
         // draw the points
