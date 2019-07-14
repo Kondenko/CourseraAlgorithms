@@ -1,8 +1,6 @@
 package com.kondenko.week3.assignment;
 
-
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Stack;
 
 public class FastCollinearPoints {
@@ -18,12 +16,7 @@ public class FastCollinearPoints {
         if (points == null) {
             throw new IllegalArgumentException("Points array is null");
         }
-        var pointSet = new HashSet<Point>();
-        for (Point point : points) {
-            if (point == null) throw new IllegalArgumentException("A point in the array is null");
-            pointSet.add(point);
-        }
-        if (pointSet.size() != points.length) {
+        if (!areUnique(true, points)) {
             throw new IllegalArgumentException("The array contains a repeating point");
         }
         this.segments = findSegments(points);
@@ -69,6 +62,20 @@ public class FastCollinearPoints {
      */
     public LineSegment[] segments() {
         return segments.toArray(new LineSegment[0]);
+    }
+
+    private boolean areUnique(boolean checkForNulls, Point... array) {
+        for (int i = 0; i < array.length; i++) {
+            if (checkForNulls && array[i] == null) throw new IllegalArgumentException("A point in the array is null");
+            for (int j = i; j < array.length; j++) {
+                if (equal(array[i], array[j])) return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean equal(Point a, Point b) {
+        return a.compareTo(b) == 0;
     }
 
     /*

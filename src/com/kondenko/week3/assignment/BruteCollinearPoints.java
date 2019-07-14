@@ -1,7 +1,5 @@
 package com.kondenko.week3.assignment;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Stack;
 
 public class BruteCollinearPoints {
@@ -17,12 +15,7 @@ public class BruteCollinearPoints {
         if (points == null) {
             throw new IllegalArgumentException("Points array is null");
         }
-        var pointSet = new HashSet<Point>();
-        for (Point point : points) {
-            if (point == null) throw new IllegalArgumentException("A point in the array is null");
-            pointSet.add(point);
-        }
-        if (pointSet.size() != points.length) {
+        if (!areUnique(true, points)) {
             throw new IllegalArgumentException("The array contains a repeating point");
         }
         this.points = points;
@@ -58,7 +51,7 @@ public class BruteCollinearPoints {
                                 areAscending(p, q) &&
                                         areAscending(q, r) &&
                                         areAscending(r, s);
-                        if (areAscending && areUnique(p, q, r, s) && isLine(p, q, r, s)) {
+                        if (areAscending && areUnique(false, p, q, r, s) && isLine(p, q, r, s)) {
                             segments.push(new LineSegment(p, s));
                         }
                     }
@@ -79,7 +72,7 @@ public class BruteCollinearPoints {
         return areEqual(pq, pr, ps);
     }
 
-    private static <T> boolean areEqual(T... values) {
+    private <T> boolean areEqual(T... values) {
         T initial = values[0];
         for (int i = 1; i < values.length; i++) {
             if (!initial.equals(values[i])) return false;
@@ -87,8 +80,18 @@ public class BruteCollinearPoints {
         return true;
     }
 
-    private static <T> boolean areUnique(T... values) {
-        return new HashSet<>(Arrays.asList(values)).size() == values.length;
+    private boolean areUnique(boolean checkForNulls, Point... array) {
+        for (int i = 0; i < array.length; i++) {
+            if (checkForNulls && array[i] == null) throw new IllegalArgumentException("A point in the array is null");
+            for (int j = i; j < array.length; j++) {
+                if (equal(array[i], array[j])) return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean equal(Point a, Point b) {
+        return a.compareTo(b) == 0;
     }
 
     /*
