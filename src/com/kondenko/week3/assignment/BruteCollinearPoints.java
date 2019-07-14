@@ -1,15 +1,8 @@
 package com.kondenko.week3.assignment;
 
-import java.awt.Color;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Stack;
-
-import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
-
-import static com.kondenko.ArrayUtils.areEqual;
-import static com.kondenko.ArrayUtils.areUnique;
-import static edu.princeton.cs.algs4.StdOut.printf;
 
 public class BruteCollinearPoints {
 
@@ -86,6 +79,19 @@ public class BruteCollinearPoints {
         return areEqual(pq, pr, ps);
     }
 
+    private static <T> boolean areEqual(T... values) {
+        T initial = values[0];
+        for (int i = 1; i < values.length; i++) {
+            if (!initial.equals(values[i])) return false;
+        }
+        return true;
+    }
+
+    private static <T> boolean areUnique(T... values) {
+        return new HashSet<>(Arrays.asList(values)).size() == values.length;
+    }
+
+    /*
     public static void main(String[] args) {
         String file = "/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/input20.txt";
         Point[] points = PointsFactory.fromFile(file);
@@ -110,5 +116,6 @@ public class BruteCollinearPoints {
         }
         StdDraw.show();
     }
+    */
 
 }

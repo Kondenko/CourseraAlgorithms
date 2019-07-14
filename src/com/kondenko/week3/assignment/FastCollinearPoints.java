@@ -1,15 +1,9 @@
 package com.kondenko.week3.assignment;
 
 
-import java.awt.Color;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Stack;
-
-import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
-
-import static edu.princeton.cs.algs4.StdOut.printf;
 
 public class FastCollinearPoints {
 
@@ -77,6 +71,7 @@ public class FastCollinearPoints {
         return segments.toArray(new LineSegment[0]);
     }
 
+    /*
     public static void main(String[] args) {
         String file = "/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/rs1423.txt";
         Point[] points = PointsFactory.fromFile(file);
@@ -101,5 +96,6 @@ public class FastCollinearPoints {
         }
         StdDraw.show();
     }
+    */
 
 }

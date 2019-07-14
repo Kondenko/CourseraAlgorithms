@@ -2,11 +2,8 @@ package com.kondenko;
 
 import com.kondenko.week4.quiz.PriorityQueue;
 
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.function.Predicate;
 
 import edu.princeton.cs.algs4.Stack;
 
@@ -106,25 +103,6 @@ public class ArrayUtils {
         }
         sb.append("]");
         return sb.toString();
-    }
-
-    public static <T> boolean areEqual(T... values) {
-        T initial = values[0];
-        for (int i = 1; i < values.length; i++) {
-            if (!initial.equals(values[i])) return false;
-        }
-        return true;
-    }
-
-    public static <T> boolean areUnique(T... values) {
-        return new HashSet<>(Arrays.asList(values)).size() == values.length;
-    }
-
-    public static <T> boolean all(T[] values, Predicate<T> predicate) {
-        for (T value : values) {
-            if (!predicate.test(value)) return false;
-        }
-        return true;
     }
 
 }
