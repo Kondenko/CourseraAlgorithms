@@ -3,15 +3,12 @@ package com.kondenko.week3.assignment;
 
 import java.awt.Color;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Stack;
 
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
-import static com.kondenko.ArrayUtils.isSorted;
-import static com.kondenko.CompareUtils.lt;
 import static edu.princeton.cs.algs4.StdOut.printf;
 
 public class FastCollinearPoints {
@@ -48,19 +45,26 @@ public class FastCollinearPoints {
     private Stack<LineSegment> findSegments(Point[] points) {
         Stack<LineSegment> segments = new Stack<>();
         for (Point point : points) {
-            Point[] sorted = Mergesort.sort(points, point.slopeOrder());
-            int firstPointInSegment = 0;
+            Point[] sorted = Arrays.copyOf(points, points.length);
+            Arrays.sort(sorted, point.slopeOrder());
+            int firstPointInSegment = -1;
             int lastPointInSegment = -1;
-            double prevSlope = Double.NaN;
+            double prevSlope = point.slopeTo(point);
             for (int i = 0; i < sorted.length; i++) {
                 double slope = point.slopeTo(sorted[i]);
-                if (Double.isNaN(prevSlope) || slope == prevSlope) {
+                if (prevSlope == slope) {
+                    if (firstPointInSegment == -1) firstPointInSegment = i - 1;
                     lastPointInSegment = i;
                 }
+                if (prevSlope != slope || i == sorted.length - 1) {
+                    boolean hasMinPoints = lastPointInSegment - firstPointInSegment >= minPointsInSegment - 1;
+                    if (hasMinPoints) {
+                        segments.push(new LineSegment(sorted[firstPointInSegment], sorted[lastPointInSegment]));
+                    }
+                    firstPointInSegment = -1;
+                    lastPointInSegment = -1;
+                }
                 prevSlope = slope;
-            }
-            if (!Double.isNaN(prevSlope) && lastPointInSegment >= minPointsInSegment) {
-                segments.push(new LineSegment(sorted[firstPointInSegment], sorted[lastPointInSegment]));
             }
         }
         return segments;
@@ -96,45 +100,6 @@ public class FastCollinearPoints {
             p.draw();
         }
         StdDraw.show();
-    }
-
-    private static class Mergesort {
-
-        public static <T> T[] sort(T[] array, Comparator<T> comparator) {
-            return sortBottomUp(array, comparator);
-        }
-
-        private static <T> T[] sortBottomUp(T[] array, Comparator<T> comparator) {
-            @SuppressWarnings("unchecked")
-            T[] arr = Arrays.copyOf(array, array.length);
-            T[] aux = (T[]) new Object[arr.length];
-            for (int size = 1; size < arr.length; size *= 2) {
-                for (int lo = 0; lo < arr.length - size; lo += size * 2) {
-                    int mid = lo + size - 1;
-                    int hi = Math.min(lo + size * 2 - 1, arr.length - 1);
-                    merge(arr, aux, lo, mid, hi, comparator);
-                }
-            }
-            return arr;
-        }
-
-        protected static <T> void merge(T[] arr, T[] aux, final int lo, int mid, final int hi, Comparator<T> comparator) {
-            assert isSorted(arr, lo, mid, comparator);
-            assert isSorted(arr, mid + 1, hi, comparator);
-            System.arraycopy(arr, lo, aux, lo, hi - lo + 1);
-            int i = lo;
-            int j = mid + 1;
-            for (int k = lo; k <= hi; k++) {
-                int indexAux;
-                if (i > mid) indexAux = j++;
-                else if (j > hi) indexAux = i++;
-                else if (lt(aux, j, i, comparator)) indexAux = j++;
-                else indexAux = i++;
-                arr[k] = aux[indexAux];
-            }
-            assert isSorted(arr, lo, hi, comparator);
-        }
-
     }
 
 }
