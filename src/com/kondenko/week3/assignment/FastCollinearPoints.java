@@ -16,7 +16,7 @@ import static edu.princeton.cs.algs4.StdOut.printf;
 
 public class FastCollinearPoints {
 
-    private final int minPonts = 3;
+    private final int minPointsInSegment = 3;
 
     private Stack<LineSegment> segments;
 
@@ -48,20 +48,18 @@ public class FastCollinearPoints {
     private Stack<LineSegment> findSegments(Point[] points) {
         Stack<LineSegment> segments = new Stack<>();
         for (Point point : points) {
-//            Point[] sorted = Mergesort.sort(points, point.slopeOrder());
-            Point[] sorted = Arrays.copyOf(points, points.length);
-            Arrays.sort(sorted, point.slopeOrder());
+            Point[] sorted = Mergesort.sort(points, point.slopeOrder());
             int firstPointInSegment = 0;
             int lastPointInSegment = -1;
             double prevSlope = Double.NaN;
-            for (int i = minPonts; i < sorted.length; i++) {
+            for (int i = 0; i < sorted.length; i++) {
                 double slope = point.slopeTo(sorted[i]);
-                if (prevSlope == Double.NaN || slope == prevSlope) {
+                if (Double.isNaN(prevSlope) || slope == prevSlope) {
                     lastPointInSegment = i;
                 }
                 prevSlope = slope;
             }
-            if (prevSlope != Double.NaN && lastPointInSegment != -1) {
+            if (!Double.isNaN(prevSlope) && lastPointInSegment >= minPointsInSegment) {
                 segments.push(new LineSegment(sorted[firstPointInSegment], sorted[lastPointInSegment]));
             }
         }
@@ -76,7 +74,7 @@ public class FastCollinearPoints {
     }
 
     public static void main(String[] args) {
-        String file = "/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/input6.txt";
+        String file = "/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/input10.txt";
         Point[] points = PointsFactory.fromFile(file);
         FastCollinearPoints collinear = new FastCollinearPoints(points);
 
