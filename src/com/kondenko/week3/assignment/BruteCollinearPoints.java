@@ -36,7 +36,6 @@ public class BruteCollinearPoints {
         return segments.toArray(new LineSegment[0]);
     }
 
-    @SuppressWarnings("ForLoopReplaceableByForEach")
     private Stack<LineSegment> findLineSegments() {
         Stack<LineSegment> segments = new Stack<>();
         for (int ip = 0; ip < points.length; ip++) {
