@@ -30,11 +30,11 @@ public class CompareUtils {
         return compare(array, a, b, comparator) > 0;
     }
 
-    public static <T extends Comparable<T>> boolean gt(Comparator<T> comparator, T a, T b) {
+    public static <T extends Comparable<T>> boolean gt(T a, T b, Comparator<T> comparator) {
         return comparator.compare(a, b) > 0;
     }
 
-    public static <T extends Comparable<T>> boolean lt(Comparator<T> comparator, T a, T b) {
+    public static <T extends Comparable<T>> boolean lt(T a, T b, Comparator<T> comparator) {
         return comparator.compare(a, b) < 0;
     }
 

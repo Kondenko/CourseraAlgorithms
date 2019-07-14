@@ -10,6 +10,7 @@ import edu.princeton.cs.algs4.StdOut;
 
 import static com.kondenko.ArrayUtils.areEqual;
 import static com.kondenko.ArrayUtils.areUnique;
+import static edu.princeton.cs.algs4.StdOut.printf;
 
 public class BruteCollinearPoints {
 
@@ -55,22 +56,30 @@ public class BruteCollinearPoints {
     @SuppressWarnings("ForLoopReplaceableByForEach")
     private Stack<LineSegment> findLineSegments() {
         Stack<LineSegment> segments = new Stack<>();
-        for (int p = 0; p < points.length; p++) {
-            for (int q = 0; q < points.length; q++) {
-                for (int r = 0; r < points.length; r++) {
-                    for (int s = 0; s < points.length; s++) {
-                        Point pp = points[p];
-                        Point qq = points[q];
-                        Point rr = points[r];
-                        Point ss = points[s];
-                        if (areUnique(pp, qq, rr, ss) && isLine(pp, qq, rr, ss)) {
-                            segments.push(new LineSegment(pp, ss));
+        for (int ip = 0; ip < points.length; ip++) {
+            for (int iq = 0; iq < points.length; iq++) {
+                for (int ir = 0; ir < points.length; ir++) {
+                    for (int is = 0; is < points.length; is++) {
+                        Point p = points[ip];
+                        Point q = points[iq];
+                        Point r = points[ir];
+                        Point s = points[is];
+                        boolean areAscending =
+                                areAscending(p, q) &&
+                                        areAscending(q, r) &&
+                                        areAscending(r, s);
+                        if (areAscending && areUnique(p, q, r, s) && isLine(p, q, r, s)) {
+                            segments.push(new LineSegment(p, s));
                         }
                     }
                 }
             }
         }
         return segments;
+    }
+
+    private boolean areAscending(Point a, Point b) {
+        return a.compareTo(b) >= 0;
     }
 
     private boolean isLine(Point p, Point q, Point r, Point s) {
@@ -81,7 +90,8 @@ public class BruteCollinearPoints {
     }
 
     public static void main(String[] args) {
-        In input = new In(args[0]);
+        String file = "/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/input6.txt";
+        In input = new In(file);
         int size = input.readInt();
         Point[] points = new Point[size];
         for (int i = 0; i < size; i++) {
@@ -102,6 +112,7 @@ public class BruteCollinearPoints {
             StdOut.println(segment);
             segment.draw();
         }
+        printf("\n%d segments found", collinear.numberOfSegments());
         StdDraw.setPenRadius(0.02);
         StdDraw.setPenColor(Color.BLACK);
         for (Point p : points) {
