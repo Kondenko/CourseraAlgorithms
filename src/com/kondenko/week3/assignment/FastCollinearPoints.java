@@ -78,7 +78,7 @@ public class FastCollinearPoints {
     }
 
     public static void main(String[] args) {
-        String file = "/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/input10.txt";
+        String file = "/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/rs1423.txt";
         Point[] points = PointsFactory.fromFile(file);
         FastCollinearPoints collinear = new FastCollinearPoints(points);
 
@@ -94,7 +94,7 @@ public class FastCollinearPoints {
             segment.draw();
         }
         printf("\n%d segments found", collinear.numberOfSegments());
-        StdDraw.setPenRadius(0.02);
+        StdDraw.setPenRadius(0.015);
         StdDraw.setPenColor(Color.BLACK);
         for (Point p : points) {
             p.draw();

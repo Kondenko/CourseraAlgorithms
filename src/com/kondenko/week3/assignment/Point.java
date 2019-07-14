@@ -38,7 +38,6 @@ public class Point implements Comparable<Point> {
     public void draw() {
         /* DO NOT MODIFY */
         StdDraw.point(x, y);
-        StdDraw.text(x, y, x + "," + y, 45); // TODO Remove
     }
 
     /**
