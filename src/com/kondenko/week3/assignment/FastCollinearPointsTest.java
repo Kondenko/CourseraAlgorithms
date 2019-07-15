@@ -12,5 +12,11 @@ public class FastCollinearPointsTest {
         new FastCollinearPoints(points);
     }
 
+    @Test
+    public void shouldNotCrash() {
+        Point[] points = { new Point(0,0), new Point(1,0) };
+        new FastCollinearPoints(points);
+    }
+
 
 }
