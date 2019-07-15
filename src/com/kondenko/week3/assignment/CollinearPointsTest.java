@@ -3,20 +3,26 @@ package com.kondenko.week3.assignment;
 
 import org.junit.Test;
 
-public class FastCollinearPointsTest {
+public class CollinearPointsTest {
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldCrashOnDuplicatePointsInInputBrute() {
+    public void shouldCrashOnDuplicatePointsInInputFast() {
         Point point = new Point(0,0);
         Point[] points = { point, point };
         new FastCollinearPoints(points);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldCrashOnDuplicatePointsInInputFast() {
+    public void shouldCrashOnDuplicatePointsInInputBrute() {
         Point point = new Point(0,0);
         Point[] points = { point, point };
         new BruteCollinearPoints(points);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldCrashOnNullPointsInInputFast() {
+        Point[] points = { new Point(0,0), null };
+        new FastCollinearPoints(points);
     }
 
     @Test

@@ -66,10 +66,10 @@ public class FastCollinearPoints {
 
     private boolean areUnique(boolean checkForNulls, Point... array) {
         for (int i = 0; i < array.length; i++) {
-            if (checkForNulls && array[i] == null) {
-                throw new IllegalArgumentException("A point in the array is null");
-            }
             for (int j = i + 1; j < array.length; j++) {
+                if (checkForNulls && (array[i] == null || array[j] == null)) {
+                    throw new IllegalArgumentException("A point in the array is null");
+                }
                 if (equal(array[i], array[j])) return false;
             }
         }
