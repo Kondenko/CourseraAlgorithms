@@ -25,6 +25,12 @@ public class CollinearPointsTest {
         new FastCollinearPoints(points);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldCrashOnNullPointsInInputBrute() {
+        Point[] points = { null };
+        new BruteCollinearPoints(points);
+    }
+
     @Test
     public void shouldNotCrash() {
         Point[] points = { new Point(0,0), new Point(1,0) };
