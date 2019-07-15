@@ -3,6 +3,8 @@ package com.kondenko.week3.assignment;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 public class CollinearPointsTest {
 
     @Test(expected = IllegalArgumentException.class)
@@ -44,6 +46,14 @@ public class CollinearPointsTest {
                 PointsFactory.fromFile("/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/input48.txt");
         new FastCollinearPoints(points);
         new BruteCollinearPoints(points);
+    }
+
+    @Test
+    public void shouldFind2segmentsInInput8() {
+        Point[] points =
+                PointsFactory.fromFile("/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/input9.txt");
+        FastCollinearPoints collinear = new FastCollinearPoints(points);
+        assertEquals(1, collinear.numberOfSegments());
     }
 
 

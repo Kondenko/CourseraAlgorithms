@@ -38,15 +38,18 @@ public class FastCollinearPoints {
             int lastPointInSegment = -1;
             double prevSlope = point.slopeTo(point);
             for (int i = 0; i < sorted.length; i++) {
-                double slope = point.slopeTo(sorted[i]);
+                Point other = sorted[i];
+                double slope = point.slopeTo(other);
                 if (prevSlope == slope) {
                     if (firstPointInSegment == -1) firstPointInSegment = i - 1;
                     lastPointInSegment = i;
                 }
-                if (prevSlope != slope || i == sorted.length - 1) {
+                if ((prevSlope != slope || i == sorted.length - 1) && firstPointInSegment != -1) {
+                    Arrays.sort(sorted, firstPointInSegment, lastPointInSegment + 1);
                     boolean hasMinPoints = lastPointInSegment - firstPointInSegment >= minPointsInSegment - 1;
-                    if (hasMinPoints) {
-                        segments.push(new LineSegment(sorted[firstPointInSegment], sorted[lastPointInSegment]));
+                    boolean isOriginalPointSmaller = point.compareTo(sorted[firstPointInSegment]) < 0;
+                    if (hasMinPoints && isOriginalPointSmaller) {
+                        segments.push(new LineSegment(point, sorted[lastPointInSegment]));
                     }
                     firstPointInSegment = -1;
                     lastPointInSegment = -1;
@@ -85,7 +88,7 @@ public class FastCollinearPoints {
 
     /*
     public static void main(String[] args) {
-        String file = "/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/rs1423.txt";
+        String file = "/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/input40.txt";
         Point[] points = PointsFactory.fromFile(file);
         FastCollinearPoints collinear = new FastCollinearPoints(points);
 
@@ -100,7 +103,7 @@ public class FastCollinearPoints {
             StdOut.println(segment);
             segment.draw();
         }
-        printf("\n%d segments found", collinear.numberOfSegments());
+        StdOut.printf("\n%d segments found", collinear.numberOfSegments());
         StdDraw.setPenRadius(0.015);
         StdDraw.setPenColor(Color.BLACK);
         for (Point p : points) {
