@@ -1,7 +1,11 @@
 package com.kondenko.week3.assignment;
 
+import java.awt.Color;
 import java.util.Arrays;
 import java.util.Stack;
+
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 public class FastCollinearPoints {
 
@@ -86,7 +90,6 @@ public class FastCollinearPoints {
         return a.compareTo(b) == 0;
     }
 
-    /*
     public static void main(String[] args) {
         String file = "/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/input40.txt";
         Point[] points = PointsFactory.fromFile(file);
@@ -111,6 +114,5 @@ public class FastCollinearPoints {
         }
         StdDraw.show();
     }
-    */
 
 }

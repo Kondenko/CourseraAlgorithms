@@ -1,6 +1,10 @@
 package com.kondenko.week3.assignment;
 
+import java.awt.Color;
 import java.util.Stack;
+
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 public class BruteCollinearPoints {
 
@@ -98,7 +102,6 @@ public class BruteCollinearPoints {
         return a.compareTo(b) == 0;
     }
 
-    /*
     public static void main(String[] args) {
         String file = "/Users/vladimirkondenko/IdeaProjects/AlgoritmsPrincetonCoursera/collinear/input20.txt";
         Point[] points = PointsFactory.fromFile(file);
@@ -115,7 +118,7 @@ public class BruteCollinearPoints {
             StdOut.println(segment);
             segment.draw();
         }
-        printf("\n%d segments found", collinear.numberOfSegments());
+        StdOut.printf("\n%d segments found", collinear.numberOfSegments());
         StdDraw.setPenRadius(0.02);
         StdDraw.setPenColor(Color.BLACK);
         for (Point p : points) {
@@ -123,6 +126,5 @@ public class BruteCollinearPoints {
         }
         StdDraw.show();
     }
-    */
 
 }
