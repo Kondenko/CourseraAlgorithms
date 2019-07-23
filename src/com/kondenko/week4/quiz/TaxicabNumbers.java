@@ -6,8 +6,6 @@ import java.util.Iterator;
 
 import edu.princeton.cs.algs4.StdOut;
 
-import static com.kondenko.Utils.println;
-
 public class TaxicabNumbers {
 
     private static class SumOfCubes implements Comparable<SumOfCubes> {
@@ -63,7 +61,7 @@ public class TaxicabNumbers {
     }
 
     private static void printResults(PriorityQueue<Integer> taxicabs) {
-        println("Taxicab numbers found:");
+        System.out.println("Taxicab numbers found:");
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         for (Iterator<Integer> i = taxicabs.iterator(); i.hasNext(); ) {

@@ -53,12 +53,4 @@ public class Utils {
         System.out.println(String.format(s, args));
     }
 
-    public static void println(String s) {
-        System.out.println(s);
-    }
-
-    public static void println(int s) {
-        System.out.println(s);
-    }
-
 }

@@ -81,12 +81,13 @@ public class RedBlackBstTest {
         put(bst, 35);
         put(bst, 40);
         put(bst, 50);
+        System.out.println(bst.toString());
         int deleted = bst.delete(20);
         assertEquals(20, deleted);
         assertFalse(bst.contains(20));
     }
 
-    private void put (RedBlackBst<Integer, Integer> bst, int value) {
+    private void put(RedBlackBst<Integer, Integer> bst, int value) {
         bst.put(value, value);
     }
 

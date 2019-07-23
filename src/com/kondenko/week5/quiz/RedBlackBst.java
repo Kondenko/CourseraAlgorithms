@@ -1,5 +1,10 @@
 package com.kondenko.week5.quiz;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 import static com.kondenko.CompareUtils.gt;
 import static com.kondenko.CompareUtils.lt;
 
@@ -214,6 +219,46 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         return node.color == RED;
     }
 
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Map<Node, Integer> nodesByRows = getNodesByRows();
+        HashMap<Integer, String> indentedStrings = new HashMap<>();
+        int size = Collections.max(nodesByRows.values());
+        nodesByRows.forEach((node, level) -> {
+            int indent = size - level;
+            String line = String.format("%s%s ", indentedStrings.getOrDefault(indent, ""), node);
+            indentedStrings.put(indent, line);
+        });
+        indentedStrings.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue((v1, v2) -> -(v1.compareTo(v2))))
+                .forEach(entry -> {
+                    int indent = entry.getKey();
+                    String row = entry.getValue();
+                    sb.append("   ".repeat(indent));
+                    sb.append(row);
+                    sb.append("\n\n");
+                });
+        return sb.toString();
+    }
+
+    protected Map<Node, Integer> getNodesByRows() {
+        int level = 0;
+        HashMap<Node, Integer> data = new HashMap<>();
+        nodesByLevels(data, root, level);
+        return data;
+    }
+
+    private HashMap<Node, Integer> nodesByLevels(HashMap<Node, Integer> map, Node node, int level) {
+        map.put(node, level);
+        if (node != null) {
+            int newLevel = level + 1;
+            if (node.left != null) map.putAll(nodesByLevels(map, node.left, newLevel));
+            if (node.right != null) map.putAll(nodesByLevels(map, node.right, newLevel));
+        }
+        return map;
+    }
+
     protected class Node {
 
         K key;
@@ -233,9 +278,25 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         }
 
         @Override
-        public String toString() {
-            return key + ": " + value;
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Node node = (Node) o;
+            return color == node.color &&
+                    Objects.equals(key, node.key) &&
+                    Objects.equals(value, node.value);
         }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(key, value, color);
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%s(%s)", key, value);
+        }
+
 
     }
 
