@@ -232,7 +232,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
             String line = nodesByRows.getOrDefault(level, new ArrayList<>())
                     .stream()
                     .map(this::safeToString)
-                    .collect(Collectors.joining(" "));
+                    .collect(Collectors.joining("  "));
             indentedStrings.put(indent, line);
         });
         indentedStrings.entrySet()
@@ -241,7 +241,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
                 .forEach(entry -> {
                     int indent = entry.getKey();
                     String row = entry.getValue();
-                    sb.append("  ".repeat(indent));
+                    sb.append("   ".repeat(indent));
                     sb.append(row);
                     sb.append("\n\n");
                 });
@@ -268,7 +268,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
     }
 
     private String safeToString(Node node) {
-        if (node == null || node.key == null) return "nil";
+        if (node == null || node.key == null) return "n";
         else return node.toString();
     }
 
@@ -307,7 +307,10 @@ public class RedBlackBst<K extends Comparable<K>, V> {
 
         @Override
         public String toString() {
-            return String.format("%s(%s)", key, value);
+            String keyString = key.equals(value) ? key.toString() : String.format("%s(%s)", key, value);
+            String colorString = color == RED ? ((char) 27 + "[31m") : "";
+            String colorReset = color == RED ? ((char) 27 + "[0m") : "";
+            return colorString + keyString + colorReset;
         }
 
 
