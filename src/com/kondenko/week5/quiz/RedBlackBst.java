@@ -40,32 +40,71 @@ public class RedBlackBst<K extends Comparable<K>, V> {
             n.color = BLACK;
             return n;
         } else {
-            Node sibling = sibling(node);
-            node.key = null;
-            node.value = null;
-            if (!isRed(sibling) && (isRed(sibling.left) || isRed(sibling.right))) {
-                rightRight(sibling);
-            } else if (!isRed(sibling) && isRed(sibling.left)) {
-                rightLeft(sibling);
-            }
+            return fixDoubleBlack(node);
         }
-        throw new IllegalArgumentException("Can't delete a black node yet");
+    }
+
+    private Node fixDoubleBlack(Node node) {
+        Node sibling = sibling(node);
+        boolean isLeft = isLeft(sibling);
+        boolean isRed = isRed(sibling);
+        boolean oneChildRed = isRed(sibling.left) || isRed(sibling.right);
+        boolean bothChildrenBlack = !isRed(sibling.left) && !isRed(sibling.right);
+        node.key = null;
+        node.value = null;
+        if (!isRed && oneChildRed) {
+            if (isLeft && isRed(sibling.left)) return leftLeft(sibling);
+            else if (isLeft && isRed(sibling.right)) return leftRight(sibling);
+            else if (!isLeft && isRed(sibling.right)) return rightRight(sibling);
+            else if (!isLeft && isRed(sibling.left)) return rightLeft(sibling);
+        } else if (!isRed && bothChildrenBlack) {
+            recolor(sibling);
+            return fixDoubleBlack(node.parent);
+        } else if (isRed) {
+            if (isLeft) {
+                rotateRight(sibling);
+                sibling.left.color = RED;
+            } else {
+                rotateLeft(sibling);
+                sibling.right.color = RED;
+            }
+            sibling.color = BLACK;
+            return sibling;
+        }
+        return null;
     }
 
     private Node rightRight(Node sibling) {
-        return null;
+        return rotateLeft(sibling);
     }
 
     private Node leftLeft(Node sibling) {
-        return null;
+        return rotateRight(sibling);
     }
 
     private Node rightLeft(Node sibling) {
-        return null;
+        Node newSibling = sibling.left;
+        sibling.parent.right = newSibling;
+        newSibling.parent = sibling.parent;
+        sibling.left = null;
+        newSibling.right = sibling;
+        sibling.color = RED;
+        return rotateLeft(sibling);
     }
 
     private Node leftRight(Node sibling) {
-        return null;
+        Node newSibling = sibling.right;
+        sibling.parent.left = newSibling;
+        newSibling.parent = sibling.parent;
+        sibling.right = null;
+        newSibling.left = sibling;
+        sibling.color = RED;
+        return rotateRight(sibling);
+
+    }
+
+    private void recolor(Node sibling) {
+        sibling.color = RED;
     }
 
     private Node bstDelete(Node node, K key) {
@@ -92,16 +131,14 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         throw new IllegalStateException("Should not be reached");
     }
 
-    protected Node sibling(Node node) {
-        return sibling(root, node);
+    private boolean isLeft(Node node) {
+        return node.parent.left.key == node.key;
     }
 
-    private Node sibling(Node root, Node node) {
-        if (node.key == root.left.key) return root.right;
-        if (node.key == root.right.key) return root.left;
-        if (lt(node.key, root.key)) return sibling(root.left, node);
-        if (gt(node.key, root.key)) return sibling(root.right, node);
-        throw new IllegalStateException("Should not be reached");
+    protected Node sibling(Node node) {
+        Node left = node.parent.left;
+        if (node.key != left.key) return left;
+        else return node.parent.right;
     }
 
     protected Node successor(K key) {
