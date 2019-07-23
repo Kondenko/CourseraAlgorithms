@@ -1,9 +1,11 @@
 package com.kondenko.week5.quiz;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.kondenko.CompareUtils.gt;
 import static com.kondenko.CompareUtils.lt;
@@ -220,43 +222,54 @@ public class RedBlackBst<K extends Comparable<K>, V> {
     }
 
     public String toString() {
+        if (root == null) return "Empty";
         StringBuilder sb = new StringBuilder();
-        Map<Node, Integer> nodesByRows = getNodesByRows();
+        Map<Integer, ArrayList<Node>> nodesByRows = getNodesByRows();
         HashMap<Integer, String> indentedStrings = new HashMap<>();
-        int size = Collections.max(nodesByRows.values());
-        nodesByRows.forEach((node, level) -> {
+        int size = Collections.max(nodesByRows.keySet());
+        nodesByRows.forEach((level, nodes) -> {
             int indent = size - level;
-            String line = String.format("%s%s ", indentedStrings.getOrDefault(indent, ""), node);
+            String line = nodesByRows.getOrDefault(level, new ArrayList<>())
+                    .stream()
+                    .map(this::safeToString)
+                    .collect(Collectors.joining(" "));
             indentedStrings.put(indent, line);
         });
         indentedStrings.entrySet()
                 .stream()
-                .sorted(Map.Entry.comparingByValue((v1, v2) -> -(v1.compareTo(v2))))
+                .sorted(Map.Entry.<Integer, String>comparingByKey().reversed())
                 .forEach(entry -> {
                     int indent = entry.getKey();
                     String row = entry.getValue();
-                    sb.append("   ".repeat(indent));
+                    sb.append("  ".repeat(indent));
                     sb.append(row);
                     sb.append("\n\n");
                 });
         return sb.toString();
     }
 
-    protected Map<Node, Integer> getNodesByRows() {
+    protected Map<Integer, ArrayList<Node>> getNodesByRows() {
         int level = 0;
-        HashMap<Node, Integer> data = new HashMap<>();
+        HashMap<Integer, ArrayList<Node>> data = new HashMap<>();
         nodesByLevels(data, root, level);
         return data;
     }
 
-    private HashMap<Node, Integer> nodesByLevels(HashMap<Node, Integer> map, Node node, int level) {
-        map.put(node, level);
+    private HashMap<Integer, ArrayList<Node>> nodesByLevels(HashMap<Integer, ArrayList<Node>> map, Node node, int level) {
+        var list = map.getOrDefault(level, new ArrayList<>());
+        list.add(node);
+        map.put(level, list);
         if (node != null) {
             int newLevel = level + 1;
-            if (node.left != null) map.putAll(nodesByLevels(map, node.left, newLevel));
-            if (node.right != null) map.putAll(nodesByLevels(map, node.right, newLevel));
+            map.putAll(nodesByLevels(map, node.left, newLevel));
+            map.putAll(nodesByLevels(map, node.right, newLevel));
         }
         return map;
+    }
+
+    private String safeToString(Node node) {
+        if (node == null || node.key == null) return "nil";
+        else return node.toString();
     }
 
     protected class Node {

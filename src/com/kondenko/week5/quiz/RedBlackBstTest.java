@@ -87,8 +87,18 @@ public class RedBlackBstTest {
         assertFalse(bst.contains(20));
     }
 
-    private void put(RedBlackBst<Integer, Integer> bst, int value) {
-        bst.put(value, value);
+    @Test
+    public void shouldShowNullNodesInToString() {
+        RedBlackBst<String, String> bst = new RedBlackBst<>();
+        String a = "A";
+        String b = "B";
+        put(bst, a);
+        put(bst, b);
+        String str = bst.toString();
+        System.out.println(str);
+        assertTrue(str.contains("nil"));
+        assertTrue(str.contains(a));
+        assertTrue(str.contains(b));
     }
 
     @Test
@@ -110,6 +120,10 @@ public class RedBlackBstTest {
         RedBlackBst<String, Integer> bst = new RedBlackBst<>();
         bst.put("A", 1);
         assertFalse(bst.contains("B"));
+    }
+
+    private <T extends Comparable<T>> void put(RedBlackBst<T, T> bst, T value) {
+        bst.put(value, value);
     }
 
 }
