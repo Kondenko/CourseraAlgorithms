@@ -44,23 +44,29 @@ public class RedBlackBstTest {
 
     @Test
     public void shouldContainAllAddedElements() {
-        RedBlackBst<String, Integer> bst = new RedBlackBst<>();
-        String a = "A";
-        String b = "B";
-        String c = "C";
-        String d = "D";
-        String e = "E";
-        bst.put(a, 1);
-        bst.put(b, 2);
-        bst.put(c, 3);
-        bst.put(d, 4);
-        bst.put(e, 5);
+        RedBlackBst<String, String> bst = new RedBlackBst<>();
+        String A = "A";
+        String E = "E";
+        String S = "S";
+        String R = "R";
+        String C = "C";
+        put(bst, A);
+        put(bst, E);
+        put(bst, S);
+        put(bst, R);
+        assertEquals(E, bst.root.key);
+        assertEquals(A, bst.root.left.key);
+        assertEquals(S, bst.root.right.key);
+        assertEquals(R, bst.root.right.left.key);
+        put(bst, C);
+        assertEquals(E, bst.root.key);
+        assertEquals(C, bst.root.left.key);
+        assertEquals(S, bst.root.right.key);
+        assertEquals(R, bst.root.right.left.key);
+        assertEquals(A, bst.root.left.left.key);
+        assertTrue(bst.root.left.left.color);
+        assertTrue(bst.root.right.left.color);
         System.out.println(bst);
-        assertTrue(bst.contains(a));
-        assertTrue(bst.contains(b));
-        assertTrue(bst.contains(c));
-        assertTrue(bst.contains(d));
-        assertTrue(bst.contains(e));
     }
 
     @Test
@@ -80,11 +86,10 @@ public class RedBlackBstTest {
     @Test
     public void shouldDeleteElements1() {
         RedBlackBst<Integer, Integer> bst = new RedBlackBst<>();
+        put(bst, 10);
         put(bst, 20);
         put(bst, 30);
-        put(bst, 35);
         put(bst, 40);
-        put(bst, 50);
         System.out.println(bst.toString());
         bst.delete(20);
         assertFalse(bst.contains(20));
@@ -99,7 +104,7 @@ public class RedBlackBstTest {
         put(bst, b);
         String str = bst.toString();
         System.out.println(str);
-        assertTrue(str.contains("nil"));
+        assertTrue(str.contains("n"));
         assertTrue(str.contains(a));
         assertTrue(str.contains(b));
     }
