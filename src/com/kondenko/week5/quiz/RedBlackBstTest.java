@@ -21,6 +21,7 @@ public class RedBlackBstTest {
         bst.put(c, 3);
         bst.put(d, 4);
         bst.put(e, 5);
+        System.out.println(bst);
         assertEquals(e, bst.successor(d).key);
     }
 
@@ -37,6 +38,7 @@ public class RedBlackBstTest {
         bst.put(c, 3);
         bst.put(d, 4);
         bst.put(e, 5);
+        System.out.println(bst);
         assertEquals(e, bst.sibling(bst.getNode(b)).key);
     }
 
@@ -53,6 +55,7 @@ public class RedBlackBstTest {
         bst.put(c, 3);
         bst.put(d, 4);
         bst.put(e, 5);
+        System.out.println(bst);
         assertTrue(bst.contains(a));
         assertTrue(bst.contains(b));
         assertTrue(bst.contains(c));
@@ -69,8 +72,9 @@ public class RedBlackBstTest {
         bst.put(a, 1);
         bst.put(b, 2);
         bst.put(c, 3);
-        int deleted = bst.delete(a);
-        assertEquals(1, deleted);
+        System.out.println(bst);
+        bst.delete(a);
+        assertFalse(bst.contains(a));
     }
 
     @Test
@@ -82,8 +86,7 @@ public class RedBlackBstTest {
         put(bst, 40);
         put(bst, 50);
         System.out.println(bst.toString());
-        int deleted = bst.delete(20);
-        assertEquals(20, deleted);
+        bst.delete(20);
         assertFalse(bst.contains(20));
     }
 
@@ -110,6 +113,7 @@ public class RedBlackBstTest {
         bst.put(a, 1);
         bst.put(b, 2);
         bst.put(c, 3);
+        System.out.println(bst);
         assertEquals(b, bst.root.key);
         assertEquals(a, bst.root.left.key);
         assertEquals(c, bst.root.right.key);

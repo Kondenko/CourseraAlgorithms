@@ -20,10 +20,11 @@ public class RedBlackBst<K extends Comparable<K>, V> {
     public void put(K key, V value) {
         root = put(root, root, key, value);
         root.parent = null;
+        System.out.printf("Inserting %s(%s)\n\n%s", key, value, this);
     }
 
     private Node put(Node parent, Node node, K key, V value) {
-        if (node == null) return new Node(parent, key, value, RED);
+        if (node == null) return new Node(parent, key, value, root != null);
         int comparison = key.compareTo(node.key);
         if (comparison < 0) node.left = put(node, node.left, key, value);
         else if (comparison > 0) node.right = put(node, node.right, key, value);
@@ -139,7 +140,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
     }
 
     private boolean isLeft(Node node) {
-        return node.parent.left.key == node.key;
+        return node.parent.left.key.equals(node.key);
     }
 
     protected Node sibling(Node node) {
@@ -154,7 +155,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
 
     private Node successor(Node node, K key) {
         if (node == null) return null;
-        if (key == node.key && node.right != null) {
+        if (key.equals(node.key) && node.right != null) {
             Node tmp = node.right;
             while (tmp.left != null) {
                 tmp = tmp.left;
@@ -194,6 +195,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         h.parent = x;
         x.color = h.color;
         x.left.color = RED;
+        System.out.printf("rotateLeft(%s)\n\n%s", h.key, this);
         return x;
     }
 
@@ -205,20 +207,17 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         h.parent = x;
         x.color = h.color;
         h.color = RED;
+        System.out.printf("rotateRight(%s)\n\n%s", h.key, this);
         return x;
     }
 
-    private void flip(Node n) {
-        if (n != null) {
-            n.color = RED;
-            if (n.left != null) n.left.color = BLACK;
-            if (n.right != null) n.right.color = BLACK;
+    private void flip(Node h) {
+        if (h != null) {
+            if (!h.equals(root)) h.color = RED;
+            if (h.left != null) h.left.color = BLACK;
+            if (h.right != null) h.right.color = BLACK;
+            System.out.printf("flip(%s)\n\n%s", h.key, this);
         }
-    }
-
-    private boolean isRed(Node node) {
-        if (node == null) return false;
-        return node.color == RED;
     }
 
     public String toString() {
@@ -265,6 +264,11 @@ public class RedBlackBst<K extends Comparable<K>, V> {
             map.putAll(nodesByLevels(map, node.right, newLevel));
         }
         return map;
+    }
+
+    private boolean isRed(Node node) {
+        if (node == null) return false;
+        return node.color == RED;
     }
 
     private String safeToString(Node node) {
