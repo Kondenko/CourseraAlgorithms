@@ -22,7 +22,7 @@ public class RedBlackBstTest {
         bst.put(d, 4);
         bst.put(e, 5);
         System.out.println(bst);
-        assertEquals(e, bst.successor(d).key);
+        assertEquals(e, bst.successor(bst.getNode(d)).key);
     }
 
     @Test
@@ -86,13 +86,13 @@ public class RedBlackBstTest {
     @Test
     public void shouldDeleteElements1() {
         RedBlackBst<Integer, Integer> bst = new RedBlackBst<>();
-        put(bst, 10);
-        put(bst, 20);
         put(bst, 30);
+        put(bst, 20);
         put(bst, 40);
+        put(bst, 10);
         System.out.println(bst.toString());
-        bst.delete(20);
-        assertFalse(bst.contains(20));
+        bst.delete(10);
+        assertFalse(bst.contains(10));
     }
 
     @Test

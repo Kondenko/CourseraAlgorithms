@@ -7,9 +7,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.kondenko.CompareUtils.gt;
-import static com.kondenko.CompareUtils.lt;
-
 public class RedBlackBst<K extends Comparable<K>, V> {
 
     private static final boolean RED = true;
@@ -17,10 +14,12 @@ public class RedBlackBst<K extends Comparable<K>, V> {
 
     protected Node root = null;
 
+    private boolean logAuxiliaryOperations = false;
+
     public void put(K key, V value) {
         root = put(root, root, key, value);
         root.parent = null;
-        System.out.printf("Inserting %s(%s)\n\n%s", key, value, this);
+        System.out.printf("Inserted %s(%s)\n\n%s", key, value, this);
     }
 
     private Node put(Node parent, Node node, K key, V value) {
@@ -35,51 +34,83 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         return node;
     }
 
-    public V delete(K key) {
-        Node deletedNode = delete(root, key);
-        if (deletedNode != null) return deletedNode.value;
-        return null;
+    public void delete(K key) {
+        Node nodeToDelete = getNode(key);
+        if (nodeToDelete == null) return;
+        delete(nodeToDelete, key);
+        System.out.printf("Deleted %s\n\n%s", key, this);
     }
 
-    private Node delete(Node node, K key) {
-        if (node.key == null) return null;
+    private void delete(Node node, K key) {
         if (isRed(node)) {
-            Node n = bstDelete(node, key);
-            n.color = BLACK;
-            return n;
+            bstDelete(node, key);
         } else {
-            return fixDoubleBlack(node);
+            fixDoubleBlack(node, key);
         }
     }
 
-    private Node fixDoubleBlack(Node node) {
-        Node sibling = sibling(node);
-        boolean isLeft = isLeft(sibling);
-        boolean isRed = isRed(sibling);
-        boolean oneChildRed = isRed(sibling.left) || isRed(sibling.right);
-        boolean bothChildrenBlack = !isRed(sibling.left) && !isRed(sibling.right);
-        node.key = null;
-        node.value = null;
-        if (!isRed && oneChildRed) {
-            if (isLeft && isRed(sibling.left)) return leftLeft(sibling);
-            else if (isLeft && isRed(sibling.right)) return leftRight(sibling);
-            else if (!isLeft && isRed(sibling.right)) return rightRight(sibling);
-            else if (!isLeft && isRed(sibling.left)) return rightLeft(sibling);
-        } else if (!isRed && bothChildrenBlack) {
-            recolor(sibling);
-            return fixDoubleBlack(node.parent);
-        } else if (isRed) {
-            if (isLeft) {
-                rotateRight(sibling);
-                sibling.left.color = RED;
-            } else {
-                rotateLeft(sibling);
-                sibling.right.color = RED;
+    private void bstDelete(Node node, K key) {
+        if (node == null) return;
+        if (node.equals(root) && key.equals(node.key)) {
+            root = null;
+        } else if (key.equals(node.key)) {
+            Node right = node.right;
+            Node left = node.left;
+            boolean isLeft = isLeft(node);
+            if (right == null && left == null) {
+                if (isLeft) node.parent.left = null;
+                else node.parent.right = null;
             }
-            sibling.color = BLACK;
-            return sibling;
+            if (right != null && left == null) {
+                if (isLeft) node.parent.left = right;
+                else node.parent.right = right;
+            }
+            if (left != null && right == null) {
+                if (isLeft) node.parent.left = left;
+                else node.parent.right = left;
+            }
+            Node successor = successor(node);
+            bstDelete(successor, key);
+            node.key = successor.key;
+            node.value = successor.value;
+        } else {
+            bstDelete(node.left, key);
+            bstDelete(node.right, key);
         }
-        return null;
+    }
+
+    private void fixDoubleBlack(Node node, K key) {
+        if (!node.equals(root)) {
+            Node sibling = sibling(node);
+            boolean isLeft = isLeft(sibling);
+            boolean isRed = isRed(sibling);
+            boolean oneChildRed = isRed(sibling.left) || isRed(sibling.right);
+            boolean bothChildrenBlack = !isRed(sibling.left) && !isRed(sibling.right);
+            if (key.equals(node.key)) {
+                node.key = null;
+                node.value = null;
+            }
+            if (!isRed && oneChildRed) {
+                if (isLeft && isRed(sibling.left)) leftLeft(sibling);
+                else if (isLeft && isRed(sibling.right)) leftRight(sibling);
+                else if (!isLeft && isRed(sibling.right)) rightRight(sibling);
+                else if (!isLeft && isRed(sibling.left)) rightLeft(sibling);
+            } else if (!isRed && bothChildrenBlack) {
+                recolor(sibling);
+                fixDoubleBlack(node.parent, key);
+            } else if (isRed) {
+                if (isLeft) {
+                    rotateRight(sibling);
+                    sibling.left.color = RED;
+                } else {
+                    rotateLeft(sibling);
+                    sibling.right.color = RED;
+                }
+                sibling.color = BLACK;
+            }
+        } else {
+            node.color = BLACK;
+        }
     }
 
     private Node rightRight(Node sibling) {
@@ -115,56 +146,37 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         sibling.color = RED;
     }
 
-    private Node bstDelete(Node node, K key) {
-        if (key == node.key) {
-            Node right = node.right;
-            Node left = node.left;
-            if (right == null && left == null) return node;
-            if (right != null && left == null) return right;
-            if (left != null && right == null) return left;
-            Node successor = successor(node, key);
-            bstDelete(successor, key);
-            node.key = successor.key;
-            node.value = successor.value;
-            return node;
-        }
-        if (key == node.left.key) {
-            node.left = bstDelete(node.left, key);
-            return node.left;
-        }
-        if (key == node.right.key) {
-            node.right = bstDelete(node.right, key);
-            return node.right;
-        }
-        throw new IllegalStateException("Should not be reached");
-    }
-
-    private boolean isLeft(Node node) {
-        return node.parent.left.key.equals(node.key);
-    }
-
-    protected Node sibling(Node node) {
+    protected final Node sibling(Node node) {
         Node left = node.parent.left;
         if (node.key != left.key) return left;
         else return node.parent.right;
     }
 
-    protected Node successor(K key) {
-        return successor(root, key);
+    protected final Node successor(Node n) {
+        if (n.right != null) {
+            return minValue(n.right);
+        }
+        Node p = n.parent;
+        while (p != null && n == p.right) {
+            n = p;
+            p = p.parent;
+        }
+        return p;
     }
 
-    private Node successor(Node node, K key) {
-        if (node == null) return null;
-        if (key.equals(node.key) && node.right != null) {
-            Node tmp = node.right;
-            while (tmp.left != null) {
-                tmp = tmp.left;
-            }
-            return tmp;
+    /**
+     * Given a non-empty binary search tree, return the minimum data
+     * value found in that tree. Note that the entire tree does not need
+     * to be searched.
+     **/
+    private Node minValue(Node node) {
+        Node current = node;
+
+        /* loop down to find the leftmost leaf */
+        while (current.left != null) {
+            current = current.left;
         }
-        if (lt(key, node.key)) return successor(node.left, key);
-        if (gt(key, node.key)) return successor(node.right, key);
-        return null;
+        return current;
     }
 
     public V get(K key) {
@@ -176,9 +188,9 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         return get(key) != null;
     }
 
-    protected Node getNode(K key) {
+    protected final Node getNode(K key) {
         Node node = root;
-        while (node != null) {
+        while (node != null && node.key != null) {
             int cmp = key.compareTo(node.key);
             if (cmp < 0) node = node.left;
             else if (cmp > 0) node = node.right;
@@ -195,7 +207,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         h.parent = x;
         x.color = h.color;
         x.left.color = RED;
-        System.out.printf("rotateLeft(%s)\n\n%s", h.key, this);
+        if (logAuxiliaryOperations) System.out.printf("rotateLeft(%s)\n\n%s", h.key, this);
         return x;
     }
 
@@ -207,7 +219,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         h.parent = x;
         x.color = h.color;
         h.color = RED;
-        System.out.printf("rotateRight(%s)\n\n%s", h.key, this);
+        if (logAuxiliaryOperations) System.out.printf("rotateRight(%s)\n\n%s", h.key, this);
         return x;
     }
 
@@ -216,8 +228,17 @@ public class RedBlackBst<K extends Comparable<K>, V> {
             if (!h.equals(root)) h.color = RED;
             if (h.left != null) h.left.color = BLACK;
             if (h.right != null) h.right.color = BLACK;
-            System.out.printf("flip(%s)\n\n%s", h.key, this);
+            if (logAuxiliaryOperations) System.out.printf("flip(%s)\n\n%s", h.key, this);
         }
+    }
+
+    private boolean isLeft(Node node) {
+        return node.parent.left.key.equals(node.key);
+    }
+
+    private boolean isRed(Node node) {
+        if (node == null) return false;
+        return node.color == RED;
     }
 
     public String toString() {
@@ -247,7 +268,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         return sb.toString();
     }
 
-    protected Map<Integer, ArrayList<Node>> getNodesByRows() {
+    protected final Map<Integer, ArrayList<Node>> getNodesByRows() {
         int level = 0;
         HashMap<Integer, ArrayList<Node>> data = new HashMap<>();
         nodesByLevels(data, root, level);
@@ -266,17 +287,12 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         return map;
     }
 
-    private boolean isRed(Node node) {
-        if (node == null) return false;
-        return node.color == RED;
-    }
-
     private String safeToString(Node node) {
         if (node == null || node.key == null) return "n";
         else return node.toString();
     }
 
-    protected class Node {
+    protected final class Node {
 
         K key;
         V value;
