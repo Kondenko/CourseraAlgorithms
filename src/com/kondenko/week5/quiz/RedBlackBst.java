@@ -128,7 +128,8 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         sibling.left = null;
         newSibling.right = sibling;
         sibling.color = RED;
-        return rotateLeft(sibling);
+        newSibling.color = BLACK;
+        return rotateLeft(newSibling);
     }
 
     private Node leftRight(Node sibling) {
@@ -233,7 +234,8 @@ public class RedBlackBst<K extends Comparable<K>, V> {
     }
 
     private boolean isLeft(Node node) {
-        return node.parent.left.key.equals(node.key);
+        Node left = node.parent.left;
+        return left != null && node.parent.left.key.equals(node.key);
     }
 
     private boolean isRed(Node node) {

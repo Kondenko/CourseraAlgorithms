@@ -96,6 +96,21 @@ public class RedBlackBstTest {
     }
 
     @Test
+    public void shouldDeleteElements2() {
+        RedBlackBst<Integer, Integer> bst = new RedBlackBst<>();
+        put(bst, 30);
+        put(bst, 20);
+        put(bst, 40);
+        put(bst, 50);
+        System.out.println(bst.toString());
+        bst.delete(20);
+        assertFalse(bst.contains(20));
+        assertTrue(bst.contains(30));
+        assertTrue(bst.contains(40));
+        assertTrue(bst.contains(50));
+    }
+
+    @Test
     public void shouldShowNullNodesInToString() {
         RedBlackBst<String, String> bst = new RedBlackBst<>();
         String a = "A";
