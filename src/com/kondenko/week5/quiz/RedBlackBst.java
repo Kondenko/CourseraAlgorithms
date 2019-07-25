@@ -19,7 +19,8 @@ public class RedBlackBst<K extends Comparable<K>, V> {
     public void put(K key, V value) {
         root = put(root, root, key, value);
         root.parent = null;
-        System.out.printf("Inserted %s(%s)\n\n%s", key, value, this);
+        root.color = BLACK;
+        System.out.printf("Put %s(%s)\n\n%s", key, value, this);
     }
 
     private Node put(Node parent, Node node, K key, V value) {
@@ -42,8 +43,9 @@ public class RedBlackBst<K extends Comparable<K>, V> {
     }
 
     private void delete(Node node, K key) {
-        if (isRed(node)) {
+        if (isRed(node) || isRed(node.parent)) {
             bstDelete(node, key);
+            node.parent.color = BLACK;
         } else {
             fixDoubleBlack(node, key);
         }
@@ -100,7 +102,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
                 fixDoubleBlack(node.parent, key);
             } else if (isRed) {
                 if (isLeft) {
-                    rotateRight(sibling);
+                    rotateRight(sibling.parent);
                     sibling.left.color = RED;
                 } else {
                     rotateLeft(sibling);
@@ -332,6 +334,8 @@ public class RedBlackBst<K extends Comparable<K>, V> {
             String keyString = key.equals(value) ? key.toString() : String.format("%s(%s)", key, value);
             String colorString = color == RED ? ((char) 27 + "[31m") : "";
             String colorReset = color == RED ? ((char) 27 + "[0m") : "";
+//            String colorString = color == RED ? "r" : "b";
+//            String colorReset = "";
             return colorString + keyString + colorReset;
         }
 

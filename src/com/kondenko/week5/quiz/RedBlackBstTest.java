@@ -84,7 +84,7 @@ public class RedBlackBstTest {
     }
 
     @Test
-    public void shouldDeleteElements1() {
+    public void shouldDeleteElementsSimple() {
         RedBlackBst<Integer, Integer> bst = new RedBlackBst<>();
         put(bst, 30);
         put(bst, 20);
@@ -96,7 +96,24 @@ public class RedBlackBstTest {
     }
 
     @Test
-    public void shouldDeleteElements2() {
+    public void shouldDeleteElementsSimple2() {
+        RedBlackBst<Integer, Integer> bst = new RedBlackBst<>();
+        put(bst, 30);
+        put(bst, 20);
+        put(bst, 40);
+        put(bst, 35);
+        put(bst, 50);
+        System.out.println(bst.toString());
+        bst.delete(20);
+        assertFalse(bst.contains(20));
+        assertTrue(bst.contains(30));
+        assertTrue(bst.contains(35));
+        assertTrue(bst.contains(40));
+        assertTrue(bst.contains(50));
+    }
+
+    @Test
+    public void shouldDeleteElementsRightLeft() {
         RedBlackBst<Integer, Integer> bst = new RedBlackBst<>();
         put(bst, 30);
         put(bst, 20);
@@ -106,6 +123,24 @@ public class RedBlackBstTest {
         bst.delete(20);
         assertFalse(bst.contains(20));
         assertTrue(bst.contains(30));
+        assertTrue(bst.contains(40));
+        assertTrue(bst.contains(50));
+    }
+
+    @Test
+    public void shouldDeleteElementsRedSiblingRight() {
+        RedBlackBst<Integer, Integer> bst = new RedBlackBst<>();
+        put(bst, 20);
+        put(bst, 10);
+        put(bst, 30);
+        put(bst, 25);
+        put(bst, 35);
+        System.out.println(bst.toString());
+        int itemToDelete = 35;
+        bst.delete(itemToDelete);
+        assertFalse(bst.contains(itemToDelete));
+        assertTrue(bst.contains(30));
+        assertTrue(bst.contains(35));
         assertTrue(bst.contains(40));
         assertTrue(bst.contains(50));
     }
