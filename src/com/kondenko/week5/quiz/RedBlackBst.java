@@ -38,16 +38,17 @@ public class RedBlackBst<K extends Comparable<K>, V> {
     public void delete(K key) {
         Node nodeToDelete = getNode(key);
         if (nodeToDelete == null) return;
-        delete(nodeToDelete, key);
+        root = delete(nodeToDelete, key);
         System.out.printf("Deleted %s\n\n%s", key, this);
     }
 
-    private void delete(Node node, K key) {
+    private Node delete(Node node, K key) {
         if (isRed(node) || isRed(node.parent)) {
             bstDelete(node, key);
             node.parent.color = BLACK;
+            return root;
         } else {
-            fixDoubleBlack(node, key);
+            return fixDoubleBlack(node, key);
         }
     }
 
@@ -81,7 +82,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         }
     }
 
-    private void fixDoubleBlack(Node node, K key) {
+    private Node fixDoubleBlack(Node node, K key) {
         if (!node.equals(root)) {
             Node sibling = sibling(node);
             boolean isLeft = isLeft(sibling);
@@ -93,26 +94,32 @@ public class RedBlackBst<K extends Comparable<K>, V> {
                 node.value = null;
             }
             if (!isRed && oneChildRed) {
-                if (isLeft && isRed(sibling.left)) leftLeft(sibling);
-                else if (isLeft && isRed(sibling.right)) leftRight(sibling);
-                else if (!isLeft && isRed(sibling.right)) rightRight(sibling);
-                else if (!isLeft && isRed(sibling.left)) rightLeft(sibling);
+                if (isLeft && isRed(sibling.left)) return leftLeft(sibling);
+                else if (isLeft && isRed(sibling.right)) return leftRight(sibling);
+                else if (!isLeft && isRed(sibling.right)) return rightRight(sibling);
+                else if (!isLeft && isRed(sibling.left)) return rightLeft(sibling);
             } else if (!isRed && bothChildrenBlack) {
                 recolor(sibling);
-                fixDoubleBlack(node.parent, key);
+                return fixDoubleBlack(node.parent, key);
             } else if (isRed) {
+                Node n;
                 if (isLeft) {
-                    rotateRight(sibling.parent);
+                    n = rotateRight(sibling.parent);
                     sibling.left.color = RED;
                 } else {
-                    rotateLeft(sibling);
+                    n = rotateLeft(sibling);
                     sibling.right.color = RED;
                 }
                 sibling.color = BLACK;
+                return n;
+            } else {
+                return node;
             }
         } else {
             node.color = BLACK;
+            return node;
         }
+        throw new RuntimeException("Unreachable code");
     }
 
     private Node rightRight(Node sibling) {
@@ -131,7 +138,9 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         newSibling.right = sibling;
         sibling.color = RED;
         newSibling.color = BLACK;
-        return rotateLeft(newSibling);
+        Node rotated = rotateLeft(sibling.parent);
+        if (isRed(rotated.left) && isRed(rotated.right)) flip(rotated);
+        return rotated;
     }
 
     private Node leftRight(Node sibling) {
@@ -203,18 +212,20 @@ public class RedBlackBst<K extends Comparable<K>, V> {
     }
 
     private Node rotateLeft(Node h) {
+        Node hParent = h.parent;
         Node x = h.right;
         h.right = x.left;
         if (h.right != null) h.right.parent = h;
         x.left = h;
         h.parent = x;
+        x.parent = hParent;
         x.color = h.color;
         x.left.color = RED;
         if (logAuxiliaryOperations) System.out.printf("rotateLeft(%s)\n\n%s", h.key, this);
         return x;
     }
 
-    private Node rotateRight(Node h) {
+    protected final Node rotateRight(Node h) {
         Node x = h.left;
         h.left = x.right;
         if (h.left != null) h.left.parent = h;
@@ -228,7 +239,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
 
     private void flip(Node h) {
         if (h != null) {
-            if (!h.equals(root)) h.color = RED;
+            if (!h.equals(root) && h.parent != null) h.color = RED;
             if (h.left != null) h.left.color = BLACK;
             if (h.right != null) h.right.color = BLACK;
             if (logAuxiliaryOperations) System.out.printf("flip(%s)\n\n%s", h.key, this);
@@ -280,6 +291,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
     }
 
     private HashMap<Integer, ArrayList<Node>> nodesByLevels(HashMap<Integer, ArrayList<Node>> map, Node node, int level) {
+        if (level >= 10) return map;
         var list = map.getOrDefault(level, new ArrayList<>());
         list.add(node);
         map.put(level, list);
