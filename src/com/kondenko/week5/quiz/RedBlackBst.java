@@ -5,7 +5,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 import java.util.stream.Collectors;
+
+import edu.princeton.cs.algs4.StdOut;
 
 public class RedBlackBst<K extends Comparable<K>, V> {
 
@@ -20,7 +23,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         root = put(root, root, key, value);
         root.parent = null;
         root.color = BLACK;
-        System.out.printf("Put %s(%s)\n\n%s", key, value, this);
+        // System.out.printf("Put %s(%s)\n\n%s", key, value, this);
     }
 
     private Node put(Node parent, Node node, K key, V value) {
@@ -39,7 +42,8 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         Node nodeToDelete = getNode(key);
         if (nodeToDelete == null) return;
         root = delete(nodeToDelete, key);
-        System.out.printf("Deleted %s\n\n%s", key, this);
+        flipIfNeeded(root);
+        // System.out.printf("Deleted %s\n\n%s", key, this);
     }
 
     private Node delete(Node node, K key) {
@@ -139,7 +143,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         sibling.color = RED;
         newSibling.color = BLACK;
         Node rotated = rotateLeft(sibling.parent);
-        if (isRed(rotated.left) && isRed(rotated.right)) flip(rotated);
+        flipIfNeeded(rotated);
         return rotated;
     }
 
@@ -150,8 +154,13 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         sibling.right = null;
         newSibling.left = sibling;
         sibling.color = RED;
-        return rotateRight(sibling);
+        Node rotated =  rotateRight(sibling);
+        flipIfNeeded(rotated);
+        return rotated;
+    }
 
+    private void flipIfNeeded(Node node) {
+        if (isRed(node.left) && isRed(node.right)) flip(node);
     }
 
     private void recolor(Node sibling) {
@@ -291,7 +300,6 @@ public class RedBlackBst<K extends Comparable<K>, V> {
     }
 
     private HashMap<Integer, ArrayList<Node>> nodesByLevels(HashMap<Integer, ArrayList<Node>> map, Node node, int level) {
-        if (level >= 10) return map;
         var list = map.getOrDefault(level, new ArrayList<>());
         list.add(node);
         map.put(level, list);
@@ -306,6 +314,16 @@ public class RedBlackBst<K extends Comparable<K>, V> {
     private String safeToString(Node node) {
         if (node == null || node.key == null) return "n";
         else return node.toString();
+    }
+
+    public static void main(String[] args) {
+        RedBlackBst<Integer, Integer> bst = new RedBlackBst<>();
+        Random random = new Random();
+        for (int i = 0; i < 20; i++) {
+            int key = random.nextInt(20);
+            bst.put(key, key);
+        }
+        StdOut.println(bst);
     }
 
     protected final class Node {
@@ -346,11 +364,10 @@ public class RedBlackBst<K extends Comparable<K>, V> {
             String keyString = key.equals(value) ? key.toString() : String.format("%s(%s)", key, value);
             String colorString = color == RED ? ((char) 27 + "[31m") : "";
             String colorReset = color == RED ? ((char) 27 + "[0m") : "";
-//            String colorString = color == RED ? "r" : "b";
-//            String colorReset = "";
+            // String colorString = color == RED ? "r" : "b";
+            // String colorReset = "";
             return colorString + keyString + colorReset;
         }
-
 
     }
 

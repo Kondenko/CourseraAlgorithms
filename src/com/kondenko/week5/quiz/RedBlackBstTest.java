@@ -43,17 +43,6 @@ public class RedBlackBstTest {
     }
 
     @Test
-    public void shouldRotateRight() {
-        RedBlackBst<Integer, Integer> bst = new RedBlackBst<>();
-        put(bst, 20);
-        put(bst, 10);
-        put(bst, 30);
-        put(bst, 5);
-        bst.root = bst.rotateRight(bst.root);
-        System.out.println(bst);
-    }
-
-    @Test
     public void shouldContainAllAddedElements() {
         RedBlackBst<String, String> bst = new RedBlackBst<>();
         String A = "A";
@@ -150,10 +139,10 @@ public class RedBlackBstTest {
         int itemToDelete = 35;
         bst.delete(itemToDelete);
         assertFalse(bst.contains(itemToDelete));
+        assertTrue(bst.contains(20));
+        assertTrue(bst.contains(10));
         assertTrue(bst.contains(30));
-        assertTrue(bst.contains(35));
-        assertTrue(bst.contains(40));
-        assertTrue(bst.contains(50));
+        assertTrue(bst.contains(25));
     }
 
     @Test
