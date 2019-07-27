@@ -38,12 +38,13 @@ public class RedBlackBst<K extends Comparable<K>, V> {
         return node;
     }
 
-    public void delete(K key) {
+    public V delete(K key) {
         Node nodeToDelete = getNode(key);
-        if (nodeToDelete == null) return;
+        if (nodeToDelete == null) return null;
+        V value = nodeToDelete.value;
         root = delete(nodeToDelete, key);
         flipIfNeeded(root);
-        // System.out.printf("Deleted %s\n\n%s", key, this);
+        return value;
     }
 
     private Node delete(Node node, K key) {
@@ -276,7 +277,7 @@ public class RedBlackBst<K extends Comparable<K>, V> {
             String line = nodesByRows.getOrDefault(level, new ArrayList<>())
                     .stream()
                     .map(this::safeToString)
-                    .collect(Collectors.joining("  "));
+                    .collect(Collectors.joining("   "));
             indentedStrings.put(indent, line);
         });
         indentedStrings.entrySet()
