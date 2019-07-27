@@ -13,7 +13,7 @@ public class DocumentSearch {
                 if (wordIndexInQuery == 0) {
                     currentIntervalLength = 0;
                 }
-                if (wordIndexInQuery > previousFoundWordIndex) {
+                if (wordIndexInQuery == previousFoundWordIndex + 1) {
                     previousFoundWordIndex = wordIndexInQuery;
                     currentIntervalLength++;
                 }
@@ -21,7 +21,6 @@ public class DocumentSearch {
                     intervalLength = currentIntervalLength;
                 }
             } else {
-                intervalLength = -1;
                 currentIntervalLength = -1;
                 previousFoundWordIndex = -1;
             }
