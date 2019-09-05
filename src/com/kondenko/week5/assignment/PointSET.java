@@ -1,14 +1,14 @@
 package com.kondenko.week5.assignment;
 
-import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 
 public class PointSET {
 
-    private Set<Point2D> points = new TreeSet<>();
+    private TreeSet<Point2D> points = new TreeSet<>();
 
     /**
      * construct an empty set of points
@@ -37,7 +37,7 @@ public class PointSET {
      */
     public Iterable<Point2D> range(RectHV rect) {
         if (rect == null) throw new IllegalArgumentException("rect is null");
-        return null;
+        return points.stream().filter(rect::contains).collect(Collectors.toList());
     }
 
     /**
@@ -45,7 +45,8 @@ public class PointSET {
      */
     public Point2D nearest(Point2D p) {
         if (p == null) throw new IllegalArgumentException("p is null");
-        return null;
+        if (isEmpty()) return null;
+        return points.ceiling(p);
     }
 
     /**
@@ -67,14 +68,6 @@ public class PointSET {
      */
     public int size() {
         return points.size();
-    }
-
-
-    /**
-     * unit testing of the methods (optional)
-     */
-    public static void main(String[] args) {
-
     }
 
 }
