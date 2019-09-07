@@ -105,21 +105,25 @@ public class KdTree {
             boolean isChildVertical = parent == null || !parent.isVertical;
             RectHV rect;
             if (parent != null) {
-                if (isChildVertical) rect = isLeftOrUpper ? parent.left() : parent.right();
-                else rect = isLeftOrUpper ? parent.upper() : parent.lower();
+                if (isChildVertical) {
+                    rect = isLeftOrUpper ? parent.left() : parent.right();
+                } else {
+                    rect = isLeftOrUpper ? parent.upper() : parent.lower();
+                }
             } else {
                 rect = new RectHV(0, 0, 1, 1);
             }
+
             if (node == null) return new Node(parent, key.x(), key.y(), rect, isChildVertical);
+
             int comparison;
-            if (node.isVertical) {
-                comparison = Double.compare(key.x(), node.x);
-            } else {
-                comparison = Double.compare(key.y(), node.y);
-            }
+            if (node.isVertical) comparison = Double.compare(key.x(), node.x);
+            else comparison = Double.compare(key.y(), node.y);
+
             if (comparison < 0) node.left = put(node, node.left, key, true);
             else if (comparison > 0) node.right = put(node, node.right, key, false);
             else node = new Node(node.parent, key.x(), key.y(), node.rect, isChildVertical);
+
             return node;
         }
 
@@ -160,17 +164,17 @@ public class KdTree {
         }
 
         public boolean contains(Point2D key) {
-            Node n = getNode(key);
-            return n != null && n.y == key.y();
+            return getNode(key) != null;
         }
 
         private Node getNode(Point2D key) {
             Node node = root;
             while (node != null) {
-                int cmp = node.isVertical ? Double.compare(key.x(), (node.x)) : Double.compare(key.y(), (node.y));
+                int cmp = node.isVertical ? Double.compare(key.x(), node.x) : Double.compare(key.y(), node.y);
                 if (cmp < 0) node = node.left;
                 else if (cmp > 0) node = node.right;
-                else return node;
+                else if (node.point.equals(key)) return node;
+                else return null;
             }
             return null;
         }
