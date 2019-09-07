@@ -288,8 +288,7 @@ public class KdTree {
 
             @Override
             public String toString() {
-                String keyString = String.format("(%.1f, %.1f)", x, y);
-                return keyString /*+ " " + (isVertical ? "|" : "-")*/;
+                return String.format("(%.1f, %.1f)", x, y);
             }
 
             @Override

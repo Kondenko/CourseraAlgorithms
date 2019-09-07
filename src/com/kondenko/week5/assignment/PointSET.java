@@ -1,5 +1,9 @@
 package com.kondenko.week5.assignment;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -46,7 +50,15 @@ public class PointSET {
     public Point2D nearest(Point2D p) {
         if (p == null) throw new IllegalArgumentException("p is null");
         if (isEmpty()) return null;
-        return points.ceiling(p);
+        List<Point2D> nearestPoints =  points.stream()
+                .collect(Collectors.groupingBy(pp -> pp.distanceTo(p)))
+                .entrySet()
+                .stream()
+                .min(Comparator.comparingDouble(Map.Entry::getKey))
+                .map(Map.Entry::getValue)
+                .orElse(Collections.emptyList());
+        if (nearestPoints.isEmpty()) return null;
+        else return nearestPoints.get(0);
     }
 
     /**

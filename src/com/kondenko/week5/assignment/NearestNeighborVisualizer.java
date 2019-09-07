@@ -80,10 +80,10 @@ public class NearestNeighborVisualizer {
             }
 
             // draw in red the nearest neighbor (using brute-force algorithm)
-//            StdDraw.setPenRadius(0.03);
-//            StdDraw.setPenColor(StdDraw.RED);
-//            Point2D nearestBrute = brute.nearest(query);
-//            if (nearestBrute != null) nearestBrute.draw();
+            StdDraw.setPenRadius(0.03);
+            StdDraw.setPenColor(StdDraw.RED);
+            Point2D nearestBrute = brute.nearest(query);
+            if (nearestBrute != null) nearestBrute.draw();
 
             // draw in blue the nearest neighbor (using kd-tree algorithm)
             StdDraw.setPenRadius(0.02);
