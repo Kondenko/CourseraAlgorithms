@@ -1,5 +1,8 @@
 package com.kondenko.week5.assignment;
 
+import com.kondenko.Utils;
+
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,6 +13,7 @@ import java.util.stream.Collectors;
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.StdDraw;
 
 public class KdTree {
 
@@ -50,7 +54,11 @@ public class KdTree {
      * draw all points to standard draw
      */
     public void draw() {
-        points.toList().forEach(Point2D::draw);
+        points.toList().forEach(p -> {
+            StdDraw.setFont(new Font("Arial", Font.PLAIN, 12));
+            StdDraw.text(p.x(), p.y() + 0.05, String.format("(%f, %f)", p.x(), p.y()), 45);
+            p.draw();
+        });
     }
 
     /**
@@ -109,11 +117,11 @@ public class KdTree {
         }
 
         public void put(Point2D key) {
-            root = put(root, root, key, false);
+            root = put(root, root, key);
             size++;
         }
 
-        private Node put(Node parent, Node node, Point2D key, boolean isOnLeft) {
+        private Node put(Node parent, Node node, Point2D key) {
             boolean isChildVertical = parent == null || !parent.isVertical;
             RectHV rect;
             if (parent != null) {
@@ -123,17 +131,14 @@ public class KdTree {
                 rect = new RectHV(0, 0, 1, 1);
             }
             if (node == null) return new Node(parent, key.x(), key.y(), rect, isChildVertical);
-            double value;
             int comparison;
-            if (isChildVertical) {
-                value = key.x();
-                comparison = Double.compare(value, node.x);
+            if (node.isVertical) {
+                comparison = Double.compare(key.x(), node.x);
             } else {
-                value = key.y();
-                comparison = Double.compare(value, node.y);
+                comparison = Double.compare(key.y(), node.y);
             }
-            if (comparison < 0) node.left = put(node, node.left, key, true);
-            else if (comparison > 0) node.right = put(node, node.right, key, false);
+            if (comparison < 0) node.left = put(node, node.left, key);
+            else if (comparison > 0) node.right = put(node, node.right, key);
             else node = new Node(node.parent, key.x(), key.y(), node.rect, isChildVertical);
             return node;
         }
@@ -271,7 +276,7 @@ public class KdTree {
 
             @Override
             public String toString() {
-                String keyString = x.equals(y) ? x.toString() : String.format("%s(%s)", x, y);
+                String keyString = String.format("(%.1f, %.1f)", x, y);
                 return keyString + " " + (isVertical ? "|" : "-");
             }
 
