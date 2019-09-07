@@ -52,9 +52,10 @@ public class KdTree {
      * draw all points to standard draw
      */
     public void draw() {
-        points.toList().forEach(p -> {
-            Utils.drawCoords(p.x(), p.y());
+        points.nodesToList().forEach(n -> {
+            Point2D p = n.point;
             p.draw();
+            Utils.drawCoords(p.x(), p.y());
         });
     }
 
@@ -158,8 +159,9 @@ public class KdTree {
         }
 
         private Point2D nearest(Node node, Point2D query, Point2D nearest) {
-            if (nearest == null || node.point.distanceTo(query) < node.point.distanceTo(nearest)) nearest = node.point;
-            if (node.left == null && node.right == null) return nearest;
+            if (node == null) return nearest;
+            double distanceToQuery = node.point.distanceTo(query);
+            if (nearest == null || distanceToQuery < nearest.distanceTo(query)) nearest = node.point;
             if (node.isVertical) {
                 if (query.x() < node.x) nearest = nearest(node.left, query, nearest);
                 else nearest = nearest(node.right, query, nearest);
@@ -287,7 +289,7 @@ public class KdTree {
             @Override
             public String toString() {
                 String keyString = String.format("(%.1f, %.1f)", x, y);
-                return keyString + " " + (isVertical ? "|" : "-");
+                return keyString /*+ " " + (isVertical ? "|" : "-")*/;
             }
 
             @Override
