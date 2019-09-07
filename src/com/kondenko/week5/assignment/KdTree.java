@@ -2,6 +2,7 @@ package com.kondenko.week5.assignment;
 
 import com.kondenko.Utils;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.StdDraw;
 
 public class KdTree {
 
@@ -115,16 +117,16 @@ public class KdTree {
         }
 
         public void put(Point2D key) {
-            root = put(root, root, key);
+            root = put(root, root, key, root != null);
             size++;
         }
 
-        private Node put(Node parent, Node node, Point2D key) {
+        private Node put(Node parent, Node node, Point2D key, boolean isLeftOrUpper) {
             boolean isChildVertical = parent == null || !parent.isVertical;
             RectHV rect;
             if (parent != null) {
-                if (isChildVertical) rect = parent.rightOrLower();
-                else rect = parent.leftOrUpper();
+                if (isChildVertical) rect = isLeftOrUpper ? parent.left() : parent.right();
+                else rect = isLeftOrUpper ? parent.upper() : parent.lower();
             } else {
                 rect = new RectHV(0, 0, 1, 1);
             }
@@ -135,8 +137,8 @@ public class KdTree {
             } else {
                 comparison = Double.compare(key.y(), node.y);
             }
-            if (comparison < 0) node.left = put(node, node.left, key);
-            else if (comparison > 0) node.right = put(node, node.right, key);
+            if (comparison < 0) node.left = put(node, node.left, key, true);
+            else if (comparison > 0) node.right = put(node, node.right, key, false);
             else node = new Node(node.parent, key.x(), key.y(), node.rect, isChildVertical);
             return node;
         }
@@ -149,8 +151,12 @@ public class KdTree {
 
         private void searchIn(Node root, RectHV rect, ArrayList<Point2D> points) {
             if (root == null) return;
-            if (rect.intersects(root.leftOrUpper())) searchIn(root.left, rect, points);
-            if (rect.intersects(root.rightOrLower())) searchIn(root.right, rect, points);
+            if (intersect(root.left(), root.upper())) {
+                searchIn(root.left, rect, points);
+            }
+            if (intersect(root.right(), root.lower())) {
+                searchIn(root.right, rect, points);
+            }
             if (rect.contains(root.point)) points.add(root.point);
         }
 
@@ -161,7 +167,8 @@ public class KdTree {
         private Point2D nearest(Node node, Point2D query, Point2D nearest) {
             if (node == null) return nearest;
             double distanceToQuery = node.point.distanceTo(query);
-            if (nearest == null || distanceToQuery < nearest.distanceTo(query)) nearest = node.point;
+            if (nearest == null || distanceToQuery < nearest.distanceTo(query))
+                nearest = node.point;
             if (node.isVertical) {
                 if (query.x() < node.x) nearest = nearest(node.left, query, nearest);
                 else nearest = nearest(node.right, query, nearest);
@@ -246,6 +253,11 @@ public class KdTree {
             else return node.toString();
         }
 
+        private boolean intersect(RectHV a, RectHV b) {
+            if (a == null || b == null) return false;
+            return a.intersects(b);
+        }
+
         protected static final class Node implements Comparable<Node> {
 
             final Double x;
@@ -269,16 +281,39 @@ public class KdTree {
                 this.point = new Point2D(x, y);
             }
 
-            public RectHV leftOrUpper() {
-                return isVertical ?
-                        new RectHV(rect.xmin(), rect.ymin(), x, rect.ymax()) // left
-                        : new RectHV(rect.xmin(), y, rect.xmax(), rect.ymax()); // upper
+            public void drawLine() {
+                if (isVertical) {
+                    StdDraw.setPenColor(Color.RED);
+                    StdDraw.line(x, rect.ymax(), x, rect.ymin());
+                }
             }
 
-            public RectHV rightOrLower() {
-                return isVertical ?
-                        new RectHV(x, rect.ymin(), rect.xmax(), rect.ymax()) // left
-                        : new RectHV(rect.xmin(), rect.ymin(), rect.xmax(), y); // upper
+            public RectHV left() {
+                double xmin = rect.xmin();
+                double xmax = x;
+                if (xmax < xmin) return null;
+                return new RectHV(xmin, rect.ymin(), xmax, rect.ymax());
+            }
+
+            public RectHV right() {
+                double xmin = x;
+                double xmax = rect.xmax();
+                if (xmax < xmin) return null;
+                return new RectHV(xmin, rect.ymin(), xmax, rect.ymax());
+            }
+
+            public RectHV upper() {
+                double ymin = y;
+                double ymax = rect.ymax();
+                if (ymax < ymin) return null;
+                return new RectHV(rect.xmin(), ymin, rect.xmax(), ymax);
+            }
+
+            public RectHV lower() {
+                double ymin = rect.ymin();
+                double ymax = y;
+                if (ymax < ymin) return null;
+                return new RectHV(rect.xmin(), ymin, rect.xmax(), ymax);
             }
 
             @Override

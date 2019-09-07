@@ -71,8 +71,10 @@ public class NearestNeighborVisualizer {
                 rect.draw();
                 // highlight points inside the rect
                 StdDraw.setPenRadius(0.03);
-                StdDraw.setPenColor(StdDraw.GREEN);
-                // brute.range(rect).forEach(Point2D::draw);
+                StdDraw.setPenColor(StdDraw.RED);
+                brute.range(rect).forEach(Point2D::draw);
+                StdDraw.setPenRadius(0.02);
+                StdDraw.setPenColor(StdDraw.BLUE);
                 kdtree.range(rect).forEach(Point2D::draw);
             } else if (!StdDraw.isMousePressed()) {
                 prevX = x;
