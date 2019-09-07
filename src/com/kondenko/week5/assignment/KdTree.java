@@ -103,7 +103,7 @@ public class KdTree {
         }
 
         private Node put(Node parent, Node node, Point2D key, boolean isLeftOrUpper) {
-            boolean isChildVertical = parent == null || !parent.isVertical;
+            boolean isChildVertical = root == null || !parent.isVertical;
             RectHV rect;
             if (parent != null) {
                 if (isChildVertical) {
@@ -118,10 +118,8 @@ public class KdTree {
             if (node == null) return new Node(parent, key.x(), key.y(), rect, isChildVertical);
 
             int comparison = node.compareTo(key);
-
             if (comparison < 0) node.left = put(node, node.left, key, true);
-            else if (comparison > 0) node.right = put(node, node.right, key, false);
-            else node = new Node(node.parent, key.x(), key.y(), node.rect, isChildVertical);
+            else node.right = put(node, node.right, key, false);
 
             return node;
         }

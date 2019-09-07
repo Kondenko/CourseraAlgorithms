@@ -65,4 +65,14 @@ public class KdTreeTest {
         assertEquals(2, kdTree.size());
     }
 
+    @Test
+    public void size5() {
+        KdTree kdTree = new KdTree();
+        kdTree.insert(new Point2D(0, 0));
+        kdTree.insert(new Point2D(1, 1));
+        kdTree.insert(new Point2D(0, 1));
+        kdTree.insert(new Point2D(0, 0));
+        assertEquals(3, kdTree.size());
+    }
+
 }
