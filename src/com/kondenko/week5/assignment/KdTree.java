@@ -1,6 +1,7 @@
 package com.kondenko.week5.assignment;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,7 +10,7 @@ import edu.princeton.cs.algs4.RectHV;
 
 public class KdTree {
 
-    private Tree2d points = new Tree2d();
+    protected Tree2d points = new Tree2d();
 
     /**
      * construct an empty set of points
@@ -22,7 +23,7 @@ public class KdTree {
      */
     public void insert(Point2D p) {
         if (p == null) throw new IllegalArgumentException("p is null");
-        else if (!contains(p)) points.put(p);
+        if (!contains(p)) points.put(p);
     }
 
     /**
@@ -46,10 +47,10 @@ public class KdTree {
      * draw all points to standard draw
      */
     public void draw() {
-        points.nodesToList().forEach(n -> {
+        for (Tree2d.Node n : points.nodesToList()) {
             Point2D p = n.point;
             p.draw();
-        });
+        }
     }
 
     /**
@@ -79,17 +80,18 @@ public class KdTree {
         return points.toString();
     }
 
-    private static class Tree2d {
+    static class Tree2d {
 
         private Node root = null;
 
         private int size = 0;
 
-        public List<Node> nodesToList() {
-            return toList(root, new ArrayList<>());
+        public Node[] nodesToList() {
+            HashSet<Node> nodes = new HashSet<>();
+            return toList(root, nodes).toArray(new Node[0]);
         }
 
-        private List<Node> toList(Node root, List<Node> nodes) {
+        private HashSet<Node> toList(Node root, HashSet<Node> nodes) {
             if (root.left != null) nodes.addAll(toList(root.left, nodes));
             if (root.right != null) nodes.addAll(toList(root.right, nodes));
             nodes.add(root);
@@ -116,9 +118,7 @@ public class KdTree {
 
             if (node == null) return new Node(parent, key.x(), key.y(), rect, isChildVertical);
 
-            int comparison;
-            if (node.isVertical) comparison = Double.compare(key.x(), node.x);
-            else comparison = Double.compare(key.y(), node.y);
+            int comparison = node.compareTo(key);
 
             if (comparison < 0) node.left = put(node, node.left, key, true);
             else if (comparison > 0) node.right = put(node, node.right, key, false);
@@ -170,9 +170,9 @@ public class KdTree {
         private Node getNode(Point2D key) {
             Node node = root;
             while (node != null) {
-                int cmp = node.isVertical ? Double.compare(key.x(), node.x) : Double.compare(key.y(), node.y);
-                if (cmp < 0) node = node.left;
-                else if (cmp > 0) node = node.right;
+                int comparison = node.compareTo(key);
+                if (comparison < 0) node = node.left;
+                else if (comparison > 0) node = node.right;
                 else if (node.point.equals(key)) return node;
                 else return null;
             }
@@ -192,19 +192,19 @@ public class KdTree {
             return a.intersects(b);
         }
 
-        private static final class Node {
+        static final class Node implements Comparable<Point2D> {
 
-            final Double x;
-            final Double y;
+            public final Double x;
+            public final Double y;
 
-            final Point2D point;
-            final RectHV rect;
+            public final Point2D point;
+            public final RectHV rect;
 
             final public Node parent;
             public Node left = null;
             public Node right = null;
 
-            final boolean isVertical;
+            public final boolean isVertical;
 
             public Node(Node parent, Double x, Double y, RectHV rect, boolean isVertical) {
                 this.parent = parent;
@@ -237,6 +237,11 @@ public class KdTree {
                 double ymin = Math.min(y, rect.ymin());
                 double ymax = rect.ymax();
                 return new RectHV(rect.xmin(), ymin, rect.xmax(), ymax);
+            }
+
+            @Override
+            public int compareTo(Point2D o) {
+                return isVertical ? Double.compare(o.x(), x) : Double.compare(o.y(), y);
             }
 
             @Override

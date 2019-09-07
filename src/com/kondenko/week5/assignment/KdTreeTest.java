@@ -30,4 +30,40 @@ public class KdTreeTest {
         kdTree.insert(new Point2D(0.9375, 0.0625));
         assertEquals(4, kdTree.size());
     }
+
+    @Test
+    public void size3() {
+        KdTree kdTree = new KdTree();
+        kdTree.insert(new Point2D(0.0, 0.125));
+        kdTree.insert(new Point2D(0.0, 0.625));
+        kdTree.insert(new Point2D(0.25, 0.375));
+        kdTree.insert(new Point2D(0.25, 0.5));
+        kdTree.insert(new Point2D(0.25, 0.625));
+        kdTree.insert(new Point2D(0.25, 1.0));
+        kdTree.insert(new Point2D(0.125, 0.5));
+        kdTree.insert(new Point2D(0.125, 0.875));
+        kdTree.insert(new Point2D(0.125, 0.875)); // duplicate
+        kdTree.insert(new Point2D(0.5, 0.875));
+        kdTree.insert(new Point2D(0.5, 1.0));
+        kdTree.insert(new Point2D(0.75, 0.125));
+        kdTree.insert(new Point2D(0.75, 0.25));
+        kdTree.insert(new Point2D(0.75, 1.0));
+        kdTree.insert(new Point2D(0.625, 0.25));
+        kdTree.insert(new Point2D(0.625, 1.0));
+        kdTree.insert(new Point2D(0.875, 0.25));
+        kdTree.insert(new Point2D(1.0, 0.625));
+        kdTree.insert(new Point2D(1.0, 0.75));
+
+        assertEquals(18, kdTree.size());
+    }
+
+    @Test
+    public void size4() {
+        KdTree kdTree = new KdTree();
+        kdTree.insert(new Point2D(0.0, 0.625));
+        kdTree.insert(new Point2D(0.125, 0.875));
+        kdTree.insert(new Point2D(0.125, 0.875)); // duplicate
+        assertEquals(2, kdTree.size());
+    }
+
 }
