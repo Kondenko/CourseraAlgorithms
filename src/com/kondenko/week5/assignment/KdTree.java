@@ -223,29 +223,25 @@ public class KdTree {
 
             public RectHV left() {
                 double xmin = rect.xmin();
-                double xmax = x;
-                if (xmax < xmin) return null;
+                double xmax = Math.max(x, rect.xmax());
                 return new RectHV(xmin, rect.ymin(), xmax, rect.ymax());
             }
 
             public RectHV right() {
-                double xmin = x;
+                double xmin = Math.min(x, rect.xmin());
                 double xmax = rect.xmax();
-                if (xmax < xmin) return null;
                 return new RectHV(xmin, rect.ymin(), xmax, rect.ymax());
-            }
-
-            public RectHV upper() {
-                double ymin = y;
-                double ymax = rect.ymax();
-                if (ymax < ymin) return null;
-                return new RectHV(rect.xmin(), ymin, rect.xmax(), ymax);
             }
 
             public RectHV lower() {
                 double ymin = rect.ymin();
-                double ymax = y;
-                if (ymax < ymin) return null;
+                double ymax = Math.max(y, rect.ymax());
+                return new RectHV(rect.xmin(), ymin, rect.xmax(), ymax);
+            }
+
+            public RectHV upper() {
+                double ymin = Math.min(y, rect.ymin());
+                double ymax = rect.ymax();
                 return new RectHV(rect.xmin(), ymin, rect.xmax(), ymax);
             }
 
