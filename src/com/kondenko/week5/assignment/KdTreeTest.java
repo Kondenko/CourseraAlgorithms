@@ -53,7 +53,6 @@ public class KdTreeTest {
         kdTree.insert(new Point2D(0.875, 0.25));
         kdTree.insert(new Point2D(1.0, 0.625));
         kdTree.insert(new Point2D(1.0, 0.75));
-
         assertEquals(18, kdTree.size());
     }
 

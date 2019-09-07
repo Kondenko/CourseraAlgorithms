@@ -1,7 +1,6 @@
 package com.kondenko.week5.assignment;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,7 +9,7 @@ import edu.princeton.cs.algs4.RectHV;
 
 public class KdTree {
 
-    protected Tree2d points = new Tree2d();
+    private Tree2d points = new Tree2d();
 
     /**
      * construct an empty set of points
@@ -80,18 +79,18 @@ public class KdTree {
         return points.toString();
     }
 
-    static class Tree2d {
+   private static class Tree2d {
 
         private Node root = null;
 
         private int size = 0;
 
         public Node[] nodesToList() {
-            HashSet<Node> nodes = new HashSet<>();
+            ArrayList<Node> nodes = new ArrayList<>();
             return toList(root, nodes).toArray(new Node[0]);
         }
 
-        private HashSet<Node> toList(Node root, HashSet<Node> nodes) {
+        private ArrayList<Node> toList(Node root, ArrayList<Node> nodes) {
             if (root.left != null) nodes.addAll(toList(root.left, nodes));
             if (root.right != null) nodes.addAll(toList(root.right, nodes));
             nodes.add(root);
