@@ -22,7 +22,7 @@ public class KdTree {
      */
     public void insert(Point2D p) {
         if (p == null) throw new IllegalArgumentException("p is null");
-        points.put(p);
+        else if (!contains(p)) points.put(p);
     }
 
     /**
@@ -86,18 +86,7 @@ public class KdTree {
         private int size = 0;
 
         public List<Node> nodesToList() {
-            ArrayList<Node> nodes = new ArrayList<>();
-            nodes.addAll(toList(root, nodes));
-            return nodes;
-        }
-
-        public List<Point2D> toList() {
-            List<Node> nodes = nodesToList();
-            ArrayList<Point2D> points = new ArrayList<>();
-            for (Node node : nodes) {
-                points.add(new Point2D(node.x, node.y));
-            }
-            return points;
+            return toList(root, new ArrayList<>());
         }
 
         private List<Node> toList(Node root, List<Node> nodes) {
@@ -171,10 +160,11 @@ public class KdTree {
         }
 
         public boolean contains(Point2D key) {
-            return getNode(key).y == key.y();
+            Node n = getNode(key);
+            return n != null && n.y == key.y();
         }
 
-        private final Node getNode(Point2D key) {
+        private Node getNode(Point2D key) {
             Node node = root;
             while (node != null) {
                 int cmp = node.isVertical ? Double.compare(key.x(), (node.x)) : Double.compare(key.y(), (node.y));

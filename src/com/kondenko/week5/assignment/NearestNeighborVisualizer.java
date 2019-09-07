@@ -15,7 +15,8 @@ package com.kondenko.week5.assignment;
 
 import com.kondenko.Utils;
 
-import edu.princeton.cs.algs4.In;
+import java.util.Random;
+
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
@@ -27,16 +28,27 @@ public class NearestNeighborVisualizer {
 
     public static void main(String[] args) {
         // initialize the two data structures with point from file
+
+        // PointSET brute = new PointSET();
+        KdTree kdtree = new KdTree();
+
+        /*
         String filename = args[0];
         In in = new In(filename);
-        PointSET brute = new PointSET();
-        KdTree kdtree = new KdTree();
         while (!in.isEmpty()) {
             double x = in.readDouble();
             double y = in.readDouble();
             Point2D p = new Point2D(x, y);
             kdtree.insert(p);
             brute.insert(p);
+        }
+        */
+
+        Random r = new Random();
+        for (int i = 0; i < 10; i++) {
+            Point2D p = new Point2D(r.nextFloat(), r.nextFloat());
+            // brute.insert(p);
+            kdtree.insert(p);
         }
 
         // process nearest neighbor queries
@@ -57,7 +69,7 @@ public class NearestNeighborVisualizer {
             StdDraw.clear();
             StdDraw.setPenColor(StdDraw.BLACK);
             StdDraw.setPenRadius(0.01);
-            brute.draw();
+            // brute.draw();
             kdtree.draw();
 
             Utils.drawCoords(x, y);
@@ -72,7 +84,7 @@ public class NearestNeighborVisualizer {
                 // highlight points inside the rect
                 StdDraw.setPenRadius(0.03);
                 StdDraw.setPenColor(StdDraw.RED);
-                brute.range(rect).forEach(Point2D::draw);
+                // brute.range(rect).forEach(Point2D::draw);
                 StdDraw.setPenRadius(0.02);
                 StdDraw.setPenColor(StdDraw.BLUE);
                 kdtree.range(rect).forEach(Point2D::draw);
@@ -84,8 +96,8 @@ public class NearestNeighborVisualizer {
             // draw in red the nearest neighbor (using brute-force algorithm)
             StdDraw.setPenRadius(0.03);
             StdDraw.setPenColor(StdDraw.RED);
-            Point2D nearestBrute = brute.nearest(query);
-            if (nearestBrute != null) nearestBrute.draw();
+            // Point2D nearestBrute = brute.nearest(query);
+            // if (nearestBrute != null) nearestBrute.draw();
 
             // draw in blue the nearest neighbor (using kd-tree algorithm)
             StdDraw.setPenRadius(0.02);
