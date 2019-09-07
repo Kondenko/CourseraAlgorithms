@@ -13,11 +13,12 @@ package com.kondenko.week5.assignment;
  *
  ******************************************************************************/
 
+import com.kondenko.Utils;
+
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -28,18 +29,15 @@ public class NearestNeighborVisualizer {
         // initialize the two data structures with point from file
         String filename = args[0];
         In in = new In(filename);
-        // PointSET brute = new PointSET();
+        PointSET brute = new PointSET();
         KdTree kdtree = new KdTree();
         while (!in.isEmpty()) {
             double x = in.readDouble();
             double y = in.readDouble();
             Point2D p = new Point2D(x, y);
             kdtree.insert(p);
-            // brute.insert(p);
+            brute.insert(p);
         }
-
-        StdOut.println("Added all points:");
-        StdOut.println(kdtree.toString());
 
         // process nearest neighbor queries
         StdDraw.enableDoubleBuffering();
@@ -54,12 +52,15 @@ public class NearestNeighborVisualizer {
             double y = StdDraw.mouseY();
             Point2D query = new Point2D(x, y);
 
+
             // draw all of the points
             StdDraw.clear();
             StdDraw.setPenColor(StdDraw.BLACK);
             StdDraw.setPenRadius(0.01);
-            // brute.draw();
+            brute.draw();
             kdtree.draw();
+
+            Utils.drawCoords(x, y);
 
             if (prevX != null && prevY != null && StdDraw.isMousePressed()) {
                 double llX = min(x, prevX);
@@ -81,8 +82,8 @@ public class NearestNeighborVisualizer {
             // draw in red the nearest neighbor (using brute-force algorithm)
             StdDraw.setPenRadius(0.03);
             StdDraw.setPenColor(StdDraw.RED);
-            // Point2D nearestBrute = brute.nearest(query);
-            // if (nearestBrute != null) nearestBrute.draw();
+            Point2D nearestBrute = brute.nearest(query);
+            if (nearestBrute != null) nearestBrute.draw();
             StdDraw.setPenRadius(0.02);
 
             // draw in blue the nearest neighbor (using kd-tree algorithm)
@@ -92,5 +93,6 @@ public class NearestNeighborVisualizer {
             StdDraw.show();
             StdDraw.pause(40);
         }
+
     }
 }

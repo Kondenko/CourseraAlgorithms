@@ -2,7 +2,6 @@ package com.kondenko.week5.assignment;
 
 import com.kondenko.Utils;
 
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,7 +12,6 @@ import java.util.stream.Collectors;
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
-import edu.princeton.cs.algs4.StdDraw;
 
 public class KdTree {
 
@@ -47,7 +45,7 @@ public class KdTree {
     public Point2D nearest(Point2D p) {
         if (p == null) throw new IllegalArgumentException("p is null");
         if (isEmpty()) return null;
-        return null;
+        return points.nearest(p);
     }
 
     /**
@@ -55,8 +53,7 @@ public class KdTree {
      */
     public void draw() {
         points.toList().forEach(p -> {
-            StdDraw.setFont(new Font("Arial", Font.PLAIN, 12));
-            StdDraw.text(p.x(), p.y() + 0.05, String.format("(%f, %f)", p.x(), p.y()), 45);
+            Utils.drawCoords(p.x(), p.y());
             p.draw();
         });
     }
@@ -156,9 +153,22 @@ public class KdTree {
             if (rect.contains(root.point)) points.add(root.point);
         }
 
-//        public Point2D nearest(Node root, Point2D point) {
-//
-//        }
+        public Point2D nearest(Point2D query) {
+            return nearest(root, query, null);
+        }
+
+        private Point2D nearest(Node node, Point2D query, Point2D nearest) {
+            if (nearest == null || node.point.distanceTo(query) < node.point.distanceTo(nearest)) nearest = node.point;
+            if (node.left == null && node.right == null) return nearest;
+            if (node.isVertical) {
+                if (query.x() < node.x) nearest = nearest(node.left, query, nearest);
+                else nearest = nearest(node.right, query, nearest);
+            } else {
+                nearest = nearest(node.left, query, nearest);
+                nearest = nearest(node.right, query, nearest);
+            }
+            return nearest;
+        }
 
         public boolean contains(Point2D key) {
             return getNode(key).y == key.y();
