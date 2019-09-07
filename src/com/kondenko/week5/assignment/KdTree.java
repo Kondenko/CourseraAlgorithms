@@ -1,13 +1,11 @@
 package com.kondenko.week5.assignment;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
-import edu.princeton.cs.algs4.StdDraw;
 
 public class KdTree {
 
@@ -200,7 +198,7 @@ public class KdTree {
             return a.intersects(b);
         }
 
-        private static final class Node implements Comparable<Node> {
+        private static final class Node {
 
             final Double x;
             final Double y;
@@ -221,13 +219,6 @@ public class KdTree {
                 this.rect = rect;
                 this.isVertical = isVertical;
                 this.point = new Point2D(x, y);
-            }
-
-            public void drawLine() {
-                if (isVertical) {
-                    StdDraw.setPenColor(Color.RED);
-                    StdDraw.line(x, rect.ymax(), x, rect.ymin());
-                }
             }
 
             public RectHV left() {
@@ -256,11 +247,6 @@ public class KdTree {
                 double ymax = y;
                 if (ymax < ymin) return null;
                 return new RectHV(rect.xmin(), ymin, rect.xmax(), ymax);
-            }
-
-            @Override
-            public int compareTo(Node o) {
-                return isVertical ? Double.compare(x, o.x) : Double.compare(y, o.y);
             }
 
             @Override
