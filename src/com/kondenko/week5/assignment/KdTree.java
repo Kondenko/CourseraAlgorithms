@@ -1,15 +1,9 @@
 package com.kondenko.week5.assignment;
 
-import com.kondenko.Utils;
-
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
@@ -57,7 +51,6 @@ public class KdTree {
         points.nodesToList().forEach(n -> {
             Point2D p = n.point;
             p.draw();
-            Utils.drawCoords(p.x(), p.y());
         });
     }
 
@@ -90,7 +83,7 @@ public class KdTree {
 
     private static class Tree2d {
 
-        protected Node root = null;
+        private Node root = null;
 
         private int size = 0;
 
@@ -166,8 +159,8 @@ public class KdTree {
 
         private Point2D nearest(Node node, Point2D query, Point2D nearest) {
             if (node == null) return nearest;
-            double distanceToQuery = node.point.distanceTo(query);
-            if (nearest == null || distanceToQuery < nearest.distanceTo(query))
+            double distanceToQuery = node.point.distanceSquaredTo(query);
+            if (nearest == null || distanceToQuery < nearest.distanceSquaredTo(query))
                 nearest = node.point;
             if (node.isVertical) {
                 if (query.x() < node.x) nearest = nearest(node.left, query, nearest);
@@ -183,7 +176,7 @@ public class KdTree {
             return getNode(key).y == key.y();
         }
 
-        protected final Node getNode(Point2D key) {
+        private final Node getNode(Point2D key) {
             Node node = root;
             while (node != null) {
                 int cmp = node.isVertical ? Double.compare(key.x(), (node.x)) : Double.compare(key.y(), (node.y));
@@ -202,63 +195,12 @@ public class KdTree {
             return size == 0;
         }
 
-        public String toString() {
-            if (root == null) return "Empty";
-            StringBuilder sb = new StringBuilder();
-            Map<Integer, ArrayList<Node>> nodesByRows = getNodesByRows();
-            HashMap<Integer, String> indentedStrings = new HashMap<>();
-            int size = Collections.max(nodesByRows.keySet());
-            nodesByRows.forEach((level, nodes) -> {
-                int indent = size - level;
-                String line = nodesByRows.getOrDefault(level, new ArrayList<>())
-                        .stream()
-                        .map(this::safeToString)
-                        .collect(Collectors.joining("   "));
-                indentedStrings.put(indent, line);
-            });
-            indentedStrings.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.<Integer, String>comparingByKey().reversed())
-                    .forEach(entry -> {
-                        int indent = entry.getKey();
-                        String row = entry.getValue();
-                        sb.append("   ".repeat(indent));
-                        sb.append(row);
-                        sb.append("\n\n");
-                    });
-            return sb.toString();
-        }
-
-        protected final Map<Integer, ArrayList<Node>> getNodesByRows() {
-            int level = 0;
-            HashMap<Integer, ArrayList<Node>> data = new HashMap<>();
-            nodesByLevels(data, root, level);
-            return data;
-        }
-
-        private HashMap<Integer, ArrayList<Node>> nodesByLevels(HashMap<Integer, ArrayList<Node>> map, Node node, int level) {
-            var list = map.getOrDefault(level, new ArrayList<>());
-            list.add(node);
-            map.put(level, list);
-            if (node != null) {
-                int newLevel = level + 1;
-                map.putAll(nodesByLevels(map, node.left, newLevel));
-                map.putAll(nodesByLevels(map, node.right, newLevel));
-            }
-            return map;
-        }
-
-        private String safeToString(Node node) {
-            if (node == null || node.x == null) return "n";
-            else return node.toString();
-        }
-
         private boolean intersect(RectHV a, RectHV b) {
             if (a == null || b == null) return false;
             return a.intersects(b);
         }
 
-        protected static final class Node implements Comparable<Node> {
+        private static final class Node implements Comparable<Node> {
 
             final Double x;
             final Double y;

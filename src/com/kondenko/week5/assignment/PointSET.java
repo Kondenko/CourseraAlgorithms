@@ -50,8 +50,8 @@ public class PointSET {
     public Point2D nearest(Point2D p) {
         if (p == null) throw new IllegalArgumentException("p is null");
         if (isEmpty()) return null;
-        List<Point2D> nearestPoints =  points.stream()
-                .collect(Collectors.groupingBy(pp -> pp.distanceTo(p)))
+        List<Point2D> nearestPoints = points.stream()
+                .collect(Collectors.groupingBy(pp -> pp.distanceSquaredTo(p)))
                 .entrySet()
                 .stream()
                 .min(Comparator.comparingDouble(Map.Entry::getKey))
