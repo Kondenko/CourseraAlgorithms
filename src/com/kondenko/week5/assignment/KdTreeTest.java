@@ -22,6 +22,15 @@ public class KdTreeTest {
     }
 
     @Test
+    public void size1() {
+        KdTree kdTree = new KdTree();
+        kdTree.insert(new Point2D(0, 1));
+        kdTree.insert(new Point2D(0, 0));
+        kdTree.insert(new Point2D(0, 0));
+        assertEquals(2, kdTree.size());
+    }
+
+    @Test
     public void size2() {
         KdTree kdTree = new KdTree();
         kdTree.insert(new Point2D(0.8125, 0.5625));

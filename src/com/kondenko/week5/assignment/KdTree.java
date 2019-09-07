@@ -171,7 +171,7 @@ public class KdTree {
                 if (comparison < 0) node = node.left;
                 else if (comparison > 0) node = node.right;
                 else if (node.point.equals(key)) return node;
-                else return null;
+                else node = node.right;
             }
             return null;
         }
