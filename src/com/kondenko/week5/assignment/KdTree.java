@@ -127,8 +127,8 @@ public class KdTree {
             if (node == null) return new Node(parent, key.x(), key.y(), rect, isChildVertical);
 
             int comparison = node.compareTo(key);
-            if (comparison < 0) node.left = put(node, node.left, key, isChildVertical);
-            else node.right = put(node, node.right, key, !isChildVertical);
+            if (comparison < 0) node.left = put(node, node.left, key, false);
+            else node.right = put(node, node.right, key, true);
 
             return node;
         }
@@ -141,7 +141,6 @@ public class KdTree {
         }
 
         private void searchIn(Node node, RectHV rect, ArrayList<Point2D> points) {
-            if (node == null) return;
             if (node.left != null && intersect(rect, node.left.rect))
                 searchIn(node.left, rect, points);
             if (node.right != null && intersect(rect, node.right.rect))
