@@ -8,7 +8,6 @@ import java.util.Objects;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
 
 public class KdTree {
 
@@ -134,18 +133,17 @@ public class KdTree {
         }
 
         public List<Point2D> searchIn(RectHV rect) {
-            StdOut.println("searchIn(" + rect + ")");
             ArrayList<Point2D> points = new ArrayList<>();
             searchIn(root, rect, points);
             return points;
         }
 
         private void searchIn(Node node, RectHV rect, ArrayList<Point2D> points) {
+            if (node == null) return;
             if (node.left != null && intersect(rect, node.left.rect))
                 searchIn(node.left, rect, points);
             if (node.right != null && intersect(rect, node.right.rect))
                 searchIn(node.right, rect, points);
-            StdOut.println("Searching for points in " + node.point);
             if (rect.contains(node.point)) points.add(node.point);
         }
 
