@@ -17,18 +17,13 @@ import com.kondenko.Utils;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Point2D;
-import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
-
-import static java.lang.Math.max;
-import static java.lang.Math.min;
 
 public class NearestNeighborVisualizer {
 
     public static void main(String[] args) {
         // initialize the two data structures with point from file
-
-        // PointSET brute = new PointSET();
+        PointSET brute = new PointSET();
         KdTree kdtree = new KdTree();
 
         String filename = args[0];
@@ -38,34 +33,11 @@ public class NearestNeighborVisualizer {
             double y = in.readDouble();
             Point2D p = new Point2D(x, y);
             kdtree.insert(p);
-            // brute.insert(p);
+            brute.insert(p);
         }
-
-        /*
-        Random r = new Random();
-        for (int i = 0; i < 10; i++) {
-            Point2D p = new Point2D(r.nextFloat(), r.nextFloat());
-            // brute.insert(p);
-            kdtree.insert(p);
-        }
-        */
-
-//        Point2D A = new Point2D(0.7, 0.2);
-//        Point2D B = new Point2D(0.5, 0.4);
-//        Point2D C = new Point2D(0.2, 0.3);
-//        Point2D D = new Point2D(0.4, 0.7);
-//        Point2D E = new Point2D(0.9, 0.6);
-//        kdtree.insert(A);
-//        kdtree.insert(B);
-//        kdtree.insert(C);
-//        kdtree.insert(D);
-//        kdtree.insert(E);
 
         // process nearest neighbor queries
         StdDraw.enableDoubleBuffering();
-
-        Double prevX = null;
-        Double prevY = null;
 
         while (true) {
 
@@ -79,36 +51,16 @@ public class NearestNeighborVisualizer {
             StdDraw.clear();
             StdDraw.setPenColor(StdDraw.BLACK);
             StdDraw.setPenRadius(0.01);
-            // brute.draw();
+            brute.draw();
             kdtree.draw();
 
             Utils.drawCoords(x, y);
 
-            if (prevX != null && prevY != null && StdDraw.isMousePressed()) {
-                double llX = min(x, prevX);
-                double urX = max(x, prevX);
-                double llY = min(y, prevY);
-                double urY = max(y, prevY);
-                RectHV rect = new RectHV(llX, llY, urX, urY);
-                StdDraw.setPenRadius(0.01);
-                rect.draw();
-                // highlight points inside the rect
-                StdDraw.setPenRadius(0.04);
-                StdDraw.setPenColor(StdDraw.YELLOW);
-                // brute.range(rect).forEach(Point2D::draw);
-                StdDraw.setPenRadius(0.04);
-                StdDraw.setPenColor(StdDraw.GREEN);
-                kdtree.range(rect).forEach(Point2D::draw);
-            } else if (!StdDraw.isMousePressed()) {
-                prevX = x;
-                prevY = y;
-            }
-
             // draw in red the nearest neighbor (using brute-force algorithm)
             StdDraw.setPenRadius(0.03);
             StdDraw.setPenColor(StdDraw.RED);
-            // Point2D nearestBrute = brute.nearest(query);
-            // if (nearestBrute != null) nearestBrute.draw();
+            Point2D nearestBrute = brute.nearest(query);
+            if (nearestBrute != null) nearestBrute.draw();
 
             // draw in blue the nearest neighbor (using kd-tree algorithm)
             StdDraw.setPenRadius(0.02);
