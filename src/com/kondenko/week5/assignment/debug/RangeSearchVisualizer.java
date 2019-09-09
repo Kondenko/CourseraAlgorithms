@@ -1,4 +1,4 @@
-package com.kondenko.week5.assignment;
+package com.kondenko.week5.assignment.debug;
 
 /******************************************************************************
  *  Compilation:  javac RangeSearchVisualizer.java
@@ -13,6 +13,9 @@ package com.kondenko.week5.assignment;
  *  in red; the results using the kd-tree algorithms are drawn in blue.
  *
  ******************************************************************************/
+
+import com.kondenko.week5.assignment.KdTree;
+import com.kondenko.week5.assignment.PointSET;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Point2D;

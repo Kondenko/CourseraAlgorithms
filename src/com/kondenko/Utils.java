@@ -8,9 +8,14 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
+import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class Utils {
+
+    public static String drawCoords(Point2D point2D) {
+        return drawCoords(point2D.x(), point2D.y());
+    }
 
     public static String drawCoords(double x, double y) {
         StdDraw.setFont(new Font("Arial", Font.PLAIN, 12));

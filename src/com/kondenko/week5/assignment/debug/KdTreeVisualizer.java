@@ -1,4 +1,4 @@
-package com.kondenko.week5.assignment; /******************************************************************************
+package com.kondenko.week5.assignment.debug; /******************************************************************************
  *  Compilation:  javac KdTreeVisualizer.java
  *  Execution:    java KdTreeVisualizer
  *  Dependencies: KdTree.java
@@ -7,6 +7,8 @@ package com.kondenko.week5.assignment; /****************************************
  *  to a kd-tree and draw the resulting kd-tree.
  *
  ******************************************************************************/
+
+import com.kondenko.week5.assignment.KdTree;
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;

@@ -1,4 +1,4 @@
-package com.kondenko.week5.assignment;
+package com.kondenko.week5.assignment.debug;
 
 /******************************************************************************
  *  Compilation:  javac NearestNeighborVisualizer.java
@@ -14,6 +14,8 @@ package com.kondenko.week5.assignment;
  ******************************************************************************/
 
 import com.kondenko.Utils;
+import com.kondenko.week5.assignment.KdTree;
+import com.kondenko.week5.assignment.PointSET;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Point2D;
@@ -40,7 +42,6 @@ public class NearestNeighborVisualizer {
         StdDraw.enableDoubleBuffering();
 
         while (true) {
-
             // the location (x, y) of the mouse
             double x = StdDraw.mouseX();
             double y = StdDraw.mouseY();
@@ -54,7 +55,8 @@ public class NearestNeighborVisualizer {
             brute.draw();
             kdtree.draw();
 
-            Utils.drawCoords(x, y);
+            query.draw();
+            Utils.drawCoords(query);
 
             // draw in red the nearest neighbor (using brute-force algorithm)
             StdDraw.setPenRadius(0.03);

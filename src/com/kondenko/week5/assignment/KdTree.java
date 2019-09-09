@@ -154,15 +154,15 @@ public class KdTree {
         private Point2D nearest(Node node, Point2D query, Point2D nearest) {
             if (node == null) return nearest;
             double distanceToQuery = node.point.distanceSquaredTo(query);
-            if (nearest == null || distanceToQuery < nearest.distanceSquaredTo(query))
-                nearest = node.point;
-            if (node.isVertical) {
-                if (query.x() < node.x) nearest = nearest(node.left, query, nearest);
-                else nearest = nearest(node.right, query, nearest);
-            } else {
-                nearest = nearest(node.left, query, nearest);
-                nearest = nearest(node.right, query, nearest);
+            Double distanceToNearest = nearest != null ? nearest.distanceSquaredTo(query) : null;
+            if (distanceToNearest != null && distanceToNearest < node.rect.distanceSquaredTo(query)) {
+                return nearest;
             }
+            if (distanceToNearest == null || distanceToQuery < distanceToNearest) {
+                nearest = node.point;
+            }
+            nearest = nearest(node.left, query, nearest);
+            nearest = nearest(node.right, query, nearest);
             return nearest;
         }
 
