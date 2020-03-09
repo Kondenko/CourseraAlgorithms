@@ -1,11 +1,10 @@
 package com.kondenko;
 
-import com.kondenko.week4.quiz.PriorityQueue;
+import com.kondenko.part1.week4.quiz.PriorityQueue;
+import edu.princeton.cs.algs4.Stack;
 
 import java.util.Comparator;
 import java.util.Iterator;
-
-import edu.princeton.cs.algs4.Stack;
 
 public class ArrayUtils {
 

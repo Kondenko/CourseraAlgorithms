@@ -1,15 +1,10 @@
 package com.kondenko;
 
-import com.kondenko.week4.quiz.PriorityQueue;
-
+import com.kondenko.part1.week4.quiz.PriorityQueue;
+import edu.princeton.cs.algs4.Stack;
 import org.junit.Test;
 
-import edu.princeton.cs.algs4.Stack;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ArrayUtilsTest {
 
