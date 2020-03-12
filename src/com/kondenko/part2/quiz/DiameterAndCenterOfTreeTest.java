@@ -3,7 +3,7 @@ package com.kondenko.part2.quiz;
 import edu.princeton.cs.algs4.Graph;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class DiameterAndCenterOfTreeTest {
 
@@ -37,7 +37,7 @@ public class DiameterAndCenterOfTreeTest {
 
 	@Test
 	public void diameter3() {
-		Graph g = new Graph(9);
+		Graph g = new Graph(10);
 		g.addEdge(0, 1);
 
 		g.addEdge(1, 3);
@@ -51,8 +51,9 @@ public class DiameterAndCenterOfTreeTest {
 		g.addEdge(2, 8);
 
 		g.addEdge(6, 7);
+		g.addEdge(7, 9);
 
-		assertEquals(7, DiameterAndCenterOfTree.diameter(g));
+		assertEquals(8, DiameterAndCenterOfTree.diameter(g));
 	}
 
 }

@@ -2,46 +2,52 @@ package com.kondenko.part2.quiz;
 
 import edu.princeton.cs.algs4.Graph;
 import edu.princeton.cs.algs4.MaxPQ;
-import edu.princeton.cs.algs4.Stack;
 
 import static com.kondenko.Utils.println;
-import static com.kondenko.Utils.size;
 
 public class DiameterAndCenterOfTree {
 
-	/*
-	 * 1. Perform DFS, store the longest subtree of each vertex.
-	 * 2. Take 2 largest paths of the root, it will be the longest path
+	/**
+	 * Task: design a linear-time algorithm to find the longest simple path in the graph
+	 * <p>
+	 * Solution: find 2 deepest subgraphs of the root node with DFS, the sum their depths + 1 will be the diameter.
 	 */
 	public static int diameter(Graph g) {
 		int v = g.V();
 		if (v <= 1) return 0;
 		if (v == 2) return 1;
-		MaxPQ<Integer> depths = new MaxPQ<>();
-		dfsDepth(g, 0, depths);
-		return depths.size() == 1 ? depths.max() : depths.delMax() + depths.delMax() + 1; // 1 for root
+		MaxPQ<Integer> rootSubgraphsDepths = new MaxPQ<>();
+		dfsDepth(g, rootSubgraphsDepths);
+		if (rootSubgraphsDepths.size() == 1) return rootSubgraphsDepths.max();
+		return rootSubgraphsDepths.delMax() + rootSubgraphsDepths.delMax() + 1; // + 1 for the root node
 	}
 
-	private static int dfsDepth(Graph g, int s, MaxPQ<Integer> depths) {
+	private static void dfsDepth(Graph g, MaxPQ<Integer> rootSubgraphsDepths) {
 		boolean[] marked = new boolean[g.V()];
-		marked[s] = true;
-		return dfsDepth(g, s, marked, 1, depths);
+		marked[0] = true;
+		dfsDepth(g, 0, marked, 1, rootSubgraphsDepths);
 	}
 
-	private static int dfsDepth(Graph g, int s, boolean[] marked, int depth, MaxPQ<Integer> depths) {
-		depth++;
+	private static int dfsDepth(Graph g, int s, boolean[] marked, final int depth, MaxPQ<Integer> subgraphDepths) {
+		MaxPQ<Integer> childSubgraphDepths = new MaxPQ<>();
 		for (int v : g.adj(s)) {
 			if (!marked[v]) {
-				println("(%d) is at depth %d", v, depth);
+				println("Depth of subgraph at node (%d) is %d", v, depth);
 				marked[v] = true;
-				dfsDepth(g, v, marked, depth, depths);
-				if (depth == 2) {
-					println("Subtree processed, adding depth %d", depth);
-					depths.insert(depth);
-				}
+				// Store each's subgraph's depth
+				childSubgraphDepths.insert(dfsDepth(g, v, marked, depth + 1, subgraphDepths));
 			}
 		}
-		return depth;
+		if (s == 0) {
+			// Store all subgraphs of root into a priority queue to extract 2 largest ones later.
+			for (Integer rootChildDepth : childSubgraphDepths) {
+				subgraphDepths.insert(rootChildDepth);
+			}
+		}
+		// If s is a leaf, its depth is 1. Otherwise, it's depth is the depth of it's deepest child + 1 for the node itself.
+		int maxDepth = childSubgraphDepths.size() > 0 ? childSubgraphDepths.max() + 1 : 1;
+		println("Max depth of subgraph (%d) is %d", s, maxDepth);
+		return maxDepth;
 	}
 
 	public static int center(Graph g) {
