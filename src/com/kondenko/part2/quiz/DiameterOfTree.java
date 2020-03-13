@@ -5,7 +5,7 @@ import edu.princeton.cs.algs4.MaxPQ;
 
 import static com.kondenko.Utils.println;
 
-public class DiameterAndCenterOfTree {
+public class DiameterOfTree {
 
 	/**
 	 * Task: design a linear-time algorithm to find the longest simple path in the graph
@@ -48,11 +48,6 @@ public class DiameterAndCenterOfTree {
 		int maxDepth = childSubgraphDepths.size() > 0 ? childSubgraphDepths.max() + 1 : 1;
 		println("Max depth of subgraph (%d) is %d", s, maxDepth);
 		return maxDepth;
-	}
-
-	public static int center(Graph g) {
-		int center = -1;
-		return center;
 	}
 
 }

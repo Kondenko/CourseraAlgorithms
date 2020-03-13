@@ -5,15 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class DiameterAndCenterOfTreeTest {
-
-	// @Test
-	public void center1() {
-		Graph g = new Graph(5);
-		g.addEdge(0, 1);
-		g.addEdge(1, 2);
-		assertEquals(1, DiameterAndCenterOfTree.center(g));
-	}
+public class DiameterOfTreeTest {
 
 	@Test
 	public void diameter1() {
@@ -24,7 +16,7 @@ public class DiameterAndCenterOfTreeTest {
 		g.addEdge(3, 4);
 		g.addEdge(3, 5);
 		g.addEdge(5, 6);
-		assertEquals(5, DiameterAndCenterOfTree.diameter(g));
+		assertEquals(5, DiameterOfTree.diameter(g));
 	}
 
 	@Test
@@ -32,7 +24,7 @@ public class DiameterAndCenterOfTreeTest {
 		Graph g = new Graph(3);
 		g.addEdge(0, 1);
 		g.addEdge(1, 2);
-		assertEquals(2, DiameterAndCenterOfTree.diameter(g));
+		assertEquals(2, DiameterOfTree.diameter(g));
 	}
 
 	@Test
@@ -53,7 +45,7 @@ public class DiameterAndCenterOfTreeTest {
 		g.addEdge(6, 7);
 		g.addEdge(7, 9);
 
-		assertEquals(8, DiameterAndCenterOfTree.diameter(g));
+		assertEquals(8, DiameterOfTree.diameter(g));
 	}
 
 }
