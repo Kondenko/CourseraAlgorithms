@@ -3,6 +3,7 @@ package com.kondenko.part2.quiz;
 import edu.princeton.cs.algs4.Graph;
 
 import java.util.*;
+import java.util.stream.StreamSupport;
 
 import static com.kondenko.Utils.println;
 
@@ -18,7 +19,7 @@ public class EulerCycle {
 			visited[i] = new HashSet<>();
 		}
 		euler(g, visited, vertices, 0, 0, 0);
-		println("Euler's cycle goes through %s", vertices.toString());
+		printEdges(vertices);
 		return vertices;
 	}
 
@@ -34,9 +35,9 @@ public class EulerCycle {
 			}
 		}
 		for (Integer v : next) {
-			if (vertices.size() > 1 && vertices.firstElement().equals(vertices.lastElement())) {
+			if (vertices.size() == g.E() + 1) {
 				return;
-			} else if (v == root && !vertices.isEmpty()) {
+			} else if (v == root) {
 				vertices.add(v);
 				return;
 			} else {
@@ -51,6 +52,13 @@ public class EulerCycle {
 			if (g.degree(i) % 2 != 0) return false;
 		}
 		return true;
+	}
+
+	private static void printEdges(Iterable<Integer> edges) {
+		Optional<String> chain = StreamSupport.stream(edges.spliterator(), false)
+				.map(String::valueOf)
+				.reduce((a, b) -> a + " - " + b);
+		println("Euler's cycle goes through " + chain.orElse("nothing"));
 	}
 
 	public static void main(String[] args) {
