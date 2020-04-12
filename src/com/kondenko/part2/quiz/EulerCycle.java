@@ -30,7 +30,10 @@ public class EulerCycle {
 		for (int v : g.adj(current)) {
 			if (!visited[v].contains(current)) {
 				int numberOfUnvisitedEdges = g.degree(v) - visited[v].size();
-				if (numberOfUnvisitedEdges >= 2) next.addFirst(v);
+				if (next.contains(v)) {
+					next.addFirst(current);
+					next.addFirst(v);
+				} else if (numberOfUnvisitedEdges >= 2) next.addFirst(v);
 				else next.addLast(v);
 			}
 		}
