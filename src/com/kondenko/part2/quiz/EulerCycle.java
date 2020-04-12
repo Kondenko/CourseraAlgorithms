@@ -34,14 +34,14 @@ public class EulerCycle {
 			}
 		}
 		for (Integer v : next) {
-			if (vertices.size() <= 1 || !vertices.firstElement().equals(vertices.lastElement())) {
-				if (v == root && !vertices.isEmpty()) {
-					vertices.add(v);
-					return;
-				} else {
-					visited[v].add(current);
-					euler(g, visited, vertices, root, current, v);
-				}
+			if (vertices.size() > 1 && vertices.firstElement().equals(vertices.lastElement())) {
+				return;
+			} else if (v == root && !vertices.isEmpty()) {
+				vertices.add(v);
+				return;
+			} else {
+				visited[v].add(current);
+				euler(g, visited, vertices, root, current, v);
 			}
 		}
 	}
