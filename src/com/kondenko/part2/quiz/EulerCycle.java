@@ -33,15 +33,16 @@ public class EulerCycle {
 				if (next.contains(v)) {
 					next.addFirst(current);
 					next.addFirst(v);
-				} else if (numberOfUnvisitedEdges >= 2) next.addFirst(v);
-				else next.addLast(v);
+				} else if (numberOfUnvisitedEdges >= 2) {
+					next.addFirst(v);
+				} else {
+					next.addLast(v);
+				}
 			}
 		}
 		for (Integer v : next) {
 			if (vertices.size() == g.E() + 1) {
-				return;
-			} else if (v == root) {
-				vertices.add(v);
+				if (v == root) vertices.add(v);
 				return;
 			} else {
 				visited[v].add(current);
@@ -62,22 +63,6 @@ public class EulerCycle {
 				.map(String::valueOf)
 				.reduce((a, b) -> a + " - " + b);
 		println("Euler's cycle goes through " + chain.orElse("nothing"));
-	}
-
-	public static void main(String[] args) {
-		Graph g = new Graph(6);
-		g.addEdge(0, 1);
-		g.addEdge(0, 4);
-		g.addEdge(1, 4);
-		g.addEdge(1, 5);
-		g.addEdge(1, 2);
-		g.addEdge(2, 3);
-		g.addEdge(3, 5);
-		g.addEdge(3, 5); // parallel edge
-		g.addEdge(3, 4);
-		g.addEdge(4, 5);
-		List<Integer> eulerCycle = findEulerCycle(g);
-		assert eulerCycle.get(0).equals(eulerCycle.get(eulerCycle.size() - 1));
 	}
 
 }
