@@ -1,4 +1,4 @@
-package com.kondenko.part2.quiz;
+package com.kondenko.part2.week1.quiz.graphs;
 
 import edu.princeton.cs.algs4.Graph;
 
