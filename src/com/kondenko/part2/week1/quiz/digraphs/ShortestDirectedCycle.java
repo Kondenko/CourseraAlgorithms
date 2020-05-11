@@ -2,45 +2,66 @@ package com.kondenko.part2.week1.quiz.digraphs;
 
 import edu.princeton.cs.algs4.Digraph;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 import static com.kondenko.Utils.println;
 
 public class ShortestDirectedCycle {
 
-	private static final int NO_CYCLE = -1;
-
 	public static void find(Digraph g) {
-		int shortestCycleLength = dfs(g);
-		println("\nThe shortest cycle in G has length of %d", shortestCycleLength);
+		List<Integer> shortestCycle = findCycle(g);
+		println("\nThe shortest cycle in G is %s", shortestCycle);
 	}
 
-	private static int dfs(Digraph g) {
-		int[] graphDepths = new int[g.V()];
-		Arrays.fill(graphDepths, NO_CYCLE);
+	private static List<Integer> findCycle(Digraph g) {
+		List<Stack<Integer>> graphPaths = new ArrayList<>(g.V());
 		for (int i = 0; i < g.V(); i++) {
-			int[] depth = new int[g.V()];
-			Arrays.fill(depth, NO_CYCLE);
-			dfs(g, new boolean[g.V()][g.V()], i, i, depth);
-			graphDepths[i] = depth[i];
+			graphPaths.add(new Stack<>());
 		}
-		int minCycleDepth = NO_CYCLE;
-		for (int depth : graphDepths) {
-			if (minCycleDepth == NO_CYCLE || (depth != NO_CYCLE && depth < minCycleDepth)) {
-				minCycleDepth = depth;
+		for (int i = 0; i < g.V(); i++) {
+			println("\n> Checking %d", i);
+			List<Stack<Integer>> paths = new ArrayList<>(g.V());
+			for (int j = 0; j < g.V(); j++) {
+				paths.add(new Stack<>());
+			}
+			dfs(g, new boolean[g.V()][g.V()], i, i, paths);
+			graphPaths.set(i, paths.get(i));
+			println("Depths: " + paths);
+			println("! Shortest cycle from %d has length of %s", i, paths.get(i));
+		}
+		List<Integer> shortestCycle = null;
+		for (Stack<Integer> path : graphPaths) {
+			List<Integer> cycle = findCycle(path);
+			if (shortestCycle == null || (cycle != null && cycle.size() > 1 && cycle.size() < shortestCycle.size())) {
+				shortestCycle = cycle;
 			}
 		}
-		return minCycleDepth;
+		return shortestCycle;
 	}
 
-	private static void dfs(Digraph g, boolean[][] marked, int root, int current, int[] depth) {
+	// Maybe this can be avoided by returning from dfs and discarding vertices adjacent to root
+	private static List<Integer> findCycle(List<Integer> path) {
+		for (int i = 0; i < path.size(); i++) {
+			for (int j = i + 1; j < path.size(); j++) {
+				if (path.get(i).equals(path.get(j))) {
+					return path.subList(i, j + 1);
+				}
+			}
+		}
+		return null;
+	}
+
+	private static void dfs(Digraph g, boolean[][] marked, int root, int current, List<Stack<Integer>> path) {
+		println("dfs(root = %d, current = %d, path = %s)", root, current, path.get(current).toString());
 		Iterable<Integer> adj = g.adj(current);
+		// if (path.get(current).size() > 1 && path.get(current).contains(root)) return;
+		path.get(root).push(current);
 		for (int v : adj) {
 			if (!marked[current][v]) {
 				marked[current][v] = true;
-				int newDepth = depth[current] + 1;
-				depth[v] = newDepth;
-				dfs(g, marked, root, v, depth);
+				dfs(g, marked, root, v, path);
 			}
 		}
 	}
