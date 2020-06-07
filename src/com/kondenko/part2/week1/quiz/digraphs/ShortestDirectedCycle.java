@@ -21,15 +21,12 @@ public class ShortestDirectedCycle {
 			graphPaths.add(new Stack<>());
 		}
 		for (int i = 0; i < g.V(); i++) {
-			println("\n> Checking %d", i);
 			List<Stack<Integer>> paths = new ArrayList<>(g.V());
 			for (int j = 0; j < g.V(); j++) {
 				paths.add(new Stack<>());
 			}
 			dfs(g, new boolean[g.V()][g.V()], i, i, paths);
 			graphPaths.set(i, paths.get(i));
-			println("Depths: " + paths);
-			println("! Shortest cycle from %d has length of %s", i, paths.get(i));
 		}
 		List<Integer> shortestCycle = null;
 		for (Stack<Integer> path : graphPaths) {
@@ -54,9 +51,7 @@ public class ShortestDirectedCycle {
 	}
 
 	private static void dfs(Digraph g, boolean[][] marked, int root, int current, List<Stack<Integer>> path) {
-		println("dfs(root = %d, current = %d, path = %s)", root, current, path.get(current).toString());
 		Iterable<Integer> adj = g.adj(current);
-		// if (path.get(current).size() > 1 && path.get(current).contains(root)) return;
 		path.get(root).push(current);
 		for (int v : adj) {
 			if (!marked[current][v]) {
