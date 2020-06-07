@@ -50,19 +50,11 @@ public class HamiltonianPathInDag {
 				}
 			}
 		}
-		println("Hamiltonian path found: %b", path.size() > 0);
-		return path;
-	}
-
-	public static void main(String[] args) {
-		Digraph g = new Digraph(5);
-		g.addEdge(0, 1);
-		g.addEdge(1, 4);
-		g.addEdge(1, 2);
-		g.addEdge(2, 3);
-		g.addEdge(3, 4);
-		Iterable<Integer> path = find(g);
+		if (path.size() != g.V()) {
+			while(!path.isEmpty()) path.pop();
+		}
 		println("Hamiltonian path in a DAG:\n%s", path.toString());
+		return path;
 	}
 
 }
