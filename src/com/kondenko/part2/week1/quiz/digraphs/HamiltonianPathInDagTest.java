@@ -3,6 +3,7 @@ package com.kondenko.part2.week1.quiz.digraphs;
 import edu.princeton.cs.algs4.Digraph;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -16,7 +17,7 @@ public class HamiltonianPathInDagTest {
 		g.addEdge(1, 4);
 		g.addEdge(1, 2);
 		g.addEdge(2, 3);
-		test(g, List.of());
+		test(g, Collections.emptyList());
 	}
 
 	@Test

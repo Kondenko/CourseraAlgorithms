@@ -3,6 +3,7 @@ package com.kondenko.part2.week1.quiz.digraphs;
 import com.kondenko.Utils;
 import edu.princeton.cs.algs4.Digraph;
 
+import java.util.Collections;
 import java.util.Stack;
 
 import static com.kondenko.Utils.println;
@@ -33,16 +34,24 @@ public class HamiltonianPathInDag {
 			int current = dfsStack.pop();
 			println("Visited %d", current);
 			path.push(current);
+			println("Path = %s", path.toString());
+			Iterable<Integer> adj = g.adj(current);
+			int adjSize = Utils.size(adj);
 			if (path.size() == g.V()) {
+				println("Path found");
 				break;
-			} else if (returnPoint != -1) {
+			} else if (adjSize == 0 && returnPoint != -1) {
+				println("Popping until return point of %d", returnPoint);
 				while (!path.isEmpty() && path.peek() != returnPoint) {
 					path.pop();
 				}
+				println("Path after popping: %s", path.toString());
 				returnPoint = -1;
 			}
-			Iterable<Integer> adj = g.adj(current);
-			if (Utils.size(adj) > 1) returnPoint = current;
+			if (adjSize > 1) {
+				returnPoint = current;
+				println("Setting return point to %d", returnPoint);
+			}
 			for (int v : adj) {
 				if (!marked[current][v]) {
 					marked[current][v] = true;
@@ -51,7 +60,7 @@ public class HamiltonianPathInDag {
 			}
 		}
 		if (path.size() != g.V()) {
-			while(!path.isEmpty()) path.pop();
+			return Collections.emptyList();
 		}
 		println("Hamiltonian path in a DAG:\n%s", path.toString());
 		return path;
