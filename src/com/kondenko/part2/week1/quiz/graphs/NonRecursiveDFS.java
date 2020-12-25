@@ -10,7 +10,11 @@ import static com.kondenko.Utils.println;
  */
 public class NonRecursiveDFS {
 
-	public static void dfs(Graph g, int s) {
+	public static void dfs(Graph g) {
+		dfs(g, 0);
+	}
+
+	private static void dfs(Graph g, int s) {
 		println("Starting non-recursive DFS");
 		Stack<Integer> stack = new Stack<>();
 		boolean[] visited = new boolean[g.V()];
@@ -34,8 +38,7 @@ public class NonRecursiveDFS {
 		g.addEdge(2, 3);
 		g.addEdge(2, 4);
 		g.addEdge(3, 4);
-		int s = 0;
-		dfs(g, s);
+		dfs(g);
 	}
 
 }
