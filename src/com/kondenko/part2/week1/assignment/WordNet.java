@@ -106,7 +106,7 @@ public class WordNet {
 		WordNet wn = new WordNet("data/synsets.txt", "data/hypernyms.txt");
 		println(String.valueOf(wn.isNoun("definitelynotaword")));
 		println(String.valueOf(wn.isNoun("haiku")));
-		// println(wn.nouns().toString());
+		println(String.valueOf(wn.distance("haiku", "propeller")));
 	}
 
 	private static List<List<String>> getRecords(String file) throws FileNotFoundException {
