@@ -11,7 +11,9 @@ import static com.kondenko.Utils.println;
 
 public class WordNet {
 
-	private String[][] synsets;
+	private String[] synsets;
+
+	private Map<String, Integer> nouns;
 
 	private Set<Integer>[] hypernyms;
 
@@ -25,11 +27,16 @@ public class WordNet {
 			// Read synsets
 			List<List<String>> synsetRecords = getRecords(synsetsFile);
 			println("Found %d synsets", synsetRecords.size());
-			synsets = new String[synsetRecords.size()][];
+			synsets = new String[synsetRecords.size()];
+			nouns = new HashMap<>();
 			for (List<String> synsetRecord : synsetRecords) {
 				int id = Integer.parseInt(synsetRecord.get(0));
-				String synsetsList = synsetRecord.get(1);
-				synsets[id] = synsetsList.split(" ");
+				String synset = synsetRecord.get(1);
+				String[] nouns = synset.split(" ");
+				synsets[id] = synset;
+				for (String noun : nouns) {
+					this.nouns.put(noun, id);
+				}
 			}
 
 			// Read hypernyms
@@ -64,16 +71,12 @@ public class WordNet {
 
 	// returns all WordNet nouns
 	public Iterable<String> nouns() {
-		List<String> nouns = new ArrayList<>();
-		for (String[] synsets : synsets) {
-			Collections.addAll(nouns, synsets);
-		}
-		return nouns;
+		return nouns.keySet();
 	}
 
-	// is the word a WordNet noun?
+	// is the word a WordNet noun?Us
 	public boolean isNoun(String word) {
-		throw new NotImplementedError();
+		return nouns.containsKey(word);
 	}
 
 	// distance between nounA and nounB (defined below)
@@ -90,7 +93,9 @@ public class WordNet {
 	// do unit testing of this class
 	public static void main(String[] args) {
 		WordNet wn = new WordNet("data/synsets.txt", "data/hypernyms.txt");
-		println(wn.nouns().toString());
+		println(String.valueOf(wn.isNoun("definitelynotaword")));
+		println(String.valueOf(wn.isNoun("haiku")));
+		// println(wn.nouns().toString());
 	}
 
 	private static List<List<String>> getRecords(String file) throws FileNotFoundException {
