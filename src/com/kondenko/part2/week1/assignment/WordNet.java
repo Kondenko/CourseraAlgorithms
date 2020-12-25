@@ -1,7 +1,6 @@
 package com.kondenko.part2.week1.assignment;
 
 import edu.princeton.cs.algs4.Digraph;
-import kotlin.NotImplementedError;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,7 +16,9 @@ public class WordNet {
 
 	private Set<Integer>[] hypernyms;
 
-	private Digraph wordnet;
+	private Digraph wordNet;
+
+	private SAP shortestAncestralPath;
 
 	// constructor takes the name of the two input files
 	public WordNet(String synsetsFile, String hypernymsFile) {
@@ -60,12 +61,15 @@ public class WordNet {
 			}
 
 			// Construct WordNet
-			wordnet = new Digraph(synsets.length);
+			wordNet = new Digraph(synsets.length);
 			for (int synset = 0; synset < hypernyms.length; synset++) {
 				for (Integer hypernym : hypernyms[synset]) {
-					wordnet.addEdge(synset, hypernym);
+					wordNet.addEdge(synset, hypernym);
 				}
 			}
+
+			// Construct SAP
+			shortestAncestralPath = new SAP(wordNet);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -83,13 +87,18 @@ public class WordNet {
 
 	// distance between nounA and nounB (defined below)
 	public int distance(String nounA, String nounB) {
-		throw new NotImplementedError();
+		int idA = nouns.get(nounA);
+		int idB = nouns.get(nounB);
+		return shortestAncestralPath.length(idA, idB);
 	}
 
 	// a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
 	// in a shortest ancestral path (defined below)
 	public String sap(String nounA, String nounB) {
-		throw new NotImplementedError();
+		int idA = nouns.get(nounA);
+		int idB = nouns.get(nounB);
+		int ancestorSynsetId = shortestAncestralPath.ancestor(idA, idB);
+		return synsets[ancestorSynsetId];
 	}
 
 	// do unit testing of this class
