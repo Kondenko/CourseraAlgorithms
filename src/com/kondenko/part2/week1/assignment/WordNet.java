@@ -55,7 +55,9 @@ public class WordNet {
 				}
 				hypernyms[id] = hypernymsSet;
 			}
-			if (!rootFound) throw new IllegalArgumentException("The input to the constructor does not correspond to a rooted DAG");
+			if (!rootFound) {
+				throw new IllegalArgumentException("The input to the constructor does not correspond to a rooted DAG");
+			}
 
 			// Construct WordNet
 			wordnet = new Digraph(synsets.length);
