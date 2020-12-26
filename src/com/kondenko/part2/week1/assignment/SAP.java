@@ -27,12 +27,12 @@ public class SAP {
 
 	// length of shortest ancestral path between v and w; -1 if no such path
 	public int length(int v, int w) {
-		return findCommonAncestor(List.of(v), List.of(w)).pathLength();
+		return length(List.of(v), List.of(w));
 	}
 
 	// a common ancestor of v and w that participates in a shortest ancestral path; -1 if no such path
 	public int ancestor(int v, int w) {
-		return findCommonAncestor(List.of(v), List.of(w)).ancestor;
+		return ancestor(List.of(v), List.of(w));
 	}
 
 	// length of shortest ancestral path between any vertex in v and any vertex in w; -1 if no such path

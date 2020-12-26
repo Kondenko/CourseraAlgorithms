@@ -98,9 +98,7 @@ public class WordNet {
 		int idA = nouns.get(nounA);
 		int idB = nouns.get(nounB);
 		int ancestorSynsetId = shortestAncestralPath.ancestor(idA, idB);
-		String ancestorSynset = synsets[ancestorSynsetId];
-		println("%s and %s are both %s", nounA, nounB, ancestorSynset);
-		return ancestorSynset;
+		return synsets[ancestorSynsetId];
 	}
 
 	// do unit testing of this class
