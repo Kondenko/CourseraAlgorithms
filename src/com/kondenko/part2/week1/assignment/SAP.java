@@ -1,73 +1,76 @@
 package com.kondenko.part2.week1.assignment;
 
 import edu.princeton.cs.algs4.Digraph;
-import kotlin.NotImplementedError;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-
-import static com.kondenko.Utils.println;
 
 public class SAP {
 
-	private Digraph wordNet;
+	private Digraph digraph;
 
 	int root;
 
 	// constructor takes a digraph (not necessarily a DAG)
 	public SAP(Digraph G) {
 		if (G == null) throw new IllegalArgumentException();
-		wordNet = G.reverse();
-		for (int v = 0; v < wordNet.V(); v++) {
-			if (wordNet.indegree(v) == 0) {
+		digraph = G.reverse();
+		for (int v = 0; v < digraph.V(); v++) {
+			if (digraph.indegree(v) == 0) {
 				root = v;
 				break;
 			}
 		}
-		println("Root of Digraph is %d", root);
 	}
 
 	// length of shortest ancestral path between v and w; -1 if no such path
 	public int length(int v, int w) {
-		throw new NotImplementedError();
+		return findCommonAncestor(List.of(v), List.of(w)).pathLength();
 	}
 
 	// a common ancestor of v and w that participates in a shortest ancestral path; -1 if no such path
 	public int ancestor(int v, int w) {
-		throw new NotImplementedError();
+		return findCommonAncestor(List.of(v), List.of(w)).ancestor;
 	}
 
 	// length of shortest ancestral path between any vertex in v and any vertex in w; -1 if no such path
 	public int length(Iterable<Integer> v, Iterable<Integer> w) {
 		if (v == null || w == null) throw new IllegalArgumentException();
-		throw new NotImplementedError();
+		return findCommonAncestor(v, w).pathLength();
 	}
 
 	// a common ancestor that participates in shortest ancestral path; -1 if no such path
 	public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
 		if (v == null || w == null) throw new IllegalArgumentException();
-		throw new NotImplementedError();
+		return findCommonAncestor(v, w).ancestor;
 	}
 
-	private void findCommonAncestor(Iterable<Integer> v, Iterable<Integer> w) {
-		Result ancestorResult = dfs(wordNet, new boolean[wordNet.V()][wordNet.V()], 0, root, v, w);
-		String resultString = ancestorResult != null ? ancestorResult.toString() : "null";
-		println("findCommonAncestor(%s, %s) = %s", v.toString(), w.toString(), resultString);
+	private Result findCommonAncestor(Iterable<Integer> v, Iterable<Integer> w) {
+		return dfs(digraph, new HashMap<>(), 0, root, v, w);
 	}
 
-	private Result dfs(Digraph g, boolean[][] marked, int depth, int current, Iterable<Integer> v, Iterable<Integer> w) {
+	private Result dfs(Digraph g, HashMap<Integer, List<Integer>> marked, int depth, int current, Iterable<Integer> v, Iterable<Integer> w) {
 		Iterable<Integer> adj = g.adj(current);
-		boolean vFound = false;
-		boolean wFound = false;
+		int vDepth = -1;
+		int wDepth = -1;
 		for (int vertex : adj) {
-			if (!marked[current][vertex]) {
-				marked[current][vertex] = true;
+			if (!marked.getOrDefault(current, Collections.emptyList()).contains(vertex)) {
+				List<Integer> newList = marked.getOrDefault(current, new ArrayList<>());
+				newList.add(vertex);
+				marked.put(current, newList);
 				Result result = dfs(g, marked, depth + 1, vertex, v, w);
 				if (result.isCommonAncestor()) return result;
-				if (contains(v, vertex) || result.vFound) vFound = true;
-				if (contains(w, vertex) || result.wFound) wFound = true;
+				if (contains(v, vertex) || result.vFound) {
+					vDepth = Math.max(depth, result.vDepth);
+				}
+				if (contains(w, vertex) || result.wFound) {
+					wDepth = Math.max(depth, result.wDepth);
+				}
 			}
 		}
-		return new Result(vFound, wFound, current);
+		return new Result(current, vDepth, wDepth);
 	}
 
 	// do unit testing of this class
@@ -99,29 +102,30 @@ public class SAP {
 
 	private class Result {
 
-		final boolean vFound;
+		final int ancestor;
 
-		final boolean wFound;
+		private final boolean vFound;
 
-		final int vertex;
+		private final boolean wFound;
 
-		public Result(boolean vFound, boolean wFound, int vertex) {
-			this.vFound = vFound;
-			this.wFound = wFound;
-			this.vertex = vertex;
+		private final int vDepth;
+
+		private final int wDepth;
+
+		public Result(int vertex, int vDepth, int wDepth) {
+			this.vFound = vDepth >= 0;
+			this.wFound = wDepth >= 0;
+			this.ancestor = vertex;
+			this.vDepth = vDepth;
+			this.wDepth = wDepth;
+		}
+
+		int pathLength() {
+			return isCommonAncestor() ? vDepth + wDepth : -1;
 		}
 
 		boolean isCommonAncestor() {
 			return vFound && wFound;
-		}
-
-		@Override
-		public String toString() {
-			return "Result{" +
-					"vFound=" + vFound +
-					", wFound=" + wFound +
-					", vertex=" + vertex +
-					'}';
 		}
 
 	}

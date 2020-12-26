@@ -98,15 +98,15 @@ public class WordNet {
 		int idA = nouns.get(nounA);
 		int idB = nouns.get(nounB);
 		int ancestorSynsetId = shortestAncestralPath.ancestor(idA, idB);
-		return synsets[ancestorSynsetId];
+		String ancestorSynset = synsets[ancestorSynsetId];
+		println("%s and %s are both %s", nounA, nounB, ancestorSynset);
+		return ancestorSynset;
 	}
 
 	// do unit testing of this class
 	public static void main(String[] args) {
 		WordNet wn = new WordNet("data/synsets.txt", "data/hypernyms.txt");
-		println(String.valueOf(wn.isNoun("definitelynotaword")));
-		println(String.valueOf(wn.isNoun("haiku")));
-		println(String.valueOf(wn.distance("haiku", "propeller")));
+		wn.sap("heat", "cold");
 	}
 
 	private static List<List<String>> getRecords(String file) throws FileNotFoundException {
