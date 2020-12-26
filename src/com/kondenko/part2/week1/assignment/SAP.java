@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.kondenko.Utils.println;
+
 public class SAP {
 
 	private Digraph digraph;
@@ -48,49 +50,33 @@ public class SAP {
 	}
 
 	private Result findCommonAncestor(Iterable<Integer> v, Iterable<Integer> w) {
-		return dfs(digraph, new HashMap<>(), 0, root, v, w);
+		return dfs(new HashMap<>(), 0, root, v, w);
 	}
 
-	private Result dfs(Digraph g, HashMap<Integer, List<Integer>> marked, int depth, int current, Iterable<Integer> v, Iterable<Integer> w) {
-		Iterable<Integer> adj = g.adj(current);
+	private Result dfs(HashMap<Integer, List<Integer>> marked, int depth, int current, Iterable<Integer> v, Iterable<Integer> w) {
+		Iterable<Integer> adj = digraph.adj(current);
 		int vDepth = -1;
 		int wDepth = -1;
+		Result newResult = null;
 		for (int vertex : adj) {
 			if (!marked.getOrDefault(current, Collections.emptyList()).contains(vertex)) {
 				List<Integer> newList = marked.getOrDefault(current, new ArrayList<>());
 				newList.add(vertex);
 				marked.put(current, newList);
-				Result result = dfs(g, marked, depth + 1, vertex, v, w);
-				if (result.isCommonAncestor()) return result;
+				Result result = dfs(marked, depth + 1, vertex, v, w);
 				if (contains(v, vertex) || result.vFound) {
 					vDepth = Math.max(depth, result.vDepth);
 				}
 				if (contains(w, vertex) || result.wFound) {
 					wDepth = Math.max(depth, result.wDepth);
 				}
+				if (vDepth + wDepth <= result.pathLength() && result.isCommonAncestor()) {
+					newResult = result;
+					println("New best result: " + result.ancestor);
+				}
 			}
 		}
-		return new Result(current, vDepth, wDepth);
-	}
-
-	// do unit testing of this class
-
-	public static void main(String[] args) {
-		// The graph is reversed
-		Digraph G = new Digraph(8);
-
-		G.addEdge(2, 0);
-		G.addEdge(1, 0);
-
-		G.addEdge(3, 1);
-		G.addEdge(4, 1);
-		G.addEdge(5, 1);
-
-		G.addEdge(6, 5);
-		G.addEdge(7, 6);
-
-		SAP sap = new SAP(G);
-		sap.findCommonAncestor(List.of(3), List.of(7));
+		return newResult != null ? newResult : new Result(current, vDepth, wDepth);
 	}
 
 	private boolean contains(Iterable<Integer> iterable, int i) {
