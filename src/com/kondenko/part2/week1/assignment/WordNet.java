@@ -10,11 +10,11 @@ import static com.kondenko.Utils.println;
 
 public class WordNet {
 
+	private Set<Integer>[] hypernyms;
+
 	private String[] synsets;
 
 	private Map<String, Integer> nouns;
-
-	private Set<Integer>[] hypernyms;
 
 	private Digraph wordNet;
 
@@ -27,7 +27,6 @@ public class WordNet {
 		try {
 			// Read synsets
 			List<List<String>> synsetRecords = getRecords(synsetsFile);
-			println("Found %d synsets", synsetRecords.size());
 			synsets = new String[synsetRecords.size()];
 			nouns = new HashMap<>();
 			for (List<String> synsetRecord : synsetRecords) {
@@ -42,7 +41,6 @@ public class WordNet {
 
 			// Read hypernyms
 			List<List<String>> hypernymRecords = getRecords(hypernymsFile);
-			println("Found %d hypernyms", hypernymRecords.size());
 			hypernyms = new HashSet[hypernymRecords.size()];
 			boolean rootFound = false;
 			for (List<String> hypernymRecord : hypernymRecords) {
@@ -62,7 +60,7 @@ public class WordNet {
 
 			// Construct WordNet
 			wordNet = new Digraph(synsets.length);
-			for (int synset = 0; synset < hypernyms.length; synset++) {
+			for (int synset = 0; synset < synsets.length; synset++) {
 				for (Integer hypernym : hypernyms[synset]) {
 					wordNet.addEdge(synset, hypernym);
 				}
@@ -104,7 +102,7 @@ public class WordNet {
 	// do unit testing of this class
 	public static void main(String[] args) {
 		WordNet wn = new WordNet("data/synsets.txt", "data/hypernyms.txt");
-		wn.sap("heat", "cold");
+		println(wn.sap("zebra", "horse"));
 	}
 
 	private static List<List<String>> getRecords(String file) throws FileNotFoundException {

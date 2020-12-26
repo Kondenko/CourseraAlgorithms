@@ -17,17 +17,19 @@ public class Outcast {
 	// given an array of WordNet nouns, return an outcast
 	public String outcast(String[] nouns) {
 		String outcast = null;
-		int maxDistance = -1;
-		for (int i = 0; i < nouns.length; i++) {
-			for (int j = i + 1; j < nouns.length; j++) {
-				int distance = wordNet.distance(nouns[i], nouns[j]);
-				String ancestor = wordNet.sap(nouns[i], nouns[j]);
-				println("%s - %s = %d (ancestor is %s)", nouns[i], nouns[j], distance, ancestor);
-				if (distance > maxDistance) {
-					maxDistance = distance;
-					outcast = nouns[j];
-					println("New outcast: %s (%d)", outcast, maxDistance);
-				}
+		int maxSum = 0;
+		for (String noun : nouns) {
+			int sum = 0;
+			for (String otherNoun : nouns) {
+				int distance = wordNet.distance(noun, otherNoun);
+				println("Distance between %s and %s = %d", noun, otherNoun, distance);
+				sum += distance;
+			}
+			println("Sum for %s = %d", noun, sum);
+			if (sum > maxSum) {
+				println("%s is the new outcast", noun);
+				outcast = noun;
+				maxSum = sum;
 			}
 		}
 		return outcast;
