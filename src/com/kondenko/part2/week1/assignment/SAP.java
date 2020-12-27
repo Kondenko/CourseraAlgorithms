@@ -1,6 +1,9 @@
 package com.kondenko.part2.week1.assignment;
 
 import edu.princeton.cs.algs4.Digraph;
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +47,7 @@ public class SAP {
 	// a common ancestor that participates in shortest ancestral path; -1 if no such path
 	public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
 		if (v == null || w == null) throw new IllegalArgumentException();
-		return findCommonAncestor(v, w).ancestor;
+		return findCommonAncestor(v, w).getAncestor();
 	}
 
 	private Result findCommonAncestor(Iterable<Integer> v, Iterable<Integer> w) {
@@ -80,6 +83,19 @@ public class SAP {
 		return newResult != null ? newResult : new Result(current, depth, vDepth, wDepth);
 	}
 
+	public static void main(String[] args) {
+		In in = new In(args[0]);
+		Digraph G = new Digraph(in);
+		SAP sap = new SAP(G);
+		while (!StdIn.isEmpty()) {
+			int v = StdIn.readInt();
+			int w = StdIn.readInt();
+			int length = sap.length(v, w);
+			int ancestor = sap.ancestor(v, w);
+			StdOut.printf("length = %d, ancestor = %d\n", length, ancestor);
+		}
+	}
+
 	private boolean contains(Iterable<Integer> iterable, int i) {
 		for (Integer integer : iterable) {
 			if (integer == i) return true;
@@ -89,9 +105,9 @@ public class SAP {
 
 	private class Result {
 
-		final int ancestor;
-
 		final int ancestorDepth;
+
+		private final int vertex;
 
 		private final boolean vFound;
 
@@ -102,7 +118,7 @@ public class SAP {
 		private final int wDepth;
 
 		public Result(int vertex, int ancestorDepth, int vDepth, int wDepth) {
-			this.ancestor = vertex;
+			this.vertex = vertex;
 			this.ancestorDepth = ancestorDepth;
 			this.vFound = vDepth >= 0;
 			this.wFound = wDepth >= 0;
@@ -110,8 +126,12 @@ public class SAP {
 			this.wDepth = wDepth;
 		}
 
+		int getAncestor() {
+			return pathLength() >= 0 ? vertex : -1;
+		}
+
 		int pathLength() {
-			return isCommonAncestor() ? vDepth - ancestorDepth + wDepth - ancestorDepth : -1;
+			return isCommonAncestor() ? (vDepth - ancestorDepth) + (wDepth - ancestorDepth) : -1;
 		}
 
 		boolean isCommonAncestor() {
@@ -121,7 +141,7 @@ public class SAP {
 		@Override
 		public String toString() {
 			return "Result{" +
-					"ancestor=" + ancestor +
+					"ancestor=" + vertex +
 					", ancestorDepth=" + ancestorDepth +
 					", vFound=" + vFound +
 					", wFound=" + wFound +

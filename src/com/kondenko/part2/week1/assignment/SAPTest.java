@@ -69,7 +69,7 @@ public class SAPTest {
 		G.addEdge(4, 3);
 
 		SAP sap = new SAP(G);
-		assertEquals(1, sap.ancestor(3, 4));
+		assertEquals(3, sap.ancestor(3, 4));
 	}
 
 	@Test
