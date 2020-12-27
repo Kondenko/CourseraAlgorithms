@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.kondenko.Utils.println;
-
 public class SAP {
 
 	private Digraph digraph;
@@ -55,8 +53,8 @@ public class SAP {
 
 	private Result dfs(HashMap<Integer, List<Integer>> marked, int depth, int current, Iterable<Integer> v, Iterable<Integer> w) {
 		Iterable<Integer> adj = digraph.adj(current);
-		int vDepth = -1;
-		int wDepth = -1;
+		int vDepth = contains(v, current) ? depth : -1;
+		int wDepth = contains(w, current) ? depth : -1;
 		Result newResult = null;
 		for (int vertex : adj) {
 			if (!marked.getOrDefault(current, Collections.emptyList()).contains(vertex)) {
@@ -64,19 +62,22 @@ public class SAP {
 				newList.add(vertex);
 				marked.put(current, newList);
 				Result result = dfs(marked, depth + 1, vertex, v, w);
-				if (contains(v, vertex) || result.vFound) {
-					vDepth = Math.max(depth, result.vDepth);
+				if (contains(v, vertex)) {
+					vDepth = depth + 1;
+				} else if (result.vFound) {
+					vDepth = result.vDepth;
 				}
-				if (contains(w, vertex) || result.wFound) {
-					wDepth = Math.max(depth, result.wDepth);
+				if (contains(w, vertex)) {
+					wDepth = depth + 1;
+				} else if (result.wFound) {
+					wDepth = result.wDepth;
 				}
-				if (vDepth + wDepth <= result.pathLength() && result.isCommonAncestor()) {
+				if (vDepth - result.ancestorDepth + wDepth - result.ancestorDepth <= result.pathLength() && result.isCommonAncestor()) {
 					newResult = result;
-					println("New best result: " + result.ancestor);
 				}
 			}
 		}
-		return newResult != null ? newResult : new Result(current, vDepth, wDepth);
+		return newResult != null ? newResult : new Result(current, depth, vDepth, wDepth);
 	}
 
 	private boolean contains(Iterable<Integer> iterable, int i) {
@@ -90,6 +91,8 @@ public class SAP {
 
 		final int ancestor;
 
+		final int ancestorDepth;
+
 		private final boolean vFound;
 
 		private final boolean wFound;
@@ -98,20 +101,33 @@ public class SAP {
 
 		private final int wDepth;
 
-		public Result(int vertex, int vDepth, int wDepth) {
+		public Result(int vertex, int ancestorDepth, int vDepth, int wDepth) {
+			this.ancestor = vertex;
+			this.ancestorDepth = ancestorDepth;
 			this.vFound = vDepth >= 0;
 			this.wFound = wDepth >= 0;
-			this.ancestor = vertex;
 			this.vDepth = vDepth;
 			this.wDepth = wDepth;
 		}
 
 		int pathLength() {
-			return isCommonAncestor() ? vDepth + wDepth : -1;
+			return isCommonAncestor() ? vDepth - ancestorDepth + wDepth - ancestorDepth : -1;
 		}
 
 		boolean isCommonAncestor() {
 			return vFound && wFound;
+		}
+
+		@Override
+		public String toString() {
+			return "Result{" +
+					"ancestor=" + ancestor +
+					", ancestorDepth=" + ancestorDepth +
+					", vFound=" + vFound +
+					", wFound=" + wFound +
+					", vDepth=" + vDepth +
+					", wDepth=" + wDepth +
+					'}';
 		}
 
 	}

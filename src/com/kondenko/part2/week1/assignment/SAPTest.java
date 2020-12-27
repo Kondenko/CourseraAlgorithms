@@ -8,6 +8,17 @@ import static org.junit.Assert.assertEquals;
 public class SAPTest {
 
 	@Test
+	public void shouldFindACommonAncestor0() {
+		Digraph G = new Digraph(8);
+
+		G.addEdge(2, 0);
+		G.addEdge(1, 0);
+
+		SAP sap = new SAP(G);
+		assertEquals(0, sap.ancestor(1, 2));
+	}
+
+	@Test
 	public void shouldFindACommonAncestor1() {
 		Digraph G = new Digraph(8);
 
@@ -60,5 +71,65 @@ public class SAPTest {
 		SAP sap = new SAP(G);
 		assertEquals(1, sap.ancestor(3, 4));
 	}
+
+	@Test
+	public void shouldFindACommonAncestor4() {
+		Digraph G = new Digraph(8);
+
+		G.addEdge(1, 0);
+
+		G.addEdge(2, 1);
+		G.addEdge(3, 1);
+
+		SAP sap = new SAP(G);
+		assertEquals(1, sap.ancestor(2, 3));
+	}
+
+
+
+	// TODO Fix length implementation
+
+	@Test
+	public void distanceBetweenTheSameVerticesShouldBeZero() {
+		Digraph G = new Digraph(8);
+
+		G.addEdge(1, 0);
+
+		SAP sap = new SAP(G);
+		assertEquals(0, sap.length(0,0));
+	}
+
+	@Test
+	public void distanceBetweenVertices1() {
+		Digraph G = new Digraph(8);
+
+		G.addEdge(2, 0);
+		G.addEdge(1, 0);
+
+		G.addEdge(3, 1);
+		G.addEdge(4, 1);
+
+		SAP sap = new SAP(G);
+		assertEquals(2, sap.length(1, 2));
+	}
+
+	@Test
+	public void distanceBetweenVertices2() {
+		Digraph G = new Digraph(8);
+
+		G.addEdge(2, 0);
+		G.addEdge(1, 0);
+
+		G.addEdge(3, 1);
+		G.addEdge(4, 1);
+		G.addEdge(5, 1);
+
+		G.addEdge(6, 5);
+		G.addEdge(7, 6);
+
+		SAP sap = new SAP(G);
+		assertEquals(4, sap.length(3, 7));
+	}
+
 
 }
