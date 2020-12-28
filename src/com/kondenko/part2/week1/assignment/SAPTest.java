@@ -1,6 +1,7 @@
 package com.kondenko.part2.week1.assignment;
 
 import edu.princeton.cs.algs4.Digraph;
+import edu.princeton.cs.algs4.In;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -86,7 +87,6 @@ public class SAPTest {
 	}
 
 
-
 	// TODO Fix length implementation
 
 	@Test
@@ -96,7 +96,7 @@ public class SAPTest {
 		G.addEdge(1, 0);
 
 		SAP sap = new SAP(G);
-		assertEquals(0, sap.length(0,0));
+		assertEquals(0, sap.length(0, 0));
 	}
 
 	@Test
@@ -129,6 +129,24 @@ public class SAPTest {
 
 		SAP sap = new SAP(G);
 		assertEquals(4, sap.length(3, 7));
+	}
+
+	@Test
+	public void fileTest1() {
+		Digraph G = create("digraph1.txt");
+		SAP sap = new SAP(G);
+		assertEquals(0, sap.length(6, 6));
+	}
+
+	@Test
+	public void fileTest2() {
+		Digraph G = create("digraph2.txt");
+		SAP sap = new SAP(G);
+		assertEquals(2, sap.length(5, 1));
+	}
+
+	private Digraph create(String fileName) {
+		return new Digraph(new In("data/wordnet/" + fileName));
 	}
 
 

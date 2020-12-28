@@ -144,7 +144,7 @@ public class SAP {
 		}
 
 		int pathLength() {
-			return isCommonAncestor() ? (vDepth - ancestorDepth) + (wDepth - ancestorDepth) : -1;
+			return isCommonAncestor() ? (vDepth - ancestorDepth) + (wDepth - ancestorDepth) : 0;
 		}
 
 		boolean isCommonAncestor() {
