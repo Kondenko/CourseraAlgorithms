@@ -14,18 +14,10 @@ public class SAP {
 
 	private Digraph digraph;
 
-	private String[] synsets;
-
-	int root;
+	private int root;
 
 	// constructor takes a digraph (not necessarily a DAG)
-	// TODO Remove synsets
 	public SAP(Digraph G) {
-		this(G, null);
-	}
-
-	public SAP(Digraph G, String[] synsets) {
-		this.synsets = synsets;
 		if (G == null) throw new IllegalArgumentException();
 		digraph = G.reverse();
 		for (int v = 0; v < digraph.V(); v++) {
@@ -124,13 +116,6 @@ public class SAP {
 		}
 	}
 
-	private boolean contains(Iterable<Integer> iterable, int i) {
-		for (Integer integer : iterable) {
-			if (integer == i) return true;
-		}
-		return false;
-	}
-
 	private class Result {
 
 		final int ancestorDepth;
@@ -169,7 +154,7 @@ public class SAP {
 		@Override
 		public String toString() {
 			return "Result{" +
-					"ancestor=" + synsets[vertex] +
+					"ancestor=" + vertex +
 					", ancestorDepth=" + ancestorDepth +
 					", pathLength=" + pathLength() +
 					", vFound=" + vFound +
