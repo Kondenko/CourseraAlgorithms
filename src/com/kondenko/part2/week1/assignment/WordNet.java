@@ -100,8 +100,8 @@ public class WordNet {
 	// a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
 	// in a shortest ancestral path (defined below)
 	public String sap(String nounA, String nounB) {
-		Iterable<Integer> synsetsA = synsetsContainingNoun(nounA);
-		Iterable<Integer> synsetsB = synsetsContainingNoun(nounB);
+		List<Integer> synsetsA = synsetsContainingNoun(nounA);
+		List<Integer> synsetsB = synsetsContainingNoun(nounB);
 		int ancestorSynsetId = shortestAncestralPath.ancestor(synsetsA, synsetsB);
 		return synsets[ancestorSynsetId];
 	}
@@ -119,7 +119,7 @@ public class WordNet {
 	// do unit testing of this class
 	public static void main(String[] args) {
 		WordNet wn = new WordNet("data/synsets.txt", "data/hypernyms.txt");
-		println(wn.sap("zebra", "horse"));
+		println(wn.sap("watermelon", "potato"));
 	}
 
 	private static List<List<String>> getRecords(String file) throws FileNotFoundException {

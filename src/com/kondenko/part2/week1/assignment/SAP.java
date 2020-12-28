@@ -58,14 +58,25 @@ public class SAP {
 		return findCommonAncestor(v, w).getAncestor();
 	}
 
-	private Result findCommonAncestor(Iterable<Integer> v, Iterable<Integer> w) {
-		return dfs(new HashMap<>(), 0, root, v, w);
+	private Result findCommonAncestor(Iterable<Integer> vIterable, Iterable<Integer> wIterable) {
+		Result closestAncestor = null;
+		for (int v : vIterable) {
+			for (int w : wIterable) {
+				Result ancestor = dfs(new HashMap<>(), 0, root, v, w);
+				if (closestAncestor == null || ancestor.pathLength() < closestAncestor.pathLength()) {
+					// println("New common ancestor found:");
+					closestAncestor = ancestor;
+				}
+				// println("Ancestor of %s and %s: %s", synsets[v], synsets[w], ancestor);
+			}
+		}
+		return closestAncestor;
 	}
 
-	private Result dfs(HashMap<Integer, List<Integer>> marked, int depth, int current, Iterable<Integer> v, Iterable<Integer> w) {
+	private Result dfs(HashMap<Integer, List<Integer>> marked, int depth, int current, int v, int w) {
 		Iterable<Integer> adj = digraph.adj(current);
-		int vDepth = contains(v, current) ? depth : -1;
-		int wDepth = contains(w, current) ? depth : -1;
+		int vDepth = current == v ? depth : -1;
+		int wDepth = current == w ? depth : -1;
 		Result newResult = null;
 		for (int vertex : adj) {
 			if (!marked.getOrDefault(current, Collections.emptyList()).contains(vertex)) {
@@ -74,22 +85,24 @@ public class SAP {
 				newList.add(vertex);
 				marked.put(current, newList);
 				// Calculate the lowest common ancestor
-				Result result = dfs(marked, depth + 1, vertex, v, w);
-				if (contains(v, vertex)) {
-					vDepth = depth + 1;
-					// println("%s was found, setting vDepth to %d", synsets[vertex], vDepth);
+				int childDepth = depth + 1;
+				Result result = dfs(marked, childDepth, vertex, v, w);
+				if (v == vertex) {
+					vDepth = childDepth;
+					// println("%s was found at %d: %s", synsets[vertex], childDepth, result);
 				} else if (result.vFound) {
 					vDepth = result.vDepth;
-					// println("%s has already been found, setting vDepth to %d", synsets[vertex], vDepth);
+					// println("%s", synsets[vertex]);
 				}
-				if (contains(w, vertex)) {
-					wDepth = depth + 1;
-					// println("%s was found, setting vDepth to %d", synsets[vertex], wDepth);
+				if (w == vertex) {
+					wDepth = childDepth;
+					// println("%s was found at %d: %s", synsets[vertex], childDepth, result);
 				} else if (result.wFound) {
 					wDepth = result.wDepth;
-					// println("%s has already been found, setting vDepth to %d", synsets[vertex], wDepth);
+					// println("%s", synsets[vertex]);
 				}
-				if ((vDepth - result.ancestorDepth) + (wDepth - result.ancestorDepth) <= result.pathLength() && result.isCommonAncestor()) {
+				int newResultDepth = (vDepth - result.ancestorDepth) + (wDepth - result.ancestorDepth);
+				if (newResultDepth <= result.pathLength() && result.isCommonAncestor()) {
 					newResult = result;
 					// println("New best result: " + result);
 				}
@@ -158,6 +171,7 @@ public class SAP {
 			return "Result{" +
 					"ancestor=" + synsets[vertex] +
 					", ancestorDepth=" + ancestorDepth +
+					", pathLength=" + pathLength() +
 					", vFound=" + vFound +
 					", wFound=" + wFound +
 					", vDepth=" + vDepth +
