@@ -1,13 +1,7 @@
 package com.kondenko.part2.week1.assignment;
 
-import edu.princeton.cs.algs4.Digraph;
-import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.StdIn;
-import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public class SAP {
@@ -41,66 +35,47 @@ public class SAP {
 	// length of shortest ancestral path between any vertex in v and any vertex in w; -1 if no such path
 	public int length(Iterable<Integer> v, Iterable<Integer> w) {
 		if (v == null || w == null) throw new IllegalArgumentException();
-		return findCommonAncestor(v, w).pathLength();
+		return findCommonAncestor(v, w).length;
 	}
 
 	// a common ancestor that participates in shortest ancestral path; -1 if no such path
 	public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
 		if (v == null || w == null) throw new IllegalArgumentException();
-		return findCommonAncestor(v, w).getAncestor();
+		return findCommonAncestor(v, w).vertex;
 	}
 
-	private Result findCommonAncestor(Iterable<Integer> vIterable, Iterable<Integer> wIterable) {
-		Result closestAncestor = null;
-		for (int v : vIterable) {
-			for (int w : wIterable) {
-				Result ancestor = dfs(new HashMap<>(), 0, root, v, w);
-				if (closestAncestor == null || ancestor.pathLength() < closestAncestor.pathLength()) {
-					// println("New common ancestor found:");
-					closestAncestor = ancestor;
+	private Ancestor findCommonAncestor(Iterable<Integer> vIterable, Iterable<Integer> wIterable) {
+		Digraph reversed = digraph.reverse(); // reverse digraph so that a path can be found from vertices farther from root to vertices closer to root
+		BreadthFirstDirectedPaths vPaths = new BreadthFirstDirectedPaths(reversed, vIterable);
+		BreadthFirstDirectedPaths wPaths = new BreadthFirstDirectedPaths(reversed, wIterable);
+		return findSap(vPaths, wPaths);
+	}
+
+	private Ancestor findSap(BreadthFirstDirectedPaths vPaths, BreadthFirstDirectedPaths wPaths) {
+		Ancestor shortestPath = new Ancestor(-1, 0);
+		// Run a non-recursive BFS
+		Queue<Integer> q = new Queue<Integer>();
+		boolean[] marked = new boolean[digraph.V()];
+		marked[root] = true;
+		q.enqueue(root);
+		while (!q.isEmpty()) {
+			int current = q.dequeue();
+			// Enqueue adjacent vertices
+			for (int adjacent : digraph.adj(current)) {
+				if (!marked[adjacent]) {
+					marked[adjacent] = true;
+					q.enqueue(adjacent);
 				}
-				// println("Ancestor of %s and %s: %s", synsets[v], synsets[w], ancestor);
 			}
-		}
-		return closestAncestor;
-	}
-
-	private Result dfs(HashMap<Integer, List<Integer>> marked, int depth, int current, int v, int w) {
-		Iterable<Integer> adj = digraph.adj(current);
-		int vDepth = current == v ? depth : -1;
-		int wDepth = current == w ? depth : -1;
-		Result newResult = null;
-		for (int vertex : adj) {
-			if (!marked.getOrDefault(current, Collections.emptyList()).contains(vertex)) {
-				// Mark the vertex as visited
-				List<Integer> newList = marked.getOrDefault(current, new ArrayList<>());
-				newList.add(vertex);
-				marked.put(current, newList);
-				// Calculate the lowest common ancestor
-				int childDepth = depth + 1;
-				Result result = dfs(marked, childDepth, vertex, v, w);
-				if (v == vertex) {
-					vDepth = childDepth;
-					// println("%s was found at %d: %s", synsets[vertex], childDepth, result);
-				} else if (result.vFound) {
-					vDepth = result.vDepth;
-					// println("%s", synsets[vertex]);
-				}
-				if (w == vertex) {
-					wDepth = childDepth;
-					// println("%s was found at %d: %s", synsets[vertex], childDepth, result);
-				} else if (result.wFound) {
-					wDepth = result.wDepth;
-					// println("%s", synsets[vertex]);
-				}
-				int newResultDepth = (vDepth - result.ancestorDepth) + (wDepth - result.ancestorDepth);
-				if (newResultDepth <= result.pathLength() && result.isCommonAncestor()) {
-					newResult = result;
-					// println("New best result: " + result);
+			// See if [current] is a common ancestor and update [shortestPath] if it's shorter than the previous one.
+			if (vPaths.hasPathTo(current) && wPaths.hasPathTo(current)) {
+				int length = vPaths.distTo(current) + wPaths.distTo(current);
+				if (shortestPath.length == 0 || length < shortestPath.length) {
+					shortestPath = new Ancestor(current, length);
 				}
 			}
 		}
-		return newResult != null ? newResult : new Result(current, depth, vDepth, wDepth);
+		return shortestPath;
 	}
 
 	public static void main(String[] args) {
@@ -116,52 +91,15 @@ public class SAP {
 		}
 	}
 
-	private class Result {
+	private static class Ancestor {
 
-		final int ancestorDepth;
+		final int vertex;
 
-		private final int vertex;
+		final int length;
 
-		private final boolean vFound;
-
-		private final boolean wFound;
-
-		private final int vDepth;
-
-		private final int wDepth;
-
-		public Result(int vertex, int ancestorDepth, int vDepth, int wDepth) {
+		public Ancestor(int vertex, int length) {
 			this.vertex = vertex;
-			this.ancestorDepth = ancestorDepth;
-			this.vFound = vDepth >= 0;
-			this.wFound = wDepth >= 0;
-			this.vDepth = vDepth;
-			this.wDepth = wDepth;
-		}
-
-		int getAncestor() {
-			return pathLength() >= 0 ? vertex : -1;
-		}
-
-		int pathLength() {
-			return isCommonAncestor() ? (vDepth - ancestorDepth) + (wDepth - ancestorDepth) : 0;
-		}
-
-		boolean isCommonAncestor() {
-			return vFound && wFound;
-		}
-
-		@Override
-		public String toString() {
-			return "Result{" +
-					"ancestor=" + vertex +
-					", ancestorDepth=" + ancestorDepth +
-					", pathLength=" + pathLength() +
-					", vFound=" + vFound +
-					", wFound=" + wFound +
-					", vDepth=" + vDepth +
-					", wDepth=" + wDepth +
-					'}';
+			this.length = length;
 		}
 
 	}

@@ -10,7 +10,7 @@ public class SAPTest {
 
 	@Test
 	public void shouldFindACommonAncestor0() {
-		Digraph G = new Digraph(8);
+		Digraph G = new Digraph(3);
 
 		G.addEdge(2, 0);
 		G.addEdge(1, 0);
@@ -39,7 +39,7 @@ public class SAPTest {
 
 	@Test
 	public void shouldFindACommonAncestor2() {
-		Digraph G = new Digraph(8);
+		Digraph G = new Digraph(7);
 
 		G.addEdge(1, 0);
 		G.addEdge(2, 0);
@@ -60,7 +60,7 @@ public class SAPTest {
 
 	@Test
 	public void shouldFindACommonAncestor3() {
-		Digraph G = new Digraph(8);
+		Digraph G = new Digraph(5);
 
 		G.addEdge(1, 0);
 		G.addEdge(2, 1);
@@ -75,7 +75,7 @@ public class SAPTest {
 
 	@Test
 	public void shouldFindACommonAncestor4() {
-		Digraph G = new Digraph(8);
+		Digraph G = new Digraph(4);
 
 		G.addEdge(1, 0);
 
@@ -91,7 +91,7 @@ public class SAPTest {
 
 	@Test
 	public void distanceBetweenTheSameVerticesShouldBeZero() {
-		Digraph G = new Digraph(8);
+		Digraph G = new Digraph(2);
 
 		G.addEdge(1, 0);
 
@@ -101,7 +101,7 @@ public class SAPTest {
 
 	@Test
 	public void distanceBetweenVertices1() {
-		Digraph G = new Digraph(8);
+		Digraph G = new Digraph(5);
 
 		G.addEdge(2, 0);
 		G.addEdge(1, 0);
@@ -133,15 +133,13 @@ public class SAPTest {
 
 	@Test
 	public void fileTest1() {
-		Digraph G = create("digraph1.txt");
-		SAP sap = new SAP(G);
+		SAP sap = new SAP(create("digraph1.txt"));
 		assertEquals(0, sap.length(6, 6));
 	}
 
 	@Test
 	public void fileTest2() {
-		Digraph G = create("digraph2.txt");
-		SAP sap = new SAP(G);
+		SAP sap = new SAP(create("digraph2.txt"));
 		assertEquals(2, sap.length(5, 1));
 	}
 
