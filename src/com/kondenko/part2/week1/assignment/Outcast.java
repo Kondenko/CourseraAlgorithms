@@ -3,11 +3,9 @@ package com.kondenko.part2.week1.assignment;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
-import static com.kondenko.Utils.println;
-
 public class Outcast {
 
-	private WordNet wordNet;
+	private final WordNet wordNet;
 
 	// constructor takes a WordNet object
 	public Outcast(WordNet wordnet) {
@@ -22,12 +20,12 @@ public class Outcast {
 			int sum = 0;
 			for (String otherNoun : nouns) {
 				int distance = wordNet.distance(noun, otherNoun);
-				println("Distance between %s and %s = %d", noun, otherNoun, distance);
+				// println("Distance between %s and %s = %d", noun, otherNoun, distance);
 				sum += distance;
 			}
-			println("Sum for %s = %d", noun, sum);
+			// println("Sum for %s = %d", noun, sum);
 			if (sum > maxSum) {
-				println("%s is the new outcast", noun);
+				// println("%s is the new outcast", noun);
 				outcast = noun;
 				maxSum = sum;
 			}

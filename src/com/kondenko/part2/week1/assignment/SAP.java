@@ -14,10 +14,18 @@ public class SAP {
 
 	private Digraph digraph;
 
+	private String[] synsets;
+
 	int root;
 
 	// constructor takes a digraph (not necessarily a DAG)
+	// TODO Remove synsets
 	public SAP(Digraph G) {
+		this(G, null);
+	}
+
+	public SAP(Digraph G, String[] synsets) {
+		this.synsets = synsets;
 		if (G == null) throw new IllegalArgumentException();
 		digraph = G.reverse();
 		for (int v = 0; v < digraph.V(); v++) {
@@ -61,22 +69,29 @@ public class SAP {
 		Result newResult = null;
 		for (int vertex : adj) {
 			if (!marked.getOrDefault(current, Collections.emptyList()).contains(vertex)) {
+				// Mark the vertex as visited
 				List<Integer> newList = marked.getOrDefault(current, new ArrayList<>());
 				newList.add(vertex);
 				marked.put(current, newList);
+				// Calculate the lowest common ancestor
 				Result result = dfs(marked, depth + 1, vertex, v, w);
 				if (contains(v, vertex)) {
 					vDepth = depth + 1;
+					// println("%s was found, setting vDepth to %d", synsets[vertex], vDepth);
 				} else if (result.vFound) {
 					vDepth = result.vDepth;
+					// println("%s has already been found, setting vDepth to %d", synsets[vertex], vDepth);
 				}
 				if (contains(w, vertex)) {
 					wDepth = depth + 1;
+					// println("%s was found, setting vDepth to %d", synsets[vertex], wDepth);
 				} else if (result.wFound) {
 					wDepth = result.wDepth;
+					// println("%s has already been found, setting vDepth to %d", synsets[vertex], wDepth);
 				}
-				if (vDepth - result.ancestorDepth + wDepth - result.ancestorDepth <= result.pathLength() && result.isCommonAncestor()) {
+				if ((vDepth - result.ancestorDepth) + (wDepth - result.ancestorDepth) <= result.pathLength() && result.isCommonAncestor()) {
 					newResult = result;
+					// println("New best result: " + result);
 				}
 			}
 		}
@@ -141,7 +156,7 @@ public class SAP {
 		@Override
 		public String toString() {
 			return "Result{" +
-					"ancestor=" + vertex +
+					"ancestor=" + synsets[vertex] +
 					", ancestorDepth=" + ancestorDepth +
 					", vFound=" + vFound +
 					", wFound=" + wFound +

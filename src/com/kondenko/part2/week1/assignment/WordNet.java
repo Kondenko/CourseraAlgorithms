@@ -14,7 +14,7 @@ public class WordNet {
 
 	private String[] synsets;
 
-	private Map<String, Integer> nouns;
+	private Set<String>[] nouns;
 
 	private Digraph wordNet;
 
@@ -28,14 +28,14 @@ public class WordNet {
 			// Read synsets
 			List<List<String>> synsetRecords = getRecords(synsetsFile);
 			synsets = new String[synsetRecords.size()];
-			nouns = new HashMap<>();
+			nouns = new HashSet[synsetRecords.size()];
 			for (List<String> synsetRecord : synsetRecords) {
 				int id = Integer.parseInt(synsetRecord.get(0));
 				String synset = synsetRecord.get(1);
-				String[] nouns = synset.split(" ");
 				synsets[id] = synset;
-				for (String noun : nouns) {
-					this.nouns.put(noun, id);
+				nouns[id] = new HashSet<>();
+				for (String noun : synset.split(" ")) {
+					nouns[id].add(noun);
 				}
 			}
 
@@ -67,7 +67,7 @@ public class WordNet {
 			}
 
 			// Construct SAP
-			shortestAncestralPath = new SAP(wordNet);
+			shortestAncestralPath = new SAP(wordNet, synsets);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -75,28 +75,45 @@ public class WordNet {
 
 	// returns all WordNet nouns
 	public Iterable<String> nouns() {
-		return nouns.keySet();
+		List<String> nounsList = new ArrayList<>();
+		for (Set<String> nounsSet : nouns) {
+			nounsList.addAll(nounsSet);
+		}
+		return nounsList;
 	}
 
 	// is the word a WordNet noun?Us
 	public boolean isNoun(String word) {
-		return nouns.containsKey(word);
+		for (Set<String> nounsSet : nouns) {
+			if (nounsSet.contains(word)) return true;
+		}
+		return false;
 	}
 
 	// distance between nounA and nounB (defined below)
 	public int distance(String nounA, String nounB) {
-		int idA = nouns.get(nounA);
-		int idB = nouns.get(nounB);
-		return shortestAncestralPath.length(idA, idB);
+		Iterable<Integer> synsetsA = synsetsContainingNoun(nounA);
+		Iterable<Integer> synsetsB = synsetsContainingNoun(nounB);
+		return shortestAncestralPath.length(synsetsA, synsetsB);
 	}
 
 	// a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
 	// in a shortest ancestral path (defined below)
 	public String sap(String nounA, String nounB) {
-		int idA = nouns.get(nounA);
-		int idB = nouns.get(nounB);
-		int ancestorSynsetId = shortestAncestralPath.ancestor(idA, idB);
+		Iterable<Integer> synsetsA = synsetsContainingNoun(nounA);
+		Iterable<Integer> synsetsB = synsetsContainingNoun(nounB);
+		int ancestorSynsetId = shortestAncestralPath.ancestor(synsetsA, synsetsB);
 		return synsets[ancestorSynsetId];
+	}
+
+	private List<Integer> synsetsContainingNoun(String noun) {
+		List<Integer> list = new ArrayList<>();
+		for (int i = 0; i < nouns.length; i++) {
+			if (nouns[i].contains(noun)) {
+				list.add(i);
+			}
+		}
+		return list;
 	}
 
 	// do unit testing of this class
