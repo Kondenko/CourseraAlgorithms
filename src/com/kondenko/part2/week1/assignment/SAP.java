@@ -60,6 +60,8 @@ public class SAP {
 		int shortestDistToV = -1;
 		int shortestDistToW = -1;
 		int ancestor = -1;
+		boolean vFound = false;
+		boolean wFound = false;
 		// Run a non-recursive BFS
 		Queue<Integer> q = new Queue<Integer>();
 		boolean[] marked = new boolean[digraph.V()];
@@ -75,6 +77,8 @@ public class SAP {
 				}
 			}
 			// See if [current] is a common ancestor and update [shortestPath] if it's shorter than the previous one.
+			if (!vFound) vFound = vPaths.hasPathTo(current);
+			if (!wFound) wFound = wPaths.hasPathTo(current);
 			if (vPaths.hasPathTo(current) && wPaths.hasPathTo(current)) {
 				int shortestPathLength = shortestDistToV + shortestDistToW;
 				int distToV = vPaths.distTo(current);
@@ -87,7 +91,11 @@ public class SAP {
 				}
 			}
 		}
-		return new Ancestor(ancestor, shortestDistToV >= 0 && shortestDistToW >= 0 ? shortestDistToV + shortestDistToW : 0);
+		int length = shortestDistToV >= 0 && shortestDistToW >= 0 ? shortestDistToV + shortestDistToW : 0;
+		if (vFound ^ wFound) {
+			length = -1;
+		}
+		return new Ancestor(ancestor, length);
 	}
 
 	public static void main(String[] args) {
