@@ -139,9 +139,22 @@ public class SAPTest {
 
 	@Test
 	public void fileTest2() {
+		SAP sap = new SAP(create("digraph1.txt"));
+		assertEquals(-1, sap.length(2, 6));
+	}
+
+	@Test
+	public void fileTest3() {
 		SAP sap = new SAP(create("digraph2.txt"));
 		assertEquals(2, sap.length(5, 1));
 	}
+
+	@Test
+	public void fileTest4() {
+		SAP sap = new SAP(create("digraph2.txt"));
+		assertEquals(0, sap.length(1, 1));
+	}
+
 
 	private Digraph create(String fileName) {
 		return new Digraph(new In("data/wordnet/" + fileName));

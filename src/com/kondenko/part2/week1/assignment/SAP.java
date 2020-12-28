@@ -1,3 +1,5 @@
+package com.kondenko.part2.week1.assignment;
+
 import edu.princeton.cs.algs4.BreadthFirstDirectedPaths;
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.In;
@@ -55,7 +57,9 @@ public class SAP {
 	}
 
 	private Ancestor findSap(BreadthFirstDirectedPaths vPaths, BreadthFirstDirectedPaths wPaths) {
-		Ancestor shortestPath = new Ancestor(-1, 0);
+		int shortestDistToV = -1;
+		int shortestDistToW = -1;
+		int ancestor = -1;
 		// Run a non-recursive BFS
 		Queue<Integer> q = new Queue<Integer>();
 		boolean[] marked = new boolean[digraph.V()];
@@ -72,13 +76,18 @@ public class SAP {
 			}
 			// See if [current] is a common ancestor and update [shortestPath] if it's shorter than the previous one.
 			if (vPaths.hasPathTo(current) && wPaths.hasPathTo(current)) {
-				int length = vPaths.distTo(current) + wPaths.distTo(current);
-				if (shortestPath.length == 0 || length < shortestPath.length) {
-					shortestPath = new Ancestor(current, length);
+				int shortestPathLength = shortestDistToV + shortestDistToW;
+				int distToV = vPaths.distTo(current);
+				int distToW = wPaths.distTo(current);
+				int length = distToV + distToW;
+				if (shortestPathLength < 0 || length < shortestPathLength) {
+					shortestDistToV = distToV;
+					shortestDistToW = distToW;
+					ancestor = current;
 				}
 			}
 		}
-		return shortestPath;
+		return new Ancestor(ancestor, shortestDistToV >= 0 && shortestDistToW >= 0 ? shortestDistToV + shortestDistToW : 0);
 	}
 
 	public static void main(String[] args) {
