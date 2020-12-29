@@ -6,23 +6,15 @@ import edu.princeton.cs.algs4.StdOut;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class WordNet {
 
-	private Set<Integer>[] hypernyms;
+	private final String[] synsets;
 
-	private String[] synsets;
+	private final HashMap<String, List<Integer>> nouns;
 
-	private Set<String>[] nouns;
-
-	private Digraph wordNet;
-
-	private SAP shortestAncestralPath;
+	private final SAP shortestAncestralPath;
 
 	// constructor takes the name of the two input files
 	public WordNet(String synsetsFile, String hypernymsFile) {
@@ -31,20 +23,21 @@ public class WordNet {
 		// Read synsets
 		List<List<String>> synsetRecords = getRecords(synsetsFile);
 		synsets = new String[synsetRecords.size()];
-		nouns = new HashSet[synsetRecords.size()];
+		nouns = new HashMap<>();
 		for (List<String> synsetRecord : synsetRecords) {
-			int id = Integer.parseInt(synsetRecord.get(0));
+			int synsetId = Integer.parseInt(synsetRecord.get(0));
 			String synset = synsetRecord.get(1);
-			synsets[id] = synset;
-			nouns[id] = new HashSet<>();
+			synsets[synsetId] = synset;
 			for (String noun : synset.split(" ")) {
-				nouns[id].add(noun);
+				List<Integer> synsetsForNoun = nouns.getOrDefault(noun, new ArrayList<>());
+				synsetsForNoun.add(synsetId);
+				nouns.put(noun, synsetsForNoun);
 			}
 		}
 
 		// Read hypernyms
 		List<List<String>> hypernymRecords = getRecords(hypernymsFile);
-		hypernyms = new HashSet[hypernymRecords.size()];
+		Set<Integer>[] hypernyms = new HashSet[hypernymRecords.size()];
 		boolean rootFound = false;
 		for (List<String> hypernymRecord : hypernymRecords) {
 			int id = Integer.parseInt(hypernymRecord.get(0));
@@ -62,7 +55,7 @@ public class WordNet {
 		}
 
 		// Construct WordNet
-		wordNet = new Digraph(synsets.length);
+		Digraph wordNet = new Digraph(synsets.length);
 		for (int synset = 0; synset < synsets.length; synset++) {
 			for (Integer hypernym : hypernyms[synset]) {
 				wordNet.addEdge(synset, hypernym);
@@ -75,19 +68,12 @@ public class WordNet {
 
 	// returns all WordNet nouns
 	public Iterable<String> nouns() {
-		List<String> nounsList = new ArrayList<>();
-		for (Set<String> nounsSet : nouns) {
-			nounsList.addAll(nounsSet);
-		}
-		return nounsList;
+		return nouns.keySet();
 	}
 
 	// is the word a WordNet noun?
 	public boolean isNoun(String word) {
-		for (Set<String> nounsSet : nouns) {
-			if (nounsSet.contains(word)) return true;
-		}
-		return false;
+		return nouns.containsKey(word);
 	}
 
 	// distance between nounA and nounB (defined below)
@@ -107,13 +93,7 @@ public class WordNet {
 	}
 
 	private List<Integer> synsetsContainingNoun(String noun) {
-		List<Integer> list = new ArrayList<>();
-		for (int i = 0; i < nouns.length; i++) {
-			if (nouns[i].contains(noun)) {
-				list.add(i);
-			}
-		}
-		return list;
+		return nouns.get(noun);
 	}
 
 	// do unit testing of this class
