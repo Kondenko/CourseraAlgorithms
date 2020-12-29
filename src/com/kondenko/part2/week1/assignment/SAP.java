@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SAP {
 
-	private Digraph digraph;
+	private final Digraph digraph;
 
 	private int root;
 
@@ -29,27 +29,29 @@ public class SAP {
 
 	// length of shortest ancestral path between v and w; -1 if no such path
 	public int length(int v, int w) {
+		if (v == w) return 0;
 		return length(List.of(v), List.of(w));
 	}
 
 	// a common ancestor of v and w that participates in a shortest ancestral path; -1 if no such path
 	public int ancestor(int v, int w) {
+		if (v == w) return v;
 		return ancestor(List.of(v), List.of(w));
 	}
 
 	// length of shortest ancestral path between any vertex in v and any vertex in w; -1 if no such path
 	public int length(Iterable<Integer> v, Iterable<Integer> w) {
-		if (v == null || w == null) throw new IllegalArgumentException();
 		return findCommonAncestor(v, w).length;
 	}
 
 	// a common ancestor that participates in shortest ancestral path; -1 if no such path
 	public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
-		if (v == null || w == null) throw new IllegalArgumentException();
 		return findCommonAncestor(v, w).vertex;
 	}
 
 	private Ancestor findCommonAncestor(Iterable<Integer> vIterable, Iterable<Integer> wIterable) {
+		validateVertices(vIterable);
+		validateVertices(wIterable);
 		Digraph reversed = digraph.reverse(); // reverse digraph so that a path can be found from vertices farther from root to vertices closer to root
 		BreadthFirstDirectedPaths vPaths = new BreadthFirstDirectedPaths(reversed, vIterable);
 		BreadthFirstDirectedPaths wPaths = new BreadthFirstDirectedPaths(reversed, wIterable);
@@ -63,7 +65,7 @@ public class SAP {
 		boolean vFound = false;
 		boolean wFound = false;
 		// Run a non-recursive BFS
-		Queue<Integer> q = new Queue<Integer>();
+		Queue<Integer> q = new Queue<>();
 		boolean[] marked = new boolean[digraph.V()];
 		marked[root] = true;
 		q.enqueue(root);
@@ -98,8 +100,31 @@ public class SAP {
 		return new Ancestor(ancestor, length);
 	}
 
+	private boolean contains(Iterable<Integer> iterable, int i) {
+		for (int integer : iterable) {
+			if (integer == i) return true;
+		}
+		return false;
+	}
+
+	private void validateVertices(Iterable<Integer> vertices) {
+		int size = 0;
+		if (vertices == null) {
+			throw new IllegalArgumentException("Iterable is null");
+		}
+		for (Integer v : vertices) {
+			size++;
+			if (v == null) {
+				throw new IllegalArgumentException("Iterable contains a null element");
+			}
+		}
+		if (size == 0) {
+			throw new IllegalArgumentException("Iterable has no elements");
+		}
+	}
+
 	public static void main(String[] args) {
-		In in = new In(args[0]);
+		In in = new In(args[0]);/**/
 		Digraph G = new Digraph(in);
 		SAP sap = new SAP(G);
 		while (!StdIn.isEmpty()) {

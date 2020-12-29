@@ -138,6 +138,12 @@ public class SAPTest {
 	}
 
 	@Test
+	public void fileTest11() {
+		SAP sap = new SAP(create("digraph1.txt"));
+		assertEquals(6, sap.ancestor(6, 6));
+	}
+
+	@Test
 	public void fileTest2() {
 		SAP sap = new SAP(create("digraph1.txt"));
 		assertEquals(-1, sap.length(2, 6));
@@ -151,6 +157,20 @@ public class SAPTest {
 
 	@Test
 	public void fileTest4() {
+		SAP sap = new SAP(create("digraph2.txt"));
+		assertEquals(0, sap.length(1, 1));
+	}
+
+
+	@Test
+	public void fileTest5() {
+		SAP sap = new SAP(create("digraph2.txt"));
+		assertEquals(0, sap.length(1, 1));
+	}
+
+
+	@Test
+	public void fileTest6() {
 		SAP sap = new SAP(create("digraph2.txt"));
 		assertEquals(0, sap.length(1, 1));
 	}
