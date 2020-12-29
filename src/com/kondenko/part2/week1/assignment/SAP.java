@@ -108,18 +108,13 @@ public class SAP {
 	}
 
 	private void validateVertices(Iterable<Integer> vertices) {
-		int size = 0;
 		if (vertices == null) {
 			throw new IllegalArgumentException("Iterable is null");
 		}
 		for (Integer v : vertices) {
-			size++;
 			if (v == null) {
 				throw new IllegalArgumentException("Iterable contains a null element");
 			}
-		}
-		if (size == 0) {
-			throw new IllegalArgumentException("Iterable has no elements");
 		}
 	}
 

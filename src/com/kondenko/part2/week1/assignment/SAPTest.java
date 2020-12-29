@@ -4,9 +4,24 @@ import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.In;
 import org.junit.Test;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 
 public class SAPTest {
+
+	@Test
+	public void shouldHandleEmptyIterables() {
+		Digraph G = new Digraph(3);
+
+		G.addEdge(2, 0);
+		G.addEdge(1, 0);
+
+		SAP sap = new SAP(G);
+		assertEquals(-1, sap.ancestor(Collections.emptyList(), Collections.emptyList()));
+		assertEquals(0, sap.length(Collections.emptyList(), Collections.emptyList()));
+	}
 
 	@Test
 	public void shouldFindACommonAncestor0() {
