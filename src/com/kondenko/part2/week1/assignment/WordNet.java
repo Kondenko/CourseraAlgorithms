@@ -1,6 +1,8 @@
 package com.kondenko.part2.week1.assignment;
 
 import edu.princeton.cs.algs4.Digraph;
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdOut;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +82,7 @@ public class WordNet {
 		return nounsList;
 	}
 
-	// is the word a WordNet noun?Us
+	// is the word a WordNet noun?
 	public boolean isNoun(String word) {
 		for (Set<String> nounsSet : nouns) {
 			if (nounsSet.contains(word)) return true;
@@ -117,18 +119,16 @@ public class WordNet {
 	// do unit testing of this class
 	public static void main(String[] args) {
 		WordNet wn = new WordNet("data/synsets.txt", "data/hypernyms.txt");
+		StdOut.println(wn.isNoun("horse"));
 	}
 
-	private static List<List<String>> getRecords(String file) {
-		List<List<String>> recods = new ArrayList<>();
-		try (Scanner scanner = new Scanner(new File(file))) {
-			while (scanner.hasNextLine()) {
-				recods.add(getRecordsFromLine(scanner.nextLine()));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+	private static List<List<String>> getRecords(String fileName) {
+		List<List<String>> records = new ArrayList<>();
+		In in = new In(fileName);
+		while (in.hasNextLine()) {
+			records.add(getRecordsFromLine(in.readLine()));
 		}
-		return recods;
+		return records;
 	}
 
 	private static List<String> getRecordsFromLine(String line) {
