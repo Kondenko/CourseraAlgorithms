@@ -4,9 +4,12 @@ import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
 
 public class WordNet {
 
@@ -38,25 +41,31 @@ public class WordNet {
 		// Read hypernyms
 		List<List<String>> hypernymRecords = getRecords(hypernymsFile);
 		Set<Integer>[] hypernyms = new HashSet[hypernymRecords.size()];
-		boolean rootFound = false;
+		int rootsFound = 0;
 		for (List<String> hypernymRecord : hypernymRecords) {
 			int id = Integer.parseInt(hypernymRecord.get(0));
 			Set<Integer> hypernymsSet = new HashSet<>();
 			if (hypernymRecord.size() == 1) {
-				rootFound = true;
+				rootsFound++;
 			}
 			for (int i = 1; i < hypernymRecord.size(); i++) {
 				hypernymsSet.add(Integer.parseInt(hypernymRecord.get(i)));
 			}
+			if (id >= hypernyms.length) {
+				throw new IllegalArgumentException();
+			}
 			hypernyms[id] = hypernymsSet;
 		}
-		if (!rootFound) {
+		if (rootsFound != 1) {
 			throw new IllegalArgumentException("The input to the constructor does not correspond to a rooted DAG");
 		}
 
 		// Construct WordNet
 		Digraph wordNet = new Digraph(synsets.length);
 		for (int synset = 0; synset < synsets.length; synset++) {
+			if (synset >= hypernyms.length) {
+				throw new IllegalArgumentException();
+			}
 			for (Integer hypernym : hypernyms[synset]) {
 				wordNet.addEdge(synset, hypernym);
 			}
@@ -73,6 +82,7 @@ public class WordNet {
 
 	// is the word a WordNet noun?
 	public boolean isNoun(String word) {
+		if (word == null) throw new IllegalArgumentException("Word is null");
 		return nouns.containsKey(word);
 	}
 
