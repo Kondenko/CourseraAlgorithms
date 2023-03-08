@@ -8,8 +8,10 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
+import edu.princeton.cs.algs4.Edge;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Utils {
 
@@ -68,4 +70,9 @@ public class Utils {
         System.out.println(String.format(s, args));
     }
 
+    public static <T> void printIterable(String name, Iterable<T> iterable) {
+        StringBuilder sb = new StringBuilder().append(name != null ? name + ":\n" : "");
+        iterable.forEach(e -> sb.append(e.toString()).append('\n'));
+        StdOut.println(sb.toString());
+    }
 }
