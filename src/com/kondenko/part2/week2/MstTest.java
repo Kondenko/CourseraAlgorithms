@@ -6,7 +6,9 @@ import edu.princeton.cs.algs4.EdgeWeightedGraph;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class MstTest {
     public static void main(String[] args) {
@@ -17,16 +19,17 @@ public class MstTest {
         MST lazyPrimMST = new LazyPrimMST(G);
         MST primMST = new PrimMST(G);
 
-        StdOut.println("Lazy Prim edges");
-        for (Edge e : lazyPrimMST.edges()) {
-            StdOut.println(e);
-        }
+        printEdges("Lazy Prim", lazyPrimMST);
+        printEdges("Eager Prim", primMST);
 
-        StdOut.println("\nPrim edges");
-        for (Edge e : primMST.edges()) {
-            StdOut.println(e);
-        }
+        StdOut.println();
+        StdOut.printf("MSTs are%s the same", lazyPrimMST.weight() != primMST.weight() ? " NOT" : "");
+    }
 
-        StdOut.printf("Are MSTs the same: %b", lazyPrimMST.weight() == primMST.weight());
+    private static void printEdges(String title, MST mst) {
+        StringBuilder sb = new StringBuilder(title).append(":\n");
+        TreeSet<Edge> edges = new TreeSet<>(Utils.toList(mst.edges()));
+        sb.append(edges);
+        StdOut.println(sb.toString());
     }
 }
