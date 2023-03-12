@@ -15,9 +15,18 @@ public class MstTest {
         G = new EdgeWeightedGraph(in);
 
         MST lazyPrimMST = new LazyPrimMST(G);
+        MST primMST = new PrimMST(G);
+
+        StdOut.println("Lazy Prim edges");
         for (Edge e : lazyPrimMST.edges()) {
             StdOut.println(e);
         }
-        StdOut.println(lazyPrimMST.weight());
+
+        StdOut.println("\nPrim edges");
+        for (Edge e : primMST.edges()) {
+            StdOut.println(e);
+        }
+
+        StdOut.printf("Are MSTs the same: %b", lazyPrimMST.weight() == primMST.weight());
     }
 }
