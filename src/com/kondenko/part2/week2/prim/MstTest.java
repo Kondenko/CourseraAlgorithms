@@ -1,4 +1,4 @@
-package com.kondenko.part2.week2;
+package com.kondenko.part2.week2.prim;
 
 import com.kondenko.Utils;
 import edu.princeton.cs.algs4.Edge;
@@ -6,11 +6,10 @@ import edu.princeton.cs.algs4.EdgeWeightedGraph;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.util.HashSet;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class MstTest {
+
     public static void main(String[] args) {
         In in = new In(args[0]);
         EdgeWeightedGraph G;

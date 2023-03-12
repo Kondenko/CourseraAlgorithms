@@ -1,4 +1,4 @@
-package com.kondenko.part2.week2;
+package com.kondenko.part2.week2.prim;
 
 import edu.princeton.cs.algs4.Edge;
 import edu.princeton.cs.algs4.EdgeWeightedGraph;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 
-interface MST {
+public interface MST {
 
     Iterable<Edge> edges();
 

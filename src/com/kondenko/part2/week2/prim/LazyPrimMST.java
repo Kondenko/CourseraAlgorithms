@@ -1,8 +1,6 @@
-package com.kondenko.part2.week2;
+package com.kondenko.part2.week2.prim;
 
 import edu.princeton.cs.algs4.*;
-
-import java.util.ArrayList;
 
 public class LazyPrimMST implements MST {
 
