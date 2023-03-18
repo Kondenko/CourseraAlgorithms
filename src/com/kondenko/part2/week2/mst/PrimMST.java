@@ -1,4 +1,4 @@
-package com.kondenko.part2.week2.prim;
+package com.kondenko.part2.week2.mst;
 
 import edu.princeton.cs.algs4.Edge;
 import edu.princeton.cs.algs4.EdgeWeightedGraph;
@@ -19,6 +19,8 @@ public class PrimMST implements MST {
 
     private final HashSet<Edge> mst = new HashSet<>();
 
+    private double weight = 0;
+
     public PrimMST(EdgeWeightedGraph graph) {
         this.graph = graph;
         this.pq = new IndexMinPQ<>(graph.V());
@@ -37,6 +39,7 @@ public class PrimMST implements MST {
         Edge mstEdge = edgeTo[v];
         if (mstEdge != null) {
             mst.add(mstEdge);
+            weight += mstEdge.weight();
         }
         for (Edge edge : graph.adj(v)) {
             int w = edge.other(v);
@@ -62,10 +65,6 @@ public class PrimMST implements MST {
 
     @Override
     public double weight() {
-        double weight = 0;
-        for (Edge edge : edges()) {
-            weight += edge.weight();
-        }
         return weight;
     }
 }

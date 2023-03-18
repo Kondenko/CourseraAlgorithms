@@ -1,9 +1,7 @@
 package com.kondenko.part2.week2.quiz;
 
-import com.kondenko.Utils;
-import com.kondenko.part2.week2.prim.LazyPrimMST;
-import com.kondenko.part2.week2.prim.MST;
-import com.kondenko.part2.week2.prim.PrimMST;
+import com.kondenko.part2.week2.mst.MST;
+import com.kondenko.part2.week2.mst.PrimMST;
 import edu.princeton.cs.algs4.*;
 
 import static com.kondenko.Utils.println;

@@ -1,4 +1,4 @@
-package com.kondenko.part2.week2.prim;
+package com.kondenko.part2.week2.mst;
 
 import edu.princeton.cs.algs4.*;
 
